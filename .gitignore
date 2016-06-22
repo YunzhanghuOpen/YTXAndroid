@@ -1,0 +1,13 @@
+/build
+*.iml
+/.gradle
+/.idea
+gradlew.bat
+gradlew
+copyright.txt
+LICENSE
+local.properties
+.DS_Store
+
+
+
