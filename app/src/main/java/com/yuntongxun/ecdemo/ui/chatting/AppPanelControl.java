@@ -34,11 +34,10 @@ public class AppPanelControl {
 	private Context mContext;
 
 	private static boolean isShowVoipCall = true;
-
 	public int[] cap = new int[] { R.string.app_panel_pic,
-			R.string.app_panel_tackpic, R.string.app_panel_file,R.string.app_panel_location };
+			R.string.app_panel_tackpic,R.string.attach_red_packet, R.string.app_panel_file,R.string.app_panel_location };
 	public int[] capVoip = new int[] { R.string.app_panel_pic,
-			R.string.app_panel_tackpic, R.string.app_panel_file,
+			R.string.app_panel_tackpic,R.string.attach_red_packet, R.string.app_panel_file,
 			R.string.app_panel_voice, R.string.app_panel_video,R.string.app_panel_read_after_fire,R.string.app_panel_location };
 
 	/**
@@ -121,6 +120,12 @@ public class AppPanelControl {
 			capability = new Capability(getContext().getString(
 					R.string.app_panel_location), R.drawable.chat_location_normal);
 			break;
+		//红包按钮
+			case R.string.attach_red_packet:
+
+				capability = new Capability(getContext().getString(
+						R.string.attach_red_packet), R.drawable.ytx_chat_redpacket_selector);
+				break;
 
 		default:
 			break;
