@@ -3,6 +3,7 @@ package utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.alibaba.fastjson.JSONObject;
@@ -18,11 +19,11 @@ public class RedPacketUtil {
     /**
      * 进入发红包页面
      *
-     * @param activity
+     * @param fragment
      * @param jsonObject
      * @param requestCode
      */
-    public static void startRedPacketActivityForResult(Activity activity, JSONObject jsonObject, int requestCode) {
+    public static void startRedPacketActivityForResult(Fragment fragment, JSONObject jsonObject, int requestCode) {
 
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_FROM_AVATAR_URL);
@@ -37,9 +38,9 @@ public class RedPacketUtil {
             redPacketInfo.groupMemberCount = jsonObject.getInteger(RedPacketConstant.KEY_GROUO_MEMBERS_COUNT);
             redPacketInfo.chatType = 2;
         }
-        Intent intent = new Intent(activity, RPRedPacketActivity.class);
+        Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
         intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
-        activity.startActivityForResult(intent, requestCode);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
 
