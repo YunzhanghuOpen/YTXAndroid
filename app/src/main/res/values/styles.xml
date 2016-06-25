@@ -719,4 +719,27 @@
         <item name="android:windowEnterAnimation">@anim/translate_up</item>
         <item name="android:windowExitAnimation">@anim/translate_down</item>
     </style>
+
+    <style name="RedPacketGreetingStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_toRightOf">@id/iv_money_icon</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:maxLength">10</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="RedPacketCheckStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignBaseline">@id/iv_money_icon</item>
+        <item name="android:layout_below">@id/tv_money_greeting</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_toRightOf">@id/iv_money_icon</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>
