@@ -18,69 +18,81 @@ package com.yuntongxun.ecdemo.ui.chatting.model;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan
- * @date 2014-4-16
  * @version 1.0
+ * @date 2014-4-16
  */
 public enum ChattingRowType {
 
     /**
      * display a image of message received
      */
-    IMAGE_ROW_RECEIVED("C200R" , Integer.valueOf(1)),
+    IMAGE_ROW_RECEIVED("C200R", Integer.valueOf(1)),
 
     /**
      * display a image of message transmitted
      */
-    IMAGE_ROW_TRANSMIT("C200T" , Integer.valueOf(2)),
+    IMAGE_ROW_TRANSMIT("C200T", Integer.valueOf(2)),
 
 
     /**
      * display a file of message received
      */
-    FILE_ROW_RECEIVED("C1024R" , Integer.valueOf(3)),
+    FILE_ROW_RECEIVED("C1024R", Integer.valueOf(3)),
 
     /**
      * display a file of message transmitted
      */
-    FILE_ROW_TRANSMIT("C1024T" , Integer.valueOf(4)),
+    FILE_ROW_TRANSMIT("C1024T", Integer.valueOf(4)),
 
     /**
      * display a voice of message received
      */
-    VOICE_ROW_RECEIVED("C60R" , Integer.valueOf(5)),
+    VOICE_ROW_RECEIVED("C60R", Integer.valueOf(5)),
 
     /**
-     *  display a voice of message transmitted
+     * display a voice of message transmitted
      */
-    VOICE_ROW_TRANSMIT("C60T" , Integer.valueOf(6)),
+    VOICE_ROW_TRANSMIT("C60T", Integer.valueOf(6)),
 
     /**
      * Display text of message received
      */
-    DESCRIPTION_ROW_RECEIVED("C2000R" , Integer.valueOf(7)),
+    DESCRIPTION_ROW_RECEIVED("C2000R", Integer.valueOf(7)),
 
     /**
      * Display text of message transmitted
      */
-    DESCRIPTION_ROW_TRANSMIT("C2000T" , Integer.valueOf(8)),
+    DESCRIPTION_ROW_TRANSMIT("C2000T", Integer.valueOf(8)),
 
     /**
      * chatting item for system .such as time
      */
-    CHATTING_SYSTEM("C18600668603R" , Integer.valueOf(9)),
-    
-    LOCATION_ROW_RECEIVED("C2200R" , Integer.valueOf(10)),
-    
-    LOCATION_ROW_TRANSMIT("C2200T" , Integer.valueOf(11)),
-    CALL_ROW_RECEIVED("C2400R" , Integer.valueOf(12)),
-    CALL_ROW_TO("C2400T" , Integer.valueOf(13)),
+    CHATTING_SYSTEM("C18600668603R", Integer.valueOf(9)),
 
-    RICH_TEXT_ROW_TO("C2600T" , Integer.valueOf(14)),
-    RICH_TEXT_ROW_RECEIVED("C2600R" , Integer.valueOf(15));
+    LOCATION_ROW_RECEIVED("C2200R", Integer.valueOf(10)),
 
+    LOCATION_ROW_TRANSMIT("C2200T", Integer.valueOf(11)),
+    CALL_ROW_RECEIVED("C2400R", Integer.valueOf(12)),
+    CALL_ROW_TO("C2400T", Integer.valueOf(13)),
 
+    RICH_TEXT_ROW_TO("C2600T", Integer.valueOf(14)),
+    RICH_TEXT_ROW_RECEIVED("C2600R", Integer.valueOf(15)),
+    /**
+     * redpacket recieve
+     */
+    REDPACKET_ROW_RECEIVED("C7000R", Integer.valueOf(16)),
 
+    /**
+     * redpacket send
+     */
+    REDPACKE_ROW_TO("C7000T", Integer.valueOf(17)),
+    /**
+     * redpacket ack
+     */
+    REDPACKE_ROW_ACK_RECEIVED("C8000R", Integer.valueOf(18)),
+    REDPACKE_ROW_ACK_TO("C8000T", Integer.valueOf(19));
 
 
     private final Integer mId;
@@ -89,16 +101,17 @@ public enum ChattingRowType {
     /**
      * Constructor of <code>ChattingRowType</code>.
      *
-     * @param id The unique identifier of the setting
+     * @param id           The unique identifier of the setting
      * @param defaultValue The default value of the setting
      */
-    private ChattingRowType(Object defaultValue , Integer id) {
+    private ChattingRowType(Object defaultValue, Integer id) {
         this.mId = id;
         this.mDefaultValue = defaultValue;
     }
 
     /**
      * Method that returns the unique identifier of the setting.
+     *
      * @return the mId
      */
     public Integer getId() {
