@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.BitmapUtil;
 import com.yuntongxun.ecdemo.common.utils.DateUtil;
@@ -33,6 +35,7 @@ import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
+import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImgInfo;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.group.DemoGroupNotice;
@@ -64,6 +67,8 @@ import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import utils.RedPacketConstant;
 
 
 /**
@@ -405,7 +410,40 @@ public class IMChattingHelper implements OnChatReceiveListener,
 			boolean showNotice) {
 		// 接收到的IM消息，根据IM消息类型做不同的处理
 		// IM消息类型：ECMessage.Type
+		if(msg.getType()==Type.TXT){
+            if(!CheckRedPacketMessageUtil.isMyAckMessage(msg,CCPAppManager.getClientUser().getUserId())){
+				IMessageSqlManager.delSingleMsg(msg.getMsgId());
+				return;
+			}
+			JSONObject jsonObject=CheckRedPacketMessageUtil.isRedPacketAckedMessage(msg);
+			if(jsonObject!=null){
+				//改写回执红包消息的内容
+				String currentUserId =CCPAppManager.getClientUser().getUserId();//当前登陆用户id
+				String recieveUserId =  jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+				String recieveUserNick=jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+				String sendUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+				String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者昵称
+				ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
+				String  text=textBody.getMessage();
+				//发送者和领取者都是自己-
+				if(currentUserId.equals(recieveUserId)&&currentUserId.equals(sendUserId)){
 
+					text=CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_money);
+				}else if(currentUserId.equals(sendUserId)){
+					//我仅仅是发送者
+					text=String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_someone_take_money), recieveUserNick);
+				}else if(currentUserId.equals(recieveUserId)){
+					//我仅仅是接收者
+					text=String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
+				}
+				ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+                msg.setBody(msgBody);
+				//设置为不提醒
+				showNotice=false;
+
+			}
+
+		}
 
 		if(msg.getType()== Type.STATE){ //状态消息
 			String msgTo = msg.getTo();
