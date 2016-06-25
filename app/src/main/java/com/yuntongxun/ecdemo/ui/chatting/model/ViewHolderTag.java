@@ -82,5 +82,7 @@ public class ViewHolderTag {
 		public static final int TAG_IM_LOCATION = 7;
 		public static final int TAG_IM_RICH_TEXT = 8;
 		public static final int TAG_IM_TEXT = 9;
+		public static final int TAG_IM_REDPACKET = 10;
+		public static final int TAG_IM_REDPACKET_ACK = 11;
 	}
 }
