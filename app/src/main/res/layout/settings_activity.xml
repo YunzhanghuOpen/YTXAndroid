@@ -133,7 +133,13 @@
             ecdemo:item_showDivider="false"
             android:layout_marginTop="@dimen/LargerPadding"
             ecdemo:item_titleText="@string/setting_about" />
-
+        <com.yuntongxun.ecdemo.common.view.SettingItem
+            android:id="@+id/settings_money"
+            style="@style/settings_item_layout_single"
+            ecdemo:item_accessoryType="arrow"
+            ecdemo:item_showDivider="false"
+            android:layout_marginTop="@dimen/LargerPadding"
+            ecdemo:item_titleText="@string/change" />
         <com.yuntongxun.ecdemo.common.view.SettingItem
             android:id="@+id/setting_exit"
             style="@style/settings_item_layout_single"

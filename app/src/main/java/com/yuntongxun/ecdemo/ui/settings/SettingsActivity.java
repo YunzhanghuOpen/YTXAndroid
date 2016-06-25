@@ -19,11 +19,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.redpacketsdk.constant.RPConstant;
+import com.easemob.redpacketui.ui.activity.RPChangeActivity;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
@@ -75,6 +78,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
     private SettingItem mSettingSwitch;
     private SettingItem mSettingUpdater;
     private SettingItem mSettingAbout;
+    //零钱
+    private SettingItem settings_money;
     private ECProgressDialog mPostingdialog;
 
     private int mExitType = 0;
@@ -223,6 +228,20 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
             mSettingUpdater.setNewUpdateVisibility(false);
         }
         initConfigValue();
+        settings_money = (SettingItem) this.findViewById(R.id.settings_money);
+        settings_money.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, RPChangeActivity.class);
+                String fromNickname = CCPAppManager.getClientUser().getUserName();
+                String fromAvatarUrl = "none";
+                fromAvatarUrl = TextUtils.isEmpty(fromAvatarUrl) ? "none" : fromAvatarUrl;
+                fromNickname = TextUtils.isEmpty(fromNickname) ?  CCPAppManager.getClientUser().getUserId() : fromNickname;
+                intent.putExtra(RPConstant.EXTRA_USER_NAME, fromNickname);
+                intent.putExtra(RPConstant.EXTRA_TO_USER_AVATAR, fromAvatarUrl);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initConfigValue() {
