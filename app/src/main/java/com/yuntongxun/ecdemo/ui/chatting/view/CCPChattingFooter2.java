@@ -594,6 +594,19 @@ public class CCPChattingFooter2 extends LinearLayout {
 			
 		}
 
+        @Override
+        public void OnSelectRedPacketClick() {
+            // TODO Auto-generated method stub
+            if(mChattingPanelClickListener != null) {
+                mChattingPanelClickListener.OnSelectRedPacketRequest();
+            }
+
+        }
+
+
+
+
+
     };
 
     final private EmojiGrid.OnEmojiItemClickListener mEmojiItemClickListener
@@ -1569,6 +1582,8 @@ public class CCPChattingFooter2 extends LinearLayout {
         void OnSelectVideoRequest();
         void OnSelectFireMsg();
         void OnSelectLocationRequest();
+        void  OnSelectRedPacketRequest();
+
         
 
     }
