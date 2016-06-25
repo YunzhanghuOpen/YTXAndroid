@@ -20,6 +20,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.easemob.redpacketsdk.RedPacket;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -63,6 +64,8 @@ public class ECApplication extends Application {
         initImageLoader();
         CrashHandler.getInstance().init(this);
         SDKInitializer.initialize(instance);
+        RedPacket.getInstance().initContext(this);
+
 
 
     }
