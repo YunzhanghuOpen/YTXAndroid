@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.yuntongxun.ecdemo.ECApplication;
 import com.yuntongxun.ecdemo.R;
+import com.yuntongxun.ecdemo.RequestTask;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.ECNotificationManager;
 import com.yuntongxun.ecdemo.common.utils.ECPreferenceSettings;
@@ -208,6 +209,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
 
         ECDevice.login(mInitParams);
+        new RequestTask(mContext,clientUser.getUserId()).execute();
         //调式
 
     }
