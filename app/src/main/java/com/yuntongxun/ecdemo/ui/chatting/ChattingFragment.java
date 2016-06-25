@@ -906,10 +906,10 @@ public class ChattingFragment extends CCPFragment implements
         String text = "[" + getResources().getString(R.string.ytx_luckymoney) + "]" + greetings;
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);
-        jsonObject.put(RedPacketConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_GREETING, greetings);
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_ID, moneyID);
+        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);//是否是红包消息
+        jsonObject.put(RedPacketConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
         // 组建一个待发送的ECMessage
         ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
         // 设置消息接收者
@@ -2602,11 +2602,11 @@ public class ChattingFragment extends CCPFragment implements
     }
     public void sendRedPacketAckMessage(String senderId,String senderNickName){
         JSONObject jsonObject=new JSONObject();
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE,true);
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID,senderId);
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME,clientUser.getUserName());
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID,clientUser.getUserId());
+        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE,true);//是否是红包领取消息
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID,senderId);//发送者id
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME,clientUser.getUserName());//接收者昵称
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID,clientUser.getUserId());//接收者id
         String  text=getResources().getString(R.string.ytx_luckymoney) ;
         if(senderId.equals(clientUser.getUserId())){
 
