@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alibaba.fastjson.JSONObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.DateUtil;
@@ -15,6 +16,7 @@ import com.yuntongxun.ecdemo.common.utils.MediaPlayTools;
 import com.yuntongxun.ecdemo.storage.ConversationSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.ui.CCPListAdapter;
+import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.model.BaseChattingRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.CallTxRow;
@@ -28,6 +30,10 @@ import com.yuntongxun.ecdemo.ui.chatting.model.ImageRxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImageTxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.LocationRxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.LocationTxRow;
+import com.yuntongxun.ecdemo.ui.chatting.model.RedPacketAckRxRow;
+import com.yuntongxun.ecdemo.ui.chatting.model.RedPacketAckTxRow;
+import com.yuntongxun.ecdemo.ui.chatting.model.RedPacketRxRow;
+import com.yuntongxun.ecdemo.ui.chatting.model.RedPacketTxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.RichTextRxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.RichTextTxRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.VoiceRxRow;
@@ -45,32 +51,46 @@ import java.util.HashMap;
 public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
 
     protected View.OnClickListener mOnClickListener;
-    /**当前语音播放的Item*/
+    /**
+     * 当前语音播放的Item
+     */
     public int mVoicePosition = -1;
-    /**需要显示时间的Item position*/
+    /**
+     * 需要显示时间的Item position
+     */
     private ArrayList<String> mShowTimePosition;
-    /**初始化所有类型的聊天Item 集合*/
-    private HashMap<Integer, IChattingRow> mRowItems ;
-    /**时间显示控件的垂直Padding*/
+    /**
+     * 初始化所有类型的聊天Item 集合
+     */
+    private HashMap<Integer, IChattingRow> mRowItems;
+    /**
+     * 时间显示控件的垂直Padding
+     */
     private int mVerticalPadding;
-    /**时间显示控件的横向Padding*/
+    /**
+     * 时间显示控件的横向Padding
+     */
     private int mHorizontalPadding;
-    /**消息联系人名称显示颜色*/
+    /**
+     * 消息联系人名称显示颜色
+     */
     private ColorStateList[] mChatNameColor;
     private String mUsername;
     private long mThread = -1;
     private int mMsgCount = 18;
     private int mTotalCount = mMsgCount;
 
-    public ChattingListAdapter2(Context ctx, ECMessage ecMessage , String user) {
-        this(ctx , ecMessage , user , -1);
+    public ChattingListAdapter2(Context ctx, ECMessage ecMessage, String user) {
+        this(ctx, ecMessage, user, -1);
     }
+
     /**
      * 构造方法
+     *
      * @param ctx
      * @param ecMessage
      */
-    public ChattingListAdapter2(Context ctx, ECMessage ecMessage , String user , long thread) {
+    public ChattingListAdapter2(Context ctx, ECMessage ecMessage, String user, long thread) {
         super(ctx, ecMessage);
         mUsername = user;
         mThread = thread;
@@ -79,7 +99,7 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
         initRowItems();
 
         // 初始化聊天消息点击事件回调
-        mOnClickListener = new ChattingListClickListener((ChattingActivity)mContext , null);
+        mOnClickListener = new ChattingListClickListener((ChattingActivity) mContext, null);
         mVerticalPadding = mContext.getResources().getDimensionPixelSize(R.dimen.SmallestPadding);
         mHorizontalPadding = mContext.getResources().getDimensionPixelSize(R.dimen.LittlePadding);
         mChatNameColor = new ColorStateList[]{
@@ -98,11 +118,11 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
     }
 
     public int increaseCount() {
-        if(isLimitCount()) {
+        if (isLimitCount()) {
             return 0;
         }
         mMsgCount += 18;
-        if(mMsgCount <= mTotalCount) {
+        if (mMsgCount <= mTotalCount) {
             return 18;
         }
         return mTotalCount % 18;
@@ -111,20 +131,21 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
     public boolean isLimitCount() {
         return mTotalCount < mMsgCount;
     }
+
     @Override
     protected void notifyChange() {
         this.mTotalCount = IMessageSqlManager.qureyIMCountForSession(mThread);
         // 初始化一个空的数据列表
-        setCursor(IMessageSqlManager.queryIMessageCursor(mThread , mMsgCount));
+        setCursor(IMessageSqlManager.queryIMessageCursor(mThread, mMsgCount));
         super.notifyDataSetChanged();
     }
 
     @Override
     protected void initCursor() {
         // 初始化一个空的数据列表
-        if(mThread > 0) {
+        if (mThread > 0) {
             notifyChange();
-            return ;
+            return;
         }
         setCursor(IMessageSqlManager.getNullCursor());
     }
@@ -137,28 +158,28 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ECMessage item = getItem(position);
-        if(item == null) {
+        if (item == null) {
             return null;
         }
+
         boolean showTimer = false;
-        if(position == 0) {
+        if (position == 0) {
             showTimer = true;
         }
-        if(position != 0) {
+        if (position != 0) {
             ECMessage previousItem = getItem(position - 1);
-            if(mShowTimePosition.contains(item.getMsgId())
+            if (mShowTimePosition.contains(item.getMsgId())
                     || (item.getMsgTime() - previousItem.getMsgTime() >= 180000L)) {
                 showTimer = true;
 
             }
         }
-
-        int messageType = ChattingsRowUtils.getChattingMessageType(item.getType());
+        int messageType = ChattingsRowUtils.getChattingMessageType(item);
         BaseChattingRow chattingRow = getBaseChattingRow(messageType, item.getDirection() == ECMessage.Direction.SEND);
         View chatView = chattingRow.buildChatView(LayoutInflater.from(mContext), convertView);
         BaseHolder baseHolder = (BaseHolder) chatView.getTag();
 
-        if(showTimer) {
+        if (showTimer) {
             baseHolder.getChattingTime().setVisibility(View.VISIBLE);
             baseHolder.getChattingTime().setBackgroundResource(R.drawable.chat_tips_bg);
             baseHolder.getChattingTime().setText(DateUtil.getDateString(item.getMsgTime(), DateUtil.SHOW_TYPE_CALL_LOG).trim());
@@ -170,9 +191,10 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
             baseHolder.getChattingTime().setBackgroundResource(0);
         }
 
+
         chattingRow.buildChattingBaseData(mContext, baseHolder, item, position);
 
-        if(baseHolder.getChattingUser() != null && baseHolder.getChattingUser().getVisibility() == View.VISIBLE) {
+        if (baseHolder.getChattingUser() != null && baseHolder.getChattingUser().getVisibility() == View.VISIBLE) {
             baseHolder.getChattingUser().setTextColor(mChatNameColor[1]);
             baseHolder.getChattingUser().setShadowLayer(0.0F, 0.0F, 0.0F, 0);
         }
@@ -181,6 +203,7 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
 
     /**
      * 消息类型数
+     * +3是因为加入收/发红包/红包回执这三类消息
      */
     @Override
     public int getViewTypeCount() {
@@ -193,13 +216,14 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
     @Override
     public int getItemViewType(int position) {
         ECMessage message = getItem(position);
-        return getBaseChattingRow(ChattingsRowUtils.getChattingMessageType(message.getType()),message.getDirection() == ECMessage.Direction.SEND).getChatViewType();
+
+        return getBaseChattingRow(ChattingsRowUtils.getChattingMessageType(message), message.getDirection() == ECMessage.Direction.SEND).getChatViewType();
     }
 
     public void checkTimeShower() {
-        if(getCount() > 0) {
+        if (getCount() > 0) {
             ECMessage item = getItem(0);
-            if(item != null) {
+            if (item != null) {
                 mShowTimePosition.add(item.getMsgId());
             }
         }
@@ -223,19 +247,23 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
         mRowItems.put(Integer.valueOf(13), new CallTxRow(13));
         mRowItems.put(Integer.valueOf(14), new RichTextTxRow(14));
         mRowItems.put(Integer.valueOf(15), new RichTextRxRow(15));
-
+        mRowItems.put(Integer.valueOf(16), new RedPacketRxRow(16));
+        mRowItems.put(Integer.valueOf(17), new RedPacketTxRow(17));
+        mRowItems.put(Integer.valueOf(18), new RedPacketAckRxRow(18));
+        mRowItems.put(Integer.valueOf(19), new RedPacketAckTxRow(19));
     }
 
     /**
      * 根据消息类型返回相对应的消息Item
+     *
      * @param rowType
      * @param isSend
      * @return
      */
-    public BaseChattingRow getBaseChattingRow(int rowType , boolean isSend) {
+    public BaseChattingRow getBaseChattingRow(int rowType, boolean isSend) {
         StringBuilder builder = new StringBuilder("C").append(rowType);
 
-        if(isSend) {
+        if (isSend) {
             builder.append("T");
         } else {
             builder.append("R");
@@ -251,6 +279,7 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
 
     /**
      * 当前语音播放的位置
+     *
      * @param position
      */
     public void setVoicePosition(int position) {
@@ -274,7 +303,7 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
     }
 
     public void onResume() {
-    	IMessageSqlManager.registerMsgObserver(this);
+        IMessageSqlManager.registerMsgObserver(this);
         super.notifyDataSetChanged();
     }
 
@@ -283,11 +312,11 @@ public class ChattingListAdapter2 extends CCPListAdapter<ECMessage> {
      */
     public void onDestroy() {
         ImageLoader.getInstance().clearMemoryCache();
-        if(mShowTimePosition != null) {
+        if (mShowTimePosition != null) {
             mShowTimePosition.clear();
             mShowTimePosition = null;
         }
-        if(mRowItems != null) {
+        if (mRowItems != null) {
             mRowItems.clear();
             mRowItems = null;
         }
