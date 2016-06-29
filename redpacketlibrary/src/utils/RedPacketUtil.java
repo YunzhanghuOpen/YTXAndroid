@@ -22,11 +22,11 @@ public class RedPacketUtil {
     /**
      * 进入发红包页面
      *
-     * @param activity
+     * @param fragment
      * @param jsonObject
      * @param requestCode
      */
-    public static void startRedPacketActivityForResult(Activity activity, JSONObject jsonObject, int requestCode) {
+    public static void startRedPacketActivityForResult(Fragment fragment, JSONObject jsonObject, int requestCode) {
 
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_FROM_AVATAR_URL);
@@ -42,10 +42,10 @@ public class RedPacketUtil {
             redPacketInfo.chatType = 2;
         }
         String currentId=jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
-        Intent intent = new Intent(activity, RPRedPacketActivity.class);
+        Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
         intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
         intent.putExtra(RPConstant.EXTRA_AUTH_INFO, AuthDataUtils.getInstance().getAuthData(currentId));
-        activity.startActivityForResult(intent, requestCode);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
 
