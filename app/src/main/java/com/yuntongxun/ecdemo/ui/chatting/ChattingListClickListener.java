@@ -188,8 +188,8 @@ public class ChattingListClickListener implements View.OnClickListener {
                 }else{
                     jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT,RPConstant.MESSAGE_DIRECT_SEND);
                 }
-                String moneyID=jsonRedPacket.getString(RPConstant.EXTRA_CHECK_MONEY_ID);
-                jsonObject.put(RPConstant.EXTRA_CHECK_MONEY_ID,moneyID)   ;
+                String moneyID=jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);
+                jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID,moneyID)   ;
                 if(mContext.mChattingFragment.isPeerChat()){
 
                     jsonObject.put("chatType",2);
