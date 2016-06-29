@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.easemob.redpacketsdk.RedPacket;
+import com.easemob.redpacketsdk.bean.AuthData;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -35,6 +36,8 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.storage.ServerConfigSqlManager;
+
+import utils.AuthDataUtils;
 
 /**
  * Created by Jorstin on 2015/3/17.
@@ -64,10 +67,10 @@ public class ECApplication extends Application {
         initImageLoader();
         CrashHandler.getInstance().init(this);
         SDKInitializer.initialize(instance);
+        //红包SDK的注册上下文
         RedPacket.getInstance().initContext(this);
-
-
-
+        //红包SDK验证信息的管理工具类
+        AuthDataUtils.init(this);
     }
 
     /**
