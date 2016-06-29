@@ -443,7 +443,21 @@
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
 
+        <activity
+            android:name="com.easemob.redpacketui.ui.activity.RPGroupMemberActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
 
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
+        <!--红包相关界面end-->
 
         <!-- *****************************ECSDK核心服务类 （必须配置）Start******************************************** -->
         // SDK核心服务配置(必选配置)
