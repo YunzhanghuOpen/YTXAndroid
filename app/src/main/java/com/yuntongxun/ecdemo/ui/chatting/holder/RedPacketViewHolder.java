@@ -19,6 +19,7 @@ public class RedPacketViewHolder extends BaseHolder{
     public View chattingContent;
     public TextView tv_money_greeting;
     public TextView tv_sponsor_name;
+    public TextView tv_packet_type;
     public RelativeLayout bubble;
     /**
      * TextView that display IMessage description.
@@ -40,6 +41,7 @@ public class RedPacketViewHolder extends BaseHolder{
         chattingUser = (TextView) baseView.findViewById(R.id.chatting_user_tv);
         tv_money_greeting=(TextView) baseView.findViewById(R.id.tv_money_greeting);
         tv_sponsor_name=(TextView) baseView.findViewById(R.id.tv_sponsor_name);
+        tv_packet_type=(TextView) baseView.findViewById(R.id.tv_packet_type);
         bubble= (RelativeLayout) baseView.findViewById(R.id.bubble);
         checkBox = (CheckBox) baseView.findViewById(R.id.chatting_checkbox);
         chattingMaskView = baseView.findViewById(R.id.chatting_maskview);
@@ -70,6 +72,12 @@ public class RedPacketViewHolder extends BaseHolder{
             tv_sponsor_name = (TextView) getBaseView().findViewById(R.id.tv_sponsor_name);
         }
         return tv_sponsor_name;
+    }
+    public TextView  getPacketTypeTv() {
+        if(tv_packet_type == null) {
+            tv_packet_type = (TextView) getBaseView().findViewById(R.id.tv_packet_type);
+        }
+        return tv_packet_type;
     }
     public RelativeLayout  getBubble() {
         if(bubble == null) {

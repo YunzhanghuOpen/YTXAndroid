@@ -22,10 +22,12 @@ import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.CheckUtil;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.MediaPlayTools;
+import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ViewHolderTag;
+import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.settings.WebAboutActivity;
 import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECDevice;
@@ -183,6 +185,8 @@ public class ChattingListClickListener implements View.OnClickListener {
                 toNickName=TextUtils.isEmpty(toNickName)?CCPAppManager.getClientUser().getUserId():toNickName;
                 jsonObject.put(RedPacketConstant.KEY_TO_AVATAR_URL,toAvatarUrl);
                 jsonObject.put(RedPacketConstant.KEY_TO_NICK_NAME,toNickName);
+                jsonObject.put(RedPacketConstant.KEY_CURRENT_ID,CCPAppManager.getClientUser().getUserId());
+
                 if(iMessage.getDirection()==Direction.RECEIVE){
                     jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT, RPConstant.MESSAGE_DIRECT_RECEIVE);
                 }else{
@@ -197,6 +201,25 @@ public class ChattingListClickListener implements View.OnClickListener {
 
                     jsonObject.put("chatType",1);
                 }
+
+
+                String specialAvatarUrl = "none";
+                String specialNickname = "";
+                String packetType = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
+                String specialReceiveId = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID);
+                if (!TextUtils.isEmpty(packetType) && packetType.equals(RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
+
+                    ECContacts contact = ContactSqlManager.getContact(specialReceiveId);
+                    if (contact != null) {
+                        specialNickname = contact.getNickname();
+                    } else {
+                        specialNickname = specialReceiveId;
+                    }
+                }
+                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID,specialReceiveId);
+                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE,packetType);
+                jsonObject.put(RedPacketConstant.KEY_SPECIAL_AVATAR_URL,specialAvatarUrl);
+                jsonObject.put(RedPacketConstant.KEY_SPECIAL_NICK_NAME,specialNickname);
 
                 RedPacketUtil.openRedPacket(mContext,jsonObject,new RedPacketUtil.OpenRedPacketSuccess(){
 
