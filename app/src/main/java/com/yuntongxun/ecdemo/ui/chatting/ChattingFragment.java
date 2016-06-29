@@ -45,6 +45,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.easemob.redpacketsdk.bean.RPUserBean;
+import com.easemob.redpacketui.callback.GroupMemberCallback;
+import com.easemob.redpacketui.callback.NotifyGroupMemberCallback;
+import com.easemob.redpacketui.utils.RPGroupMemberUtil;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
@@ -67,6 +71,7 @@ import com.yuntongxun.ecdemo.photopicker.PhotoPickerActivity;
 import com.yuntongxun.ecdemo.pojo.ImUserState;
 import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.ConversationSqlManager;
+import com.yuntongxun.ecdemo.storage.GroupMemberSqlManager;
 import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
@@ -91,6 +96,7 @@ import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECChatManager.OnChangeVoiceListener;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
+import com.yuntongxun.ecsdk.ECGroupManager;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.ECUserState;
 import com.yuntongxun.ecsdk.ECVoIPCallManager.CallType;
@@ -98,6 +104,7 @@ import com.yuntongxun.ecsdk.Parameters;
 import com.yuntongxun.ecsdk.SdkErrorCode;
 import com.yuntongxun.ecsdk.im.ECFileMessageBody;
 import com.yuntongxun.ecsdk.im.ECGroup;
+import com.yuntongxun.ecsdk.im.ECGroupMember;
 import com.yuntongxun.ecsdk.im.ECLocationMessageBody;
 import com.yuntongxun.ecsdk.im.ECPreviewMessageBody;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
@@ -903,6 +910,8 @@ public class ChattingFragment extends CCPFragment implements
     private void handlesendRedPacketMessage(Intent data) {
         String greetings = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_GREETING);
         String moneyID = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_ID);
+        String specialReceiveId = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);
+        String redPacketType = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_TYPE);
         String text = "[" + getResources().getString(R.string.ytx_luckymoney) + "]" + greetings;
 
         JSONObject jsonObject = new JSONObject();
@@ -910,6 +919,8 @@ public class ChattingFragment extends CCPFragment implements
         jsonObject.put(RedPacketConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
         jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
         jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
+        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE, redPacketType);//红包类型，是否是专属红包
+        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);//指定接收者
         // 组建一个待发送的ECMessage
         ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
         // 设置消息接收者
@@ -1723,7 +1734,7 @@ public class ChattingFragment extends CCPFragment implements
             fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
             jsonObject.put(RedPacketConstant.KEY_FROM_AVATAR_URL, fromAvatarUrl);
             jsonObject.put(RedPacketConstant.KEY_FROM_NICK_NAME, fromNickName);
-
+            jsonObject.put(RedPacketConstant.KEY_CURRENT_ID, CCPAppManager.getUserId());
             if (!isPeerChat()) {
                 //如果是单聊传递对方id
                 jsonObject.put(RedPacketConstant.KEY_USER_ID, mRecipients);
@@ -1731,6 +1742,58 @@ public class ChattingFragment extends CCPFragment implements
             } else {
                 //如果是群聊传递群id和群人数
                 ECGroup ecGroup = GroupSqlManager.getECGroup(mRecipients);
+                ECGroupManager groupManager = ECDevice.getECGroupManager();
+               // 调用获取群组成员接口，设置结果回调
+                groupManager.queryGroupMembers(ecGroup.getGroupId(),
+                        new ECGroupManager.OnQueryGroupMembersListener() {
+                            @Override
+                            public void onQueryGroupMembersComplete(ECError error
+                                    , final List members) {
+                                if (error.errorCode == SdkErrorCode.REQUEST_SUCCESS
+                                        && members != null) {
+                                    // 获取群组成员成功
+                                    // 将群组成员信息更新到本地缓存中（sqlite） 通知UI更新
+
+                                    RPGroupMemberUtil.getInstance().setGroupMemberListener(new NotifyGroupMemberCallback() {
+                                        @Override
+                                        public void getGroupMember(final String groupID, final GroupMemberCallback mCallBack) {
+
+                                            List<RPUserBean> userBeanList = new ArrayList<RPUserBean>();
+
+                                            for (int i = 0; i < members.size(); i++) {
+                                                RPUserBean userBean = new RPUserBean();
+                                                ECGroupMember member=(ECGroupMember) members.get(i);
+                                                userBean.userId =member.getVoipAccount();
+                                                if (userBean.userId.equals(CCPAppManager.getUserId())) {
+                                                    continue;
+                                                }
+
+                                                if (member != null) {
+                                                    userBean.userAvatar =  "none"  ;
+                                                    userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() :member.getDisplayName();
+                                                } else {
+                                                    userBean.userNickname = userBean.userId;
+                                                    userBean.userAvatar = "none";
+                                                }
+                                                userBeanList.add(userBean);
+                                            }
+                                            mCallBack.setGroupMember(userBeanList);
+                                        }
+                                    });
+
+
+
+                                    return;
+                                }
+                                // 群组成员获取失败
+                                Log.e("ECSDK_Demo", "sync group detail fail " +
+                                        ", errorCode=" + error.errorCode);
+
+                            }
+
+                        }
+                );
+
                 jsonObject.put(RedPacketConstant.KEY_GROUP_ID, ecGroup.getGroupId());
                 jsonObject.put(RedPacketConstant.KEY_GROUO_MEMBERS_COUNT, ecGroup.getCount());
                 jsonObject.put(RedPacketConstant.KEY_CHAT_TYPE, 2);
