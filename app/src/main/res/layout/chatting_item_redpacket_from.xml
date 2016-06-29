@@ -37,7 +37,7 @@
             <ImageView
                 android:id="@+id/iv_money_icon"
                 style="@style/RedPacketIconStyle"
-                android:src="@drawable/gotye_red_packet_icon" />
+                android:src="@drawable/ytx_red_packet_icon" />
 
             <TextView
                 android:id="@+id/tv_money_greeting"
