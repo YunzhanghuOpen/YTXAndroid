@@ -47,6 +47,8 @@ import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecsdk.ECDevice;
 
+import utils.RedPacketUtil;
+
 
 /**
  * 设置界面/设置新消息提醒（声音或者振动）
@@ -232,14 +234,11 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         settings_money.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingsActivity.this, RPChangeActivity.class);
                 String fromNickname = CCPAppManager.getClientUser().getUserName();
                 String fromAvatarUrl = "none";
                 fromAvatarUrl = TextUtils.isEmpty(fromAvatarUrl) ? "none" : fromAvatarUrl;
                 fromNickname = TextUtils.isEmpty(fromNickname) ?  CCPAppManager.getClientUser().getUserId() : fromNickname;
-                intent.putExtra(RPConstant.EXTRA_USER_NAME, fromNickname);
-                intent.putExtra(RPConstant.EXTRA_TO_USER_AVATAR, fromAvatarUrl);
-                startActivity(intent);
+                RedPacketUtil.startChangeActivity(SettingsActivity.this,fromNickname,fromAvatarUrl, CCPAppManager.getClientUser().getUserId());
             }
         });
     }
