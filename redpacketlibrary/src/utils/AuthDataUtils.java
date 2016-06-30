@@ -61,19 +61,19 @@ public class AuthDataUtils {
 
     public AuthData getAuthData(String userId) {
         JSONObject jsonObject = null;
-        AuthData authData=new AuthData();
+        AuthData authData = new AuthData();
         String jsonStr = mSharedPreferences.getString(userId, null);
         if (jsonStr != null) {
             jsonObject = JSONObject.parseObject(jsonStr);
-            if(jsonObject!=null){
+            if (jsonObject != null) {
                 String partner = jsonObject.getString("partner");
                 String user_id = jsonObject.getString("user_id");
                 String timestamp = jsonObject.getString("timestamp");
                 String sign = jsonObject.getString("sign");
-                authData.authUserId=user_id;
-                authData.authTimestamp=timestamp;
-                authData.authPartner=partner;
-                authData.authSign=sign;
+                authData.authUserId = user_id;
+                authData.authTimestamp = timestamp;
+                authData.authPartner = partner;
+                authData.authSign = sign;
             }
         }
         return authData;

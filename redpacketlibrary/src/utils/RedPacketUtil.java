@@ -1,6 +1,5 @@
 package utils;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -41,7 +40,7 @@ public class RedPacketUtil {
             redPacketInfo.groupMemberCount = jsonObject.getInteger(RedPacketConstant.KEY_GROUO_MEMBERS_COUNT);
             redPacketInfo.chatType = 2;
         }
-        String currentId=jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
+        String currentId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
         intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
         intent.putExtra(RPConstant.EXTRA_AUTH_INFO, AuthDataUtils.getInstance().getAuthData(currentId));
@@ -66,7 +65,7 @@ public class RedPacketUtil {
         String moneyId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_ID);
         messageDirect = jsonObject.getString(RedPacketConstant.KEY_MESSAGE_DIRECT);
         final int chatType = jsonObject.getInteger(RedPacketConstant.KEY_CHAT_TYPE);
-        String specialAvatarUrl =jsonObject.getString(RedPacketConstant.KEY_SPECIAL_AVATAR_URL);
+        String specialAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_SPECIAL_AVATAR_URL);
         String specialNickname = jsonObject.getString(RedPacketConstant.KEY_SPECIAL_NICK_NAME);
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.moneyID = moneyId;
@@ -75,20 +74,21 @@ public class RedPacketUtil {
         redPacketInfo.moneyMsgDirect = messageDirect;
         redPacketInfo.chatType = chatType;
         String packetType = jsonObject.getString(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
-        if (!TextUtils.isEmpty(packetType)&&packetType.equals(RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
+        if (!TextUtils.isEmpty(packetType) && packetType.equals(RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
             redPacketInfo.specialAvatarUrl = specialAvatarUrl;
             redPacketInfo.specialNickname = specialNickname;
         }
-        String currentUserId=jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
+        String currentUserId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         redPacketInfo.imUserId = currentUserId;
         redPacketInfo.toUserId = currentUserId;
 
-        AuthData authData=AuthDataUtils.getInstance().getAuthData(currentUserId);
-        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo,authData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
+        AuthData authData = AuthDataUtils.getInstance().getAuthData(currentUserId);
+        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, authData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
             @Override
             public void onSuccess(String senderId, String senderNickname) {
                 openRedPacketSuccess.onSuccess(senderId, senderNickname);
             }
+
             @Override
             public void showLoading() {
                 progressDialog.show();
@@ -113,12 +113,10 @@ public class RedPacketUtil {
 
 
     /**
-     *
      * 进入零钱页
-     *
      */
 
-    public static  void  startChangeActivity(FragmentActivity fragmentActivity,String fromNickname ,String fromAvatarUrl,String userId){
+    public static void startChangeActivity(FragmentActivity fragmentActivity, String fromNickname, String fromAvatarUrl, String userId) {
 
         Intent intent = new Intent(fragmentActivity, RPChangeActivity.class);
         RedPacketInfo redPacketInfo = new RedPacketInfo();
