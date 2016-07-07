@@ -13,10 +13,9 @@
 package com.yuntongxun.ecdemo.ui.chatting;
 
 
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ChattingRowType;
 import com.yuntongxun.ecsdk.ECMessage;
-import com.yuntongxun.ecsdk.ECMeetingManager.ECMeetingType;
 
 /**
  * @author Jorstin Chan@容联•云通讯

@@ -24,13 +24,11 @@ import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.contact.ContactDetailActivity;
 import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
-import com.yuntongxun.ecsdk.ECMeetingManager.ECMeetingType;
-import com.yuntongxun.ecsdk.ECMessage.Type;
 import com.yuntongxun.ecsdk.ECMessage;
 
 import java.util.HashMap;

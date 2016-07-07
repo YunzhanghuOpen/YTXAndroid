@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alibaba.fastjson.JSONObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.DateUtil;
@@ -16,7 +15,6 @@ import com.yuntongxun.ecdemo.common.utils.MediaPlayTools;
 import com.yuntongxun.ecdemo.storage.ConversationSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.ui.CCPListAdapter;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.model.BaseChattingRow;
 import com.yuntongxun.ecdemo.ui.chatting.model.CallTxRow;

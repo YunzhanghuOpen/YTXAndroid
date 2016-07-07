@@ -35,7 +35,7 @@ import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImgInfo;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.group.DemoGroupNotice;

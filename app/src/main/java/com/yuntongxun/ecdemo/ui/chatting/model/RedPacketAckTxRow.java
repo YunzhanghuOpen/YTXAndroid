@@ -8,11 +8,9 @@ import android.view.View;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
-import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketAckViewHolder;
-import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
 
