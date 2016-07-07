@@ -134,7 +134,7 @@ public class ConversationAdapter extends CCPListAdapter<Conversation> {
                 //用字符串的方式的识别红包消息，改变会话页显示样式
                 if (conversation.getMsgType() == ECMessage.Type.TXT.ordinal()) {
                     String content = conversation.getContent();
-                    if ((content.contains("领取了") && content.contains("的红包")) || content.contains("红包消息")) {
+                    if ((content.contains("领取了") && content.contains("的红包")) || content.contains("红包消息")|| content.contains("容联云红包")) {
 
                         fromNickName = "";
                     }
