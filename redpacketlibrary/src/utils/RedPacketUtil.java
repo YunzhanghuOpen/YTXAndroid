@@ -8,12 +8,12 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.easemob.redpacketsdk.bean.AuthData;
-import com.easemob.redpacketsdk.bean.RedPacketInfo;
-import com.easemob.redpacketsdk.constant.RPConstant;
-import com.easemob.redpacketui.ui.activity.RPChangeActivity;
-import com.easemob.redpacketui.ui.activity.RPRedPacketActivity;
-import com.easemob.redpacketui.utils.RPOpenPacketUtil;
+import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.bean.TokenData;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
+import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
+import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
 
 /**
  * Created by ustc on 2016/5/31.
@@ -42,8 +42,8 @@ public class RedPacketUtil {
         }
         String currentId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
-        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_AUTH_INFO, AuthDataUtils.getInstance().getAuthData(currentId));
+        intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, AuthDataUtils.getInstance().getTokenData(currentId));
         fragment.startActivityForResult(intent, requestCode);
     }
 
@@ -79,10 +79,8 @@ public class RedPacketUtil {
             redPacketInfo.specialNickname = specialNickname;
         }
         String currentUserId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
-        redPacketInfo.imUserId = currentUserId;
         redPacketInfo.toUserId = currentUserId;
-
-        AuthData authData = AuthDataUtils.getInstance().getAuthData(currentUserId);
+        TokenData authData = AuthDataUtils.getInstance().getTokenData(currentUserId);
         RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, authData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
             @Override
             public void onSuccess(String senderId, String senderNickname) {
@@ -121,8 +119,8 @@ public class RedPacketUtil {
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromNickName = fromNickname;
         redPacketInfo.fromAvatarUrl = fromAvatarUrl;
-        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_AUTH_INFO, AuthDataUtils.getInstance().getAuthData(userId));
+        intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, AuthDataUtils.getInstance().getTokenData(userId));
         fragmentActivity.startActivity(intent);
     }
 

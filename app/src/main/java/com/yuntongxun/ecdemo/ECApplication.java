@@ -17,7 +17,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.easemob.redpacketsdk.RedPacket;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -31,6 +30,7 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferenceSettings;
 import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
+import com.yunzhanghu.redpacketsdk.RedPacket;
 
 import java.io.File;
 import java.io.InvalidClassException;

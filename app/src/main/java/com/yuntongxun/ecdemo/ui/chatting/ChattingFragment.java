@@ -45,10 +45,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.easemob.redpacketsdk.bean.RPUserBean;
-import com.easemob.redpacketui.callback.GroupMemberCallback;
-import com.easemob.redpacketui.callback.NotifyGroupMemberCallback;
-import com.easemob.redpacketui.utils.RPGroupMemberUtil;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
@@ -111,6 +107,10 @@ import com.yuntongxun.ecsdk.im.ECUserStateMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 import com.yuntongxun.ecsdk.platformtools.ECHandlerHelper;
+import com.yunzhanghu.redpacketsdk.bean.RPUserBean;
+import com.yunzhanghu.redpacketui.callback.GroupMemberCallback;
+import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
+import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
 
 import java.io.File;
 import java.io.InvalidClassException;

@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
-import com.easemob.redpacketsdk.constant.RPConstant;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.CheckUtil;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
@@ -25,8 +24,8 @@ import com.yuntongxun.ecdemo.common.utils.MediaPlayTools;
 import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ViewHolderTag;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.settings.WebAboutActivity;
 import com.yuntongxun.ecsdk.ECDevice;
@@ -38,6 +37,7 @@ import com.yuntongxun.ecsdk.im.ECPreviewMessageBody;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,9 +194,9 @@ public class ChattingListClickListener implements View.OnClickListener {
                 String moneyID = jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);
                 jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);
                 if (mContext.mChattingFragment.isPeerChat()) {
-                    jsonObject.put("chatType", 2);
+                    jsonObject.put("chatType", RPConstant.CHATTYPE_GROUP);
                 } else {
-                    jsonObject.put("chatType", 1);
+                    jsonObject.put("chatType", RPConstant.CHATTYPE_SINGLE);
                 }
                 String specialAvatarUrl = "none";
                 String specialNickname = "";
