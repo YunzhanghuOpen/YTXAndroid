@@ -68,6 +68,7 @@ public class ECApplication extends Application {
         SDKInitializer.initialize(instance);
         //红包SDK的注册上下文
         RedPacket.getInstance().initContext(this);
+        RedPacket.getInstance().setDebugMode(true);
         //红包SDK验证信息的管理工具类
         AuthDataUtils.init(this);
     }
