@@ -210,9 +210,7 @@ public class SDKCoreHelper implements ECDevice.InitListener, ECDevice.OnECDevice
 
 
         ECDevice.login(mInitParams);
-        new RequestTask(mContext, clientUser.getUserId()).execute();
-        //调式
-
+        new RequestTask(clientUser.getUserId()).execute();
     }
 
     @Override

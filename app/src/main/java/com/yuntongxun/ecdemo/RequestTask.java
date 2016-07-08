@@ -1,6 +1,5 @@
 package com.yuntongxun.ecdemo;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,14 +16,10 @@ import utils.AuthDataUtils;
 
 
 public class RequestTask extends AsyncTask<String, String, String> {
-    private final String TAG = "RedPakcet";
+    private final String TAG = "RedPacket";
     private String userID;
-    private Context context;
-    private final int HANDLER_LOGIN_SUCCESS = 1;
-    private final int HANDLER_LOGIN_FAILURE = 0;
 
-    public RequestTask(Context context, String userID) {
-        this.context = context;
+    public RequestTask(String userID) {
         this.userID = userID;
     }
 
