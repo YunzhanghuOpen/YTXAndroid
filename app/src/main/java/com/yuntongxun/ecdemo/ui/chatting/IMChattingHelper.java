@@ -35,8 +35,8 @@ import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImgInfo;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.group.DemoGroupNotice;
 import com.yuntongxun.ecdemo.ui.group.GroupNoticeHelper;
@@ -77,6 +77,7 @@ import utils.RedPacketConstant;
  * @date 2014-12-12
  */
 public class IMChattingHelper implements OnChatReceiveListener,
+
         ECChatManager.OnDownloadMessageListener {
 
     private static final String TAG = "ECSDK_Demo.IMChattingHelper";
@@ -422,7 +423,7 @@ public class IMChattingHelper implements OnChatReceiveListener,
                 String recieveUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
                 String recieveUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
                 String sendUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者昵称
+                String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                 ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
                 String text = textBody.getMessage();
                 //发送者和领取者都是自己-

@@ -1,4 +1,4 @@
-package com.yuntongxun.ecdemo.ui.chatting.RedPackUtils;
+package com.yuntongxun.ecdemo.ui.chatting.redpacketutils;
 
 import android.util.Log;
 
@@ -56,9 +56,9 @@ public class CheckRedPacketMessageUtil {
         JSONObject jsonObject = isRedPacketAckMessage(message);
         if (jsonObject != null) {
             String receiverId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-            String sendId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+            String senderId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
             //发送者和领取者都不是自己
-            if (!currentUserId.equals(receiverId) && !currentUserId.equals(sendId)) {
+            if (!currentUserId.equals(receiverId) && !currentUserId.equals(senderId)) {
                 isMyselfAckMsg = false;
             }
         }

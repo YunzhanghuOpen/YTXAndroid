@@ -13,7 +13,7 @@
 package com.yuntongxun.ecdemo.ui.chatting;
 
 
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ChattingRowType;
 import com.yuntongxun.ecsdk.ECMessage;
 

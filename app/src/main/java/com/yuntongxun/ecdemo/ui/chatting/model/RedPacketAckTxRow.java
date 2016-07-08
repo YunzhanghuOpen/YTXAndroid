@@ -8,9 +8,9 @@ import android.view.View;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
-import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketAckViewHolder;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
 
@@ -32,9 +32,7 @@ public class RedPacketAckTxRow extends BaseChattingRow {
     public View buildChatView(LayoutInflater inflater, View convertView) {
         //we have a don't have a converView so we'll have to create a new one
         if (convertView == null || ((BaseHolder) convertView.getTag()).getType() != mRowType) {
-
             convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_redpacket_ack_to);
-
             //use the view holder pattern to save of already looked up subviews
             RedPacketAckViewHolder holder = new RedPacketAckViewHolder(mRowType);
             convertView.setTag(holder.initBaseHolder(convertView, false));
@@ -63,17 +61,13 @@ public class RedPacketAckTxRow extends BaseChattingRow {
                     String text = "";
                     //发送者和领取者都是自己-
                     if (currentUserId.equals(recieveUserId) && currentUserId.equals(sendUserId)) {
-
                         text = context.getResources().getString(R.string.money_msg_take_money);
-
                     } else if (currentUserId.equals(sendUserId)) {
                         //我仅仅是发送者
                         text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), recieveUserNick);
-
                     } else if (currentUserId.equals(recieveUserId)) {
                         //我仅仅是接收者
                         text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
-
                     }
                     holder.getRedPacketAckMsgTv().setText(text);
                 }
