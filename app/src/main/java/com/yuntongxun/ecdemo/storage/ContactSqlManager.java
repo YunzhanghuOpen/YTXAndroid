@@ -282,21 +282,21 @@ public class ContactSqlManager extends AbstractSQLManager {
 
     }
 
-    public static ArrayList<ForwardObjectBean> getForwardContact(){
+    public static ArrayList<ForwardObjectBean> getForwardContact() {
 
-        ArrayList<ECContacts> list= ContactsCache.getInstance().getContacts();
-        ArrayList<ForwardObjectBean> resultArr=null;
-        if(list!=null&&list.size()>0){
-            resultArr=new ArrayList<ForwardObjectBean>();
-            for(ECContacts item:list){
-                ForwardObjectBean bean =new ForwardObjectBean();
+        ArrayList<ECContacts> list = ContactsCache.getInstance().getContacts();
+        ArrayList<ForwardObjectBean> resultArr = null;
+        if (list != null && list.size() > 0) {
+            resultArr = new ArrayList<ForwardObjectBean>();
+            for (ECContacts item : list) {
+                ForwardObjectBean bean = new ForwardObjectBean();
                 bean.setUserId(item.getContactid());
                 bean.setUserName(item.getNickname());
                 resultArr.add(bean);
             }
 
         }
-        return  resultArr;
+        return resultArr;
 
     }
 

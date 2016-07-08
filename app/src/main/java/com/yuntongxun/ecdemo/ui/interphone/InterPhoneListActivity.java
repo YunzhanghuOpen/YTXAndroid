@@ -29,20 +29,24 @@ public class InterPhoneListActivity extends InterPhoneBaseActivity {
 
     private static final String TAG = "ECSDK_Demo.InterPhoneListActivity";
     public static final int SELECT_USER_FOR_INTERPHONE = 0x002;
-    /**实时对讲房间列表*/
+    /**
+     * 实时对讲房间列表
+     */
     private ListView mInterPhoneListView;
-    /**实时对讲会议列表*/
+    /**
+     * 实时对讲会议列表
+     */
     private InterPhoneAdapter mInterPhoneAdapter;
 
     private AdapterView.OnItemClickListener itemClickListener
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(mInterPhoneAdapter != null) {
+            if (mInterPhoneAdapter != null) {
                 ECInterPhoneInviteMsg interPhone = mInterPhoneAdapter.getItem(position);
-                if(interPhone != null) {
-                    Intent intent = new Intent(InterPhoneListActivity.this , InterPhoneChatActivity.class);
-                    intent.putExtra(ECDevice.MEETING_NO , interPhone.getMeetingNo());
+                if (interPhone != null) {
+                    Intent intent = new Intent(InterPhoneListActivity.this, InterPhoneChatActivity.class);
+                    intent.putExtra(ECDevice.MEETING_NO, interPhone.getMeetingNo());
                     startActivity(intent);
                 }
             }
@@ -106,11 +110,11 @@ public class InterPhoneListActivity extends InterPhoneBaseActivity {
             LogUtil.d("onActivityResult: bail due to resultCode=" + resultCode);
             return;
         }
-        if(requestCode == SELECT_USER_FOR_INTERPHONE) {
+        if (requestCode == SELECT_USER_FOR_INTERPHONE) {
             String[] selectUser = data.getStringArrayExtra("Select_Conv_User");
-            if(selectUser != null && selectUser.length > 0) {
-                Intent intent = new Intent(InterPhoneListActivity.this , InterPhoneChatActivity.class);
-                intent.putExtra(InterPhoneChatActivity.EXTRA_MEMBERS , selectUser);
+            if (selectUser != null && selectUser.length > 0) {
+                Intent intent = new Intent(InterPhoneListActivity.this, InterPhoneChatActivity.class);
+                intent.putExtra(InterPhoneChatActivity.EXTRA_MEMBERS, selectUser);
                 startActivity(intent);
             }
         }
@@ -157,9 +161,9 @@ public class InterPhoneListActivity extends InterPhoneBaseActivity {
 
         public void setData(List<ECInterPhoneMeetingMsg> datas) {
             clear();
-            for(ECInterPhoneMeetingMsg msg : datas) {
-                if(msg != null && msg instanceof ECInterPhoneInviteMsg) {
-                    add((ECInterPhoneInviteMsg)msg);
+            for (ECInterPhoneMeetingMsg msg : datas) {
+                if (msg != null && msg instanceof ECInterPhoneInviteMsg) {
+                    add((ECInterPhoneInviteMsg) msg);
                 }
             }
         }
@@ -168,7 +172,7 @@ public class InterPhoneListActivity extends InterPhoneBaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             InterPhoneHolder holder;
-            if (convertView == null|| convertView.getTag() == null) {
+            if (convertView == null || convertView.getTag() == null) {
                 view = View.inflate(getContext(), R.layout.intephone_list_item, null);
                 holder = new InterPhoneHolder();
                 view.setTag(holder);
@@ -180,7 +184,7 @@ public class InterPhoneListActivity extends InterPhoneBaseActivity {
             }
 
             ECInterPhoneMeetingMsg phoneMeetingMsg = getItem(position);
-            if(phoneMeetingMsg != null) {
+            if (phoneMeetingMsg != null) {
                 holder.roomName.setText(phoneMeetingMsg.getMeetingNo());
             }
 

@@ -11,7 +11,7 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.view.SettingItem;
 import com.yuntongxun.ecdemo.ui.ECSuperActivity;
 
-public class LoginSettingActivity extends ECSuperActivity implements View.OnClickListener{
+public class LoginSettingActivity extends ECSuperActivity implements View.OnClickListener {
 
     private SettingItem mSettingServerIp;
     private SettingItem mSettingAppkey;
@@ -20,14 +20,16 @@ public class LoginSettingActivity extends ECSuperActivity implements View.OnClic
     private final class OnConfigClickListener implements View.OnClickListener {
 
         private int type;
+
         public OnConfigClickListener(int type) {
             this.type = type;
         }
+
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LoginSettingActivity.this , EditConfigureActivity.class);
-            intent.putExtra("setting_type" , type);
-            startActivityForResult(intent , 0xa);
+            Intent intent = new Intent(LoginSettingActivity.this, EditConfigureActivity.class);
+            intent.putExtra("setting_type", type);
+            startActivityForResult(intent, 0xa);
         }
     }
 
@@ -72,10 +74,9 @@ public class LoginSettingActivity extends ECSuperActivity implements View.OnClic
     }
 
 
-
     private String getConfig(ECPreferenceSettings settings) {
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
-        String value = sharedPreferences.getString(settings.getId() , (String)settings.getDefaultValue());
+        String value = sharedPreferences.getString(settings.getId(), (String) settings.getDefaultValue());
         return value;
     }
 

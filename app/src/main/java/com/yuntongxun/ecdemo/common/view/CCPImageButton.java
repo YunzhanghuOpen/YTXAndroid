@@ -13,8 +13,6 @@
 package com.yuntongxun.ecdemo.common.view;
 
 
-
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -29,108 +27,105 @@ import android.widget.TextView;
 import com.yuntongxun.ecdemo.R;
 
 public class CCPImageButton extends FrameLayout {
-	
-	public ImageView mImageView;
-	public TextView mTextView;
 
-	public CCPImageButton(Context context) {
-		this(context, null, 0);
-	}
+    public ImageView mImageView;
+    public TextView mTextView;
 
-	public CCPImageButton(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    public CCPImageButton(Context context) {
+        this(context, null, 0);
+    }
 
-	public CCPImageButton(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		FrameLayout.LayoutParams imageViewFLayoutParams = new FrameLayout.LayoutParams(
-				FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-		imageViewFLayoutParams.gravity = Gravity.CENTER;
-		mImageView = new ImageView(context);
-		mImageView.setLayoutParams(imageViewFLayoutParams);
-		addView(mImageView);
-		FrameLayout.LayoutParams textViewFLayoutParams = new FrameLayout.LayoutParams(
-				FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-		textViewFLayoutParams.gravity = Gravity.CENTER;
-		mTextView = new TextView(context);
-		mTextView.setLayoutParams(textViewFLayoutParams);
-		mTextView.setClickable(false);
-		mTextView.setFocusable(false);
-		mTextView.setFocusableInTouchMode(false);
-		
-		ColorStateList colorStateList = context.getResources().getColorStateList(R.color.ccp_title_btn_text);
-		mTextView.setTextColor(colorStateList);
-		addView(mTextView);
-	}
-	
-	
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		mImageView.setEnabled(enabled);
-		mTextView.setEnabled(enabled);
-	}
+    public CCPImageButton(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public final void setImageDrawable(Drawable drawable) {
-		mImageView.setImageDrawable(drawable);
-		mImageView.setVisibility(View.VISIBLE);
-		mTextView.setVisibility(View.GONE);
-	}
+    public CCPImageButton(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        FrameLayout.LayoutParams imageViewFLayoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        imageViewFLayoutParams.gravity = Gravity.CENTER;
+        mImageView = new ImageView(context);
+        mImageView.setLayoutParams(imageViewFLayoutParams);
+        addView(mImageView);
+        FrameLayout.LayoutParams textViewFLayoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        textViewFLayoutParams.gravity = Gravity.CENTER;
+        mTextView = new TextView(context);
+        mTextView.setLayoutParams(textViewFLayoutParams);
+        mTextView.setClickable(false);
+        mTextView.setFocusable(false);
+        mTextView.setFocusableInTouchMode(false);
 
-	public final void setText(int resid) {
-		mTextView.setText(resid);
-		mTextView.setVisibility(View.VISIBLE);
-		mImageView.setVisibility(View.GONE);
-	}
+        ColorStateList colorStateList = context.getResources().getColorStateList(R.color.ccp_title_btn_text);
+        mTextView.setTextColor(colorStateList);
+        addView(mTextView);
+    }
 
-	public final void setText(String text) {
-		mTextView.setText(text);
-		mTextView.setVisibility(View.VISIBLE);
-		mImageView.setVisibility(View.GONE);
-	}
-	
-	/**
-	 * 
-	 * @Title: setTextColor 
-	 * @Description: TODO 
-	 * @param @param color 
-	 * @return void 
-	 * @throws
-	 */
-	public final void setTextColor(int color) {
-		mTextView.setTextColor(color);
-	}
-	
-	public final void setTextColor(ColorStateList colors) {
-		mTextView.setTextColor(colors);
-	}
 
-	public final void setImageResource(int resid) {
-		Drawable drawable = getResources().getDrawable(resid);
-		setImageDrawable(drawable);
-	}
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mImageView.setEnabled(enabled);
+        mTextView.setEnabled(enabled);
+    }
 
-	/**
-	 * 
-	 * @Title: setTextSize 
-	 * @Description: TODO 
-	 * @param @param size 
-	 * @return void 
-	 * @throws
-	 */
-	public final void setTextSize(float size) {
-		setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
-	}
-	
-	/**
-	 * 
-	 * @Title: setTextSize 
-	 * @Description: TODO 
-	 * @param @param unit
-	 * @param @param size 
-	 * @return void 
-	 * @throws
-	 */
-	public final void setTextSize(int unit , float size) {
-		mTextView.setTextSize(unit,size);
-	}
+    public final void setImageDrawable(Drawable drawable) {
+        mImageView.setImageDrawable(drawable);
+        mImageView.setVisibility(View.VISIBLE);
+        mTextView.setVisibility(View.GONE);
+    }
+
+    public final void setText(int resid) {
+        mTextView.setText(resid);
+        mTextView.setVisibility(View.VISIBLE);
+        mImageView.setVisibility(View.GONE);
+    }
+
+    public final void setText(String text) {
+        mTextView.setText(text);
+        mTextView.setVisibility(View.VISIBLE);
+        mImageView.setVisibility(View.GONE);
+    }
+
+    /**
+     * @param @param color
+     * @return void
+     * @throws
+     * @Title: setTextColor
+     * @Description: TODO
+     */
+    public final void setTextColor(int color) {
+        mTextView.setTextColor(color);
+    }
+
+    public final void setTextColor(ColorStateList colors) {
+        mTextView.setTextColor(colors);
+    }
+
+    public final void setImageResource(int resid) {
+        Drawable drawable = getResources().getDrawable(resid);
+        setImageDrawable(drawable);
+    }
+
+    /**
+     * @param @param size
+     * @return void
+     * @throws
+     * @Title: setTextSize
+     * @Description: TODO
+     */
+    public final void setTextSize(float size) {
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+    }
+
+    /**
+     * @param @param unit
+     * @param @param size
+     * @return void
+     * @throws
+     * @Title: setTextSize
+     * @Description: TODO
+     */
+    public final void setTextSize(int unit, float size) {
+        mTextView.setTextSize(unit, size);
+    }
 }

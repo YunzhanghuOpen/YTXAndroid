@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.DensityUtil;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
-import com.yuntongxun.ecdemo.ui.chatting.ChattingListAdapter2;
+import com.yuntongxun.ecdemo.ui.chatting.ChattingListAdapter;
 import com.yuntongxun.ecdemo.ui.chatting.model.ViewHolderTag;
 import com.yuntongxun.ecdemo.ui.chatting.view.CCPAnimImageView;
 import com.yuntongxun.ecsdk.ECMessage;
@@ -32,8 +32,8 @@ import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 
 /**
  * @author 容联•云通讯
- * @date 2014-12-9
  * @version 4.0
+ * @date 2014-12-9
  */
 public class VoiceRowViewHolder extends BaseHolder {
 
@@ -53,7 +53,7 @@ public class VoiceRowViewHolder extends BaseHolder {
 
     }
 
-    public BaseHolder initBaseHolder(View baseView , boolean receive) {
+    public BaseHolder initBaseHolder(View baseView, boolean receive) {
         super.initBaseHolder(baseView);
 
         chattingTime = ((TextView) baseView.findViewById(R.id.chatting_time_tv));
@@ -85,32 +85,31 @@ public class VoiceRowViewHolder extends BaseHolder {
     }
 
     /**
-     *
      * @param holder
      * @param uploadVisibility
      * @param playVisibility
      * @param receive
      */
-    private static void uploadVoiceStatus(VoiceRowViewHolder holder , int uploadVisibility , int playVisibility , boolean receive) {
+    private static void uploadVoiceStatus(VoiceRowViewHolder holder, int uploadVisibility, int playVisibility, boolean receive) {
         holder.uploadState.setVisibility(View.GONE);
         holder.contentTv.setVisibility(playVisibility);
         holder.voicePlayFrameLayout.setVisibility(playVisibility);
 
-        if(receive) {
+        if (receive) {
             holder.voiceLoading.setVisibility(uploadVisibility);
             return;
         }
         holder.voiceSendigBG.setVisibility(uploadVisibility);
     }
 
-    public static void initVoiceRow(VoiceRowViewHolder holder , ECMessage detail , int position , ChattingActivity activity , boolean receive) {
-        if(holder == null) {
-            return ;
+    public static void initVoiceRow(VoiceRowViewHolder holder, ECMessage detail, int position, ChattingActivity activity, boolean receive) {
+        if (holder == null) {
+            return;
         }
 
         ECVoiceMessageBody vBody = (ECVoiceMessageBody) detail.getBody();
         int duration = vBody.getDuration();
-        if(duration < 1) {
+        if (duration < 1) {
             duration = 1;
         }
 
@@ -119,8 +118,8 @@ public class VoiceRowViewHolder extends BaseHolder {
         holder.voicePlayAnim.setTag(holderTag);
         holder.voicePlayAnim.setOnClickListener(activity.mChattingFragment.getChattingAdapter().getOnClickListener());
 
-        ChattingListAdapter2 adapterForce = activity.mChattingFragment.getChattingAdapter();
-        if(adapterForce.mVoicePosition == position) {
+        ChattingListAdapter adapterForce = activity.mChattingFragment.getChattingAdapter();
+        if (adapterForce.mVoicePosition == position) {
             uploadVoiceStatus(holder, View.GONE, View.VISIBLE, receive);
             holder.voiceAnim.setVisibility(View.VISIBLE);
             holder.voiceAnim.startVoiceAnimation();
@@ -131,7 +130,7 @@ public class VoiceRowViewHolder extends BaseHolder {
             holder.contentTv.setText(activity.getString(R.string.fmt_time_length, duration));
 
             holder.voicePlayAnim.setWidth(DensityUtil.fromDPToPix(activity, getTimeWidth(duration)));
-            return ;
+            return;
         } else {
             holder.voiceAnim.stopVoiceAnimation();
             holder.voiceAnim.setVisibility(View.GONE);
@@ -139,7 +138,7 @@ public class VoiceRowViewHolder extends BaseHolder {
         }
 
 
-        if(detail.getMsgStatus() == ECMessage.MessageStatus.SUCCESS) {
+        if (detail.getMsgStatus() == ECMessage.MessageStatus.SUCCESS) {
             holder.contentTv.setTextColor(Color.parseColor("#7390A0"));
             holder.contentTv.setShadowLayer(2.0F, 1.2F, 1.2F, Color.parseColor("#ffffffff"));
             holder.contentTv.setVisibility(View.VISIBLE);
@@ -152,7 +151,7 @@ public class VoiceRowViewHolder extends BaseHolder {
         } else {
             holder.contentTv.setShadowLayer(0.0F, 0.0F, 0.0F, 0);
 
-            if(detail.getMsgStatus() == ECMessage.MessageStatus.FAILED) {
+            if (detail.getMsgStatus() == ECMessage.MessageStatus.FAILED) {
                 uploadVoiceStatus(holder, View.GONE, View.VISIBLE, receive);
                 holder.contentTv.setVisibility(View.GONE);
             } else {
@@ -163,7 +162,7 @@ public class VoiceRowViewHolder extends BaseHolder {
 
         }
 
-        if(!receive) {
+        if (!receive) {
             holder.voiceAnim.setBackgroundResource(R.drawable.chatto_bg);
             holder.voicePlayAnim.setBackgroundResource(R.drawable.chatto_bg);
         } else {
@@ -172,7 +171,6 @@ public class VoiceRowViewHolder extends BaseHolder {
         }
 
         holder.contentTv.setBackgroundColor(0);
-
 
 
     }

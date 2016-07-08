@@ -19,25 +19,41 @@ import com.yuntongxun.ecsdk.ECMeetingManager;
  * Created by Jorstin on 2015/7/22.
  */
 public class CreateVoiceMeetingActivity extends ECSuperActivity
-        implements View.OnClickListener{
+        implements View.OnClickListener {
 
     private static final String TAG = "ECSDK.Demo.CreateVoiceMeetingActivity";
     public static final String EXTRA_MEETING_PARAMS = "com.yuntongxun.meeting_params";
-    /**语音群聊房间名称输入控件*/
+    /**
+     * 语音群聊房间名称输入控件
+     */
     private CCPFormInputView mNameFormInputView;
-    /**语音群聊房间名称输入输入框*/
+    /**
+     * 语音群聊房间名称输入输入框
+     */
     private EditText mNameEditView;
-    /**语音群聊房间密码输入控件*/
+    /**
+     * 语音群聊房间密码输入控件
+     */
     private CCPFormInputView mPasswordFormInputView;
-    /**语音群聊房间密码输入输入框*/
+    /**
+     * 语音群聊房间密码输入输入框
+     */
     private EditText mPasswordEditView;
-    /**退出是否自动解散会议*/
+    /**
+     * 退出是否自动解散会议
+     */
     private CheckedTextView mCloseCheckedView;
-    /**创建成功后是否自动加入会议*/
+    /**
+     * 创建成功后是否自动加入会议
+     */
     private CheckedTextView mJoinCheckedView;
-    /**会议无成员是否自动删除会议*/
+    /**
+     * 会议无成员是否自动删除会议
+     */
     private CheckedTextView mDelCheckedView;
-    /**会议房间提示音类型*/
+    /**
+     * 会议房间提示音类型
+     */
     private SpinnerSelectView mToneTypeView;
 
     @Override
@@ -99,32 +115,32 @@ public class CreateVoiceMeetingActivity extends ECSuperActivity
                 finish();
                 break;
             case R.id.text_right:
-            	
-            	
-            	String meetingName=mNameEditView.getText().toString().trim();
-            	if(TextUtils.isEmpty(meetingName)){
-            		
-            		ToastUtil.showMessage(R.string.create_meetingName_Null);
-            		return;
-            	}
-            	
+
+
+                String meetingName = mNameEditView.getText().toString().trim();
+                if (TextUtils.isEmpty(meetingName)) {
+
+                    ToastUtil.showMessage(R.string.create_meetingName_Null);
+                    return;
+                }
+
                 ECMeetingManager.ECCreateMeetingParams.Builder builder = new ECMeetingManager.ECCreateMeetingParams.Builder();
                 // 设置语音会议房间名称
                 builder.setMeetingName(mNameEditView.getText().toString().trim())
-                // 设置语音会议房间加入密码
-                .setMeetingPwd(mPasswordEditView.getText().toString().trim())
-                // 设置语音会议创建者退出是否自动解散会议
-                .setIsAutoClose(mCloseCheckedView.isChecked())
-                // 设置语音会议创建成功是否自动加入
-                .setIsAutoJoin(mJoinCheckedView.isChecked())
-                // 设置语音会议背景音模式
-                .setVoiceMod(ECMeetingManager.ECCreateMeetingParams.ToneMode.values()[mToneTypeView.getChoiceItemPosition()])
-                // 设置语音会议所有成员退出后是否自动删除会议
-                .setIsAutoDelete(mDelCheckedView.isChecked());
+                        // 设置语音会议房间加入密码
+                        .setMeetingPwd(mPasswordEditView.getText().toString().trim())
+                        // 设置语音会议创建者退出是否自动解散会议
+                        .setIsAutoClose(mCloseCheckedView.isChecked())
+                        // 设置语音会议创建成功是否自动加入
+                        .setIsAutoJoin(mJoinCheckedView.isChecked())
+                        // 设置语音会议背景音模式
+                        .setVoiceMod(ECMeetingManager.ECCreateMeetingParams.ToneMode.values()[mToneTypeView.getChoiceItemPosition()])
+                        // 设置语音会议所有成员退出后是否自动删除会议
+                        .setIsAutoDelete(mDelCheckedView.isChecked());
 
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_MEETING_PARAMS , builder.create());
-                setResult(RESULT_OK , intent);
+                intent.putExtra(EXTRA_MEETING_PARAMS, builder.create());
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
         }

@@ -27,49 +27,50 @@ import com.yuntongxun.ecdemo.common.view.SwipeBackLayout;
  * Created by Jorstin on 2015/6/19.
  */
 public class ECFragmentActivity extends FragmentActivity
-        implements SwipeActivityManager.SwipeListener , SwipeBackLayout.OnSwipeGestureDelegate{
+        implements SwipeActivityManager.SwipeListener, SwipeBackLayout.OnSwipeGestureDelegate {
 
     private static final String TAG = "ECSDK_Demo.ECFragmentActivity";
 
     public SwipeBackLayout mSwipeBackLayout;
     public boolean mOnDragging;
     private WindowAnimation mAnimation = new WindowAnimation();
+
     private void onStartActivityAction(Intent intent) {
-        if(intent == null) {
+        if (intent == null) {
             super.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-            return ;
+            return;
         }
         String className = null;
         ComponentName component = intent.getComponent();
-        if(component != null) {
+        if (component != null) {
             className = component.getClassName();
             if (!(className.startsWith(component.getPackageName()))) {
                 className = component.getPackageName() + component.getClassName();
             }
         } else {
-            return ;
+            return;
         }
-        if((0x2 & MethodInvoke.getTransitionValue(className)) != 0) {
+        if ((0x2 & MethodInvoke.getTransitionValue(className)) != 0) {
             super.overridePendingTransition(mAnimation.openEnter, mAnimation.openExit);
-            return ;
+            return;
         }
 
-        if((0x4 & MethodInvoke.getTransitionValue(className)) != 0) {
+        if ((0x4 & MethodInvoke.getTransitionValue(className)) != 0) {
             MethodInvoke.startTransitionNotChange(this);
-            return ;
+            return;
         }
         MethodInvoke.startTransitionPopin(this);
     }
 
     public boolean onActivityCreate() {
-        if(isSupperSwipe()) {
-            ViewGroup viewGroup = (ViewGroup)getWindow().getDecorView();
+        if (isSupperSwipe()) {
+            ViewGroup viewGroup = (ViewGroup) getWindow().getDecorView();
             mSwipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-                    R.layout.swipeback_layout, viewGroup , false);
+                    R.layout.swipeback_layout, viewGroup, false);
             mSwipeBackLayout.init();
             getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getWindow().getDecorView().setBackgroundDrawable(null);
-            ViewGroup childAtView = (ViewGroup)viewGroup.getChildAt(0);
+            ViewGroup childAtView = (ViewGroup) viewGroup.getChildAt(0);
             childAtView.setBackgroundResource(R.drawable.transparent);
             viewGroup.removeView(childAtView);
             mSwipeBackLayout.addView(childAtView);
@@ -85,10 +86,10 @@ public class ECFragmentActivity extends FragmentActivity
     @Override
     protected void onPause() {
         super.onPause();
-        if(mSwipeBackLayout != null) {
+        if (mSwipeBackLayout != null) {
             mSwipeBackLayout.setEnableGesture(false);
         }
-        if(!isFinishing()) {
+        if (!isFinishing()) {
             SwipeActivityManager.pushCallback(this);
         }
     }
@@ -97,15 +98,15 @@ public class ECFragmentActivity extends FragmentActivity
     protected void onResume() {
         super.onResume();
         SwipeActivityManager.popCallback(this);
-        if(mSwipeBackLayout != null) {
+        if (mSwipeBackLayout != null) {
             mSwipeBackLayout.setEnableGesture(true);
             mSwipeBackLayout.mScrolling = false;
         }
     }
 
     private boolean isSupperSwipe() {
-        if(/*SDKVersionUtils.isSmallerVersion(19) &&*/ SupportSwipeModeUtils.isEnable()) {
-            if(isEnableSwipe()) {
+        if (/*SDKVersionUtils.isSmallerVersion(19) &&*/ SupportSwipeModeUtils.isEnable()) {
+            if (isEnableSwipe()) {
                 return true;
             }
         }
@@ -119,31 +120,31 @@ public class ECFragmentActivity extends FragmentActivity
 
     @Override
     public void onScrollParent(float scrollPercent) {
-        LogUtil.v(TAG , "on swipe " + scrollPercent + " ,duration " + Long.valueOf(240L));
+        LogUtil.v(TAG, "on swipe " + scrollPercent + " ,duration " + Long.valueOf(240L));
         View decorView = getWindow().getDecorView();
-        if ((decorView instanceof ViewGroup) && (((ViewGroup)decorView).getChildCount() > 0)) {
-            decorView = ((ViewGroup)decorView).getChildAt(0);
+        if ((decorView instanceof ViewGroup) && (((ViewGroup) decorView).getChildCount() > 0)) {
+            decorView = ((ViewGroup) decorView).getChildAt(0);
         }
-        if(Float.compare(1.0F, scrollPercent) <= 0) {
-            AnimatorUtils.startViewAnimation(decorView , 0.0F);
-            return ;
+        if (Float.compare(1.0F, scrollPercent) <= 0) {
+            AnimatorUtils.startViewAnimation(decorView, 0.0F);
+            return;
         }
-        AnimatorUtils.startViewAnimation(decorView , -1.0F * decorView.getWidth() / 4 * (1.0F - scrollPercent));
+        AnimatorUtils.startViewAnimation(decorView, -1.0F * decorView.getWidth() / 4 * (1.0F - scrollPercent));
     }
 
     @Override
     public void notifySettle(boolean open, int speed) {
         LogUtil.v(TAG, "on settle " + open + ", speed " + speed);
         View decorView = getWindow().getDecorView();
-        if ((decorView instanceof ViewGroup) && (((ViewGroup)decorView).getChildCount() > 0)) {
-            decorView = ((ViewGroup)decorView).getChildAt(0);
+        if ((decorView instanceof ViewGroup) && (((ViewGroup) decorView).getChildCount() > 0)) {
+            decorView = ((ViewGroup) decorView).getChildAt(0);
         }
         long duration = 120L;
-        if(speed <= 0) {
+        if (speed <= 0) {
             duration = 240L;
         }
-        if(open) {
-            AnimatorUtils.updateViewAnimation(decorView , duration , 0.0F, null);
+        if (open) {
+            AnimatorUtils.updateViewAnimation(decorView, duration, 0.0F, null);
             return;
         }
         AnimatorUtils.updateViewAnimation(decorView, duration, -1 * decorView.getWidth() / 4, null);
@@ -175,8 +176,8 @@ public class ECFragmentActivity extends FragmentActivity
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if(isSupperSwipe() && event.getKeyCode() == KeyEvent.KEYCODE_BACK && mSwipeBackLayout.isSwipeBacking() ) {
-            LogUtil.d(TAG , "IS SwipeBack ING, ignore KeyBack Event");
+        if (isSupperSwipe() && event.getKeyCode() == KeyEvent.KEYCODE_BACK && mSwipeBackLayout.isSwipeBacking()) {
+            LogUtil.d(TAG, "IS SwipeBack ING, ignore KeyBack Event");
             return true;
         }
         return super.dispatchKeyEvent(event);
@@ -185,16 +186,16 @@ public class ECFragmentActivity extends FragmentActivity
     @Override
     public void finish() {
         super.finish();
-        if(isEnableSwipe()) {
+        if (isEnableSwipe()) {
             SwipeActivityManager.notifySwipe(1.0F);
         }
         super.overridePendingTransition(mAnimation.closeEnter, mAnimation.closeExit);
-        if((0x2 & MethodInvoke.getAnnotationValue(super.getClass())) == 0) {
-            return ;
+        if ((0x2 & MethodInvoke.getAnnotationValue(super.getClass())) == 0) {
+            return;
         }
         if ((0x4 & MethodInvoke.getAnnotationValue(super.getClass())) != 0) {
             MethodInvoke.startTransitionNotChange(this);
-            return ;
+            return;
         }
         MethodInvoke.startTransitionPopout(this);
 
@@ -203,7 +204,7 @@ public class ECFragmentActivity extends FragmentActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return ;
+            return;
         }
         super.onSaveInstanceState(outState);
     }
@@ -271,14 +272,14 @@ public class ECFragmentActivity extends FragmentActivity
         public int closeExit = activityCloseExitAnimation;
 
         static {
-            if(!(SDKVersionUtils.isSmallerVersion(19) && SupportSwipeModeUtils.isEnable())) {
+            if (!(SDKVersionUtils.isSmallerVersion(19) && SupportSwipeModeUtils.isEnable())) {
                 activityOpenEnterAnimation = R.anim.slide_right_in;
-                activityOpenExitAnimation  = R.anim.slide_left_out;
+                activityOpenExitAnimation = R.anim.slide_left_out;
                 activityCloseEnterAnimation = R.anim.slide_left_in;
                 activityCloseExitAnimation = R.anim.slide_right_out;
             } else {
                 activityOpenEnterAnimation = R.anim.pop_in;
-                activityOpenExitAnimation  = R.anim.anim_not_change;
+                activityOpenExitAnimation = R.anim.anim_not_change;
                 activityCloseEnterAnimation = R.anim.anim_not_change;
                 activityCloseExitAnimation = R.anim.pop_out;
             }

@@ -23,7 +23,7 @@ public class RequestTask extends AsyncTask<String, String, String> {
     private final int HANDLER_LOGIN_SUCCESS = 1;
     private final int HANDLER_LOGIN_FAILURE = 0;
 
-    public RequestTask(Context context, String userID  ) {
+    public RequestTask(Context context, String userID) {
         this.context = context;
         this.userID = userID;
     }
@@ -59,8 +59,8 @@ public class RequestTask extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         try {
             if (result != null) {
-                JSONObject jsonObj =   JSONObject.parseObject(result);
-                AuthDataUtils.getInstance().setAuthData(jsonObj,userID);
+                JSONObject jsonObj = JSONObject.parseObject(result);
+                AuthDataUtils.getInstance().setAuthData(jsonObj, userID);
             }
         } catch (Exception e) {
             e.printStackTrace();

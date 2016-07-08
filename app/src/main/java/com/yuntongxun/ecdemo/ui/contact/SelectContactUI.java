@@ -20,7 +20,6 @@ import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
 import com.yuntongxun.ecdemo.common.utils.BitmapUtil;
 import com.yuntongxun.ecdemo.common.utils.CheckUtil;
-import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.common.utils.ToastUtil;
 import com.yuntongxun.ecdemo.core.ECAsyncTask;
 import com.yuntongxun.ecdemo.pojo.ForwardObjectBean;
@@ -38,7 +37,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,7 +46,7 @@ import java.util.List;
 /**
  * Created by luhuashan on 16/3/25.
  */
-public class SelectContactUI  extends ECSuperActivity implements View.OnClickListener {
+public class SelectContactUI extends ECSuperActivity implements View.OnClickListener {
     /**
      * The sub Activity implement, set the Ui Layout
      *
@@ -59,7 +57,7 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
         return R.layout.ec_select_sharecontact_list;
     }
 
-    private  ListView lv;
+    private ListView lv;
 
 
     @Override
@@ -68,23 +66,21 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
         getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt,
                 -1, null, null,
                 "选择转发对象", null, this);
-          initView();
-          url=  getIntent().getStringExtra("url");
-
+        initView();
+        url = getIntent().getStringExtra("url");
 
 
     }
-    private  ForwardObjectBean forwardObjectBean;
-    private AdapterView.OnItemClickListener clickListener =new AdapterView.OnItemClickListener() {
+
+    private ForwardObjectBean forwardObjectBean;
+    private AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-              forwardObjectBean  =  adapter.getItem(position);
-              messageTo=forwardObjectBean.getUserId();
+            forwardObjectBean = adapter.getItem(position);
+            messageTo = forwardObjectBean.getUserId();
 
-                doShareMessage(forwardObjectBean);
-
-
+            doShareMessage(forwardObjectBean);
 
 
         }
@@ -92,14 +88,14 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
 
 
     private void doShareMessage(final ForwardObjectBean bean) {
-        String msg="确定要转发吗";
+        String msg = "确定要转发吗";
         ECAlertDialog buildAlert = ECAlertDialog.buildAlert(this, msg,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                    showCommonProcessDialog("正在转发中...");
-                    new ParseHtmlTask(SelectContactUI.this).execute();
+                        showCommonProcessDialog("正在转发中...");
+                        new ParseHtmlTask(SelectContactUI.this).execute();
 
                     }
                 });
@@ -108,6 +104,7 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
         buildAlert.setTitle(R.string.app_tip);
         buildAlert.show();
     }
+
     private String url;
     private String messageTo;
 
@@ -115,7 +112,7 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
     Document doc = null;
 
 
-    private class ParseHtmlTask extends ECAsyncTask{
+    private class ParseHtmlTask extends ECAsyncTask {
 
 
         public ParseHtmlTask(Context context) {
@@ -132,7 +129,7 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
 //                String htmlString = getHtmlString(url);
 //                doc = Jsoup.parse(htmlString);
 
-                richTextBean=new RichTextBean();
+                richTextBean = new RichTextBean();
                 richTextBean.setUrl(url);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -147,13 +144,11 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
         }
 
 
-
-
         @Override
         protected void onPostExecute(Object o) {
             dismissCommonPostingDialog();
-            if(o!=null&&o instanceof RichTextBean){
-                RichTextBean bean =(RichTextBean)o;
+            if (o != null && o instanceof RichTextBean) {
+                RichTextBean bean = (RichTextBean) o;
                 handleSendMessage(bean);
             }
         }
@@ -191,15 +186,13 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
     }
 
 
-
-
-    private  ForwardContactAdapter adapter;
+    private ForwardContactAdapter adapter;
 
     private void initView() {
-        lv= (ListView) findViewById(R.id.lv_share_contact);
+        lv = (ListView) findViewById(R.id.lv_share_contact);
 
-           ArrayList<ForwardObjectBean> list =getAll();
-        adapter=new ForwardContactAdapter(this,0,list);
+        ArrayList<ForwardObjectBean> list = getAll();
+        adapter = new ForwardContactAdapter(this, 0, list);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(clickListener);
 
@@ -224,12 +217,13 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
     }
 
     RichTextBean richTextBean;
+
     private void getShareBean(Document doc) {
 
         if (null != doc) {
             Elements element = doc.select("[src]");
 
-            if(element!=null&&element.size()>0) {
+            if (element != null && element.size() > 0) {
                 for (Element src : element) {
                     if (src.tagName().equals("img")) {
 
@@ -245,15 +239,15 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
 
             Elements titleArr = doc.getElementsByTag("title");
 
-            if(titleArr!=null&&titleArr.size()>0){
+            if (titleArr != null && titleArr.size() > 0) {
                 String title = doc.getElementsByTag("title").first().text();
                 richTextBean.setTitle(title);
-            }else {
+            } else {
                 richTextBean.setTitle("标题");
             }
 
-            for(Element s :elementMeta){
-                if(s!=null) {
+            for (Element s : elementMeta) {
+                if (s != null) {
                     if (s.hasAttr("name") && s.attr("name").equals("Description")) {
                         richTextBean.setDesc(s.attr("content"));
                         break;
@@ -269,24 +263,23 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
 //                    break;
 //                }
 //            }
-         }
-
         }
 
+    }
 
 
-    private ArrayList<ForwardObjectBean> getAll(){
+    private ArrayList<ForwardObjectBean> getAll() {
 
-        ArrayList<ForwardObjectBean> groupList =   GroupSqlManager.getForwardGroup();
+        ArrayList<ForwardObjectBean> groupList = GroupSqlManager.getForwardGroup();
         ArrayList<ForwardObjectBean> contactList = ContactSqlManager.getForwardContact();
-         ArrayList<ForwardObjectBean> list =new ArrayList<ForwardObjectBean>();
-        if(groupList!=null) {
+        ArrayList<ForwardObjectBean> list = new ArrayList<ForwardObjectBean>();
+        if (groupList != null) {
             list.addAll(groupList);
         }
-        if(contactList!=null) {
+        if (contactList != null) {
             list.addAll(contactList);
         }
-        return  list;
+        return list;
 
     }
 
@@ -326,7 +319,7 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
                 view.setTag(holder);
 
                 holder.name = (TextView) view.findViewById(R.id.contact_name);
-                holder.iv=(ImageView)view.findViewById(R.id.contactitem_avatar_iv);
+                holder.iv = (ImageView) view.findViewById(R.id.contactitem_avatar_iv);
 
             } else {
                 view = convertView;
@@ -337,8 +330,8 @@ public class SelectContactUI  extends ECSuperActivity implements View.OnClickLis
             if (bean != null) {
                 holder.name.setText(bean.getUserName());
                 String userid = bean.getUserId();
-                if(!TextUtils.isEmpty(userid)){
-                    if(userid.startsWith("g")){
+                if (!TextUtils.isEmpty(userid)) {
+                    if (userid.startsWith("g")) {
                         holder.iv.setImageResource(R.drawable.group_head);
                     }
                 }

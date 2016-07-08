@@ -29,7 +29,6 @@ import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ViewHolderTag;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 import com.yuntongxun.ecdemo.ui.settings.WebAboutActivity;
-import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.ECMessage.Direction;
@@ -99,7 +98,7 @@ public class ChattingListClickListener implements View.OnClickListener {
                     return;
                 }
                 MediaPlayTools instance = MediaPlayTools.getInstance();
-                final ChattingListAdapter2 adapterForce = mContext.mChattingFragment.getChattingAdapter();
+                final ChattingListAdapter adapterForce = mContext.mChattingFragment.getChattingAdapter();
                 if (instance.isPlaying()) {
                     instance.stop();
                 }
@@ -178,37 +177,32 @@ public class ChattingListClickListener implements View.OnClickListener {
             case ViewHolderTag.TagType.TAG_IM_REDPACKET:
 
                 JSONObject jsonRedPacket = CheckRedPacketMessageUtil.isRedPacketMessage(iMessage);
-                JSONObject jsonObject=new JSONObject();
-                String toAvatarUrl="none";
-                String toNickName=CCPAppManager.getClientUser().getUserName();
-                toAvatarUrl=TextUtils.isEmpty(toAvatarUrl)?"none":toAvatarUrl;
-                toNickName=TextUtils.isEmpty(toNickName)?CCPAppManager.getClientUser().getUserId():toNickName;
-                jsonObject.put(RedPacketConstant.KEY_TO_AVATAR_URL,toAvatarUrl);
-                jsonObject.put(RedPacketConstant.KEY_TO_NICK_NAME,toNickName);
-                jsonObject.put(RedPacketConstant.KEY_CURRENT_ID,CCPAppManager.getClientUser().getUserId());
+                JSONObject jsonObject = new JSONObject();
+                String toAvatarUrl = "none";
+                String toNickName = CCPAppManager.getClientUser().getUserName();
+                toAvatarUrl = TextUtils.isEmpty(toAvatarUrl) ? "none" : toAvatarUrl;
+                toNickName = TextUtils.isEmpty(toNickName) ? CCPAppManager.getClientUser().getUserId() : toNickName;
+                jsonObject.put(RedPacketConstant.KEY_TO_AVATAR_URL, toAvatarUrl);
+                jsonObject.put(RedPacketConstant.KEY_TO_NICK_NAME, toNickName);
+                jsonObject.put(RedPacketConstant.KEY_CURRENT_ID, CCPAppManager.getClientUser().getUserId());
 
-                if(iMessage.getDirection()==Direction.RECEIVE){
+                if (iMessage.getDirection() == Direction.RECEIVE) {
                     jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT, RPConstant.MESSAGE_DIRECT_RECEIVE);
-                }else{
-                    jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT,RPConstant.MESSAGE_DIRECT_SEND);
+                } else {
+                    jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT, RPConstant.MESSAGE_DIRECT_SEND);
                 }
-                String moneyID=jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);
-                jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID,moneyID)   ;
-                if(mContext.mChattingFragment.isPeerChat()){
-
-                    jsonObject.put("chatType",2);
-                }else {
-
-                    jsonObject.put("chatType",1);
+                String moneyID = jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);
+                jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);
+                if (mContext.mChattingFragment.isPeerChat()) {
+                    jsonObject.put("chatType", 2);
+                } else {
+                    jsonObject.put("chatType", 1);
                 }
-
-
                 String specialAvatarUrl = "none";
                 String specialNickname = "";
                 String packetType = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
                 String specialReceiveId = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID);
                 if (!TextUtils.isEmpty(packetType) && packetType.equals(RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
-
                     ECContacts contact = ContactSqlManager.getContact(specialReceiveId);
                     if (contact != null) {
                         specialNickname = contact.getNickname();
@@ -216,25 +210,19 @@ public class ChattingListClickListener implements View.OnClickListener {
                         specialNickname = specialReceiveId;
                     }
                 }
-                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID,specialReceiveId);
-                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE,packetType);
-                jsonObject.put(RedPacketConstant.KEY_SPECIAL_AVATAR_URL,specialAvatarUrl);
-                jsonObject.put(RedPacketConstant.KEY_SPECIAL_NICK_NAME,specialNickname);
-
-                RedPacketUtil.openRedPacket(mContext,jsonObject,new RedPacketUtil.OpenRedPacketSuccess(){
+                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);
+                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE, packetType);
+                jsonObject.put(RedPacketConstant.KEY_SPECIAL_AVATAR_URL, specialAvatarUrl);
+                jsonObject.put(RedPacketConstant.KEY_SPECIAL_NICK_NAME, specialNickname);
+                RedPacketUtil.openRedPacket(mContext, jsonObject, new RedPacketUtil.OpenRedPacketSuccess() {
 
                     @Override
                     public void onSuccess(String senderId, String senderNickname) {
-                        mContext.mChattingFragment.sendRedPacketAckMessage(senderId,senderNickname);
+                        mContext.mChattingFragment.sendRedPacketAckMessage(senderId, senderNickname);
                     }
                 });
-
-
                 break;
-
             default:
-
-
                 break;
         }
     }

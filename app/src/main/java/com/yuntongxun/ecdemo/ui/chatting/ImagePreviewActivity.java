@@ -32,11 +32,12 @@ import java.io.InvalidClassException;
 
 /**
  * 图片预览
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2015-1-4
  * @version 4.0
+ * @date 2015-1-4
  */
-public class ImagePreviewActivity extends ECSuperActivity implements View.OnClickListener{
+public class ImagePreviewActivity extends ECSuperActivity implements View.OnClickListener {
 
     private static final String TAG = "ECDemo.ImagePreviewActivity";
     private TopBarView mTopBarView;
@@ -76,9 +77,9 @@ public class ImagePreviewActivity extends ECSuperActivity implements View.OnClic
         final String path = ECPreferences.getSharedPreferences().
                 getString(ECPreferenceSettings.SETTINGS_CROPIMAGE_OUTPUTPATH.getId(),
                         (String) ECPreferenceSettings.SETTINGS_CROPIMAGE_OUTPUTPATH.getDefaultValue());
-        if(TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(path)) {
             finish();
-            return ;
+            return;
         }
         mImageView = (PhotoView) findViewById(R.id.image);
         ECHandlerHelper handlerHelper = new ECHandlerHelper();
@@ -96,7 +97,7 @@ public class ImagePreviewActivity extends ECSuperActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bitmap != null && !bitmap.isRecycled()) {
+        if (bitmap != null && !bitmap.isRecycled()) {
             bitmap.recycle();
             bitmap = null;
         }

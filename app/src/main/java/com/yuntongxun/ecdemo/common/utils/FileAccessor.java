@@ -9,13 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.utils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+ */
+package com.yuntongxun.ecdemo.common.utils;
 
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -23,6 +18,12 @@ import android.text.TextUtils;
 
 import com.yuntongxun.ecdemo.ECApplication;
 import com.yuntongxun.ecdemo.R;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * 文件操作工具类
@@ -36,7 +37,7 @@ public class FileAccessor {
     public static final String APPS_ROOT_DIR = getExternalStorePath() + "/ECSDK_Demo";
     public static final String EXPORT_DIR = getExternalStorePath() + "/ECSDK_Demo/ECDemo_IM";
     public static final String CAMERA_PATH = getExternalStorePath() + "/DCIM/ECSDK_Demo";
-    public static final String TACK_PIC_PATH = getExternalStorePath()+ "/ECSDK_Demo/.tempchat";
+    public static final String TACK_PIC_PATH = getExternalStorePath() + "/ECSDK_Demo/.tempchat";
     public static final String IMESSAGE_VOICE = getExternalStorePath() + "/ECSDK_Demo/voice";
     public static final String IMESSAGE_IMAGE = getExternalStorePath() + "/ECSDK_Demo/image";
     public static final String IMESSAGE_AVATAR = getExternalStorePath() + "/ECSDK_Demo/avatar";
@@ -80,29 +81,27 @@ public class FileAccessor {
     }
 
     public static String getAppKey() {
-    	
-    	boolean existCustomServer = ECPreferences.getSharedPreferences().getBoolean(
-				ECPreferenceSettings.SETTINGS_SERVER_CUSTOM.getId(),
-				((Boolean) ECPreferenceSettings.SETTINGS_SERVER_CUSTOM
-						.getDefaultValue()).booleanValue());
-    	
-    	if(existCustomServer){
-    		
-    		return ECPreferences.getSharedPreferences().
+
+        boolean existCustomServer = ECPreferences.getSharedPreferences().getBoolean(
+                ECPreferenceSettings.SETTINGS_SERVER_CUSTOM.getId(),
+                ((Boolean) ECPreferenceSettings.SETTINGS_SERVER_CUSTOM
+                        .getDefaultValue()).booleanValue());
+
+        if (existCustomServer) {
+
+            return ECPreferences.getSharedPreferences().
                     getString(ECPreferenceSettings.SETTINGS_CUSTOM_APPKEY.getId(),
                             (String) ECPreferenceSettings.SETTINGS_CUSTOM_APPKEY.getDefaultValue());
-    	}
-    	
-    	
-    	
-    	
+        }
+
+
         if (isExistExternalStore()) {
             String content = readContentByFile(LOCAL_PATH);
             if (content != null) {
                 try {
                     String result = content.split(",")[0];
-                    if(result != null && result.contains("appkey=")) {
-                        return result.replace("appkey=" , "");
+                    if (result != null && result.contains("appkey=")) {
+                        return result.replace("appkey=", "");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -113,27 +112,27 @@ public class FileAccessor {
     }
 
     public static String getAppToken() {
-    	
-    	
-    	boolean existCustomServer = ECPreferences.getSharedPreferences().getBoolean(
-				ECPreferenceSettings.SETTINGS_SERVER_CUSTOM.getId(),
-				((Boolean) ECPreferenceSettings.SETTINGS_SERVER_CUSTOM
-						.getDefaultValue()).booleanValue());
-    	
-    	if(existCustomServer){
-    		
-    		return ECPreferences.getSharedPreferences().
+
+
+        boolean existCustomServer = ECPreferences.getSharedPreferences().getBoolean(
+                ECPreferenceSettings.SETTINGS_SERVER_CUSTOM.getId(),
+                ((Boolean) ECPreferenceSettings.SETTINGS_SERVER_CUSTOM
+                        .getDefaultValue()).booleanValue());
+
+        if (existCustomServer) {
+
+            return ECPreferences.getSharedPreferences().
                     getString(ECPreferenceSettings.SETTINGS_CUSTOM_TOKEN.getId(),
                             (String) ECPreferenceSettings.SETTINGS_CUSTOM_TOKEN.getDefaultValue());
-    	}
-    	
+        }
+
         if (isExistExternalStore()) {
             String content = readContentByFile(LOCAL_PATH);
             if (content != null) {
                 try {
                     String result = content.split(",")[1];
-                    if(result != null && result.contains("apptoken=")) {
-                        return result.replace("apptoken=" , "");
+                    if (result != null && result.contains("apptoken=")) {
+                        return result.replace("apptoken=", "");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -180,6 +179,7 @@ public class FileAccessor {
 
     /**
      * 获取语音文件存储目录
+     *
      * @return
      */
     public static File getVoicePathName() {
@@ -199,6 +199,7 @@ public class FileAccessor {
 
     /**
      * 头像
+     *
      * @return
      */
     public static File getAvatarPathName() {
@@ -217,9 +218,9 @@ public class FileAccessor {
     }
 
 
-
     /**
      * 获取文件目录
+     *
      * @return
      */
     public static File getFilePathName() {
@@ -239,6 +240,7 @@ public class FileAccessor {
 
     /**
      * 返回图片存放目录
+     *
      * @return
      */
     public static File getImagePathName() {
@@ -258,6 +260,7 @@ public class FileAccessor {
 
     /**
      * 获取文件名
+     *
      * @param pathName
      * @return
      */
@@ -273,6 +276,7 @@ public class FileAccessor {
 
     /**
      * 外置存储卡的路径
+     *
      * @return
      */
     public static String getExternalStorePath() {
@@ -284,6 +288,7 @@ public class FileAccessor {
 
     /**
      * 是否有外存卡
+     *
      * @return
      */
     public static boolean isExistExternalStore() {
@@ -305,27 +310,25 @@ public class FileAccessor {
     }
 
     /**
-     *
      * @param fileName
      * @return
      */
     public static String getFileUrlByFileName(String fileName) {
-        return FileAccessor.IMESSAGE_IMAGE + File.separator + FileAccessor.getSecondLevelDirectory(fileName)+ File.separator + fileName;
+        return FileAccessor.IMESSAGE_IMAGE + File.separator + FileAccessor.getSecondLevelDirectory(fileName) + File.separator + fileName;
     }
 
     /**
-     *
      * @param filePaths
      */
     public static void delFiles(ArrayList<String> filePaths) {
-        for(String url : filePaths) {
-            if(!TextUtils.isEmpty(url))
+        for (String url : filePaths) {
+            if (!TextUtils.isEmpty(url))
                 delFile(url);
         }
     }
 
 
-    public static boolean delFile(String filePath){
+    public static boolean delFile(String filePath) {
         File file = new File(filePath);
         if (file == null || !file.exists()) {
             return true;
@@ -335,12 +338,11 @@ public class FileAccessor {
     }
 
     /**
-     *
      * @param fileName
      * @return
      */
     public static String getSecondLevelDirectory(String fileName) {
-        if(TextUtils.isEmpty(fileName) || fileName.length() < 4) {
+        if (TextUtils.isEmpty(fileName) || fileName.length() < 4) {
             return null;
         }
 
@@ -350,26 +352,25 @@ public class FileAccessor {
     }
 
     /**
-     *
      * @param root
      * @param srcName
      * @param destName
      */
-    public static void renameTo(String root , String srcName , String destName) {
-        if(TextUtils.isEmpty(root) || TextUtils.isEmpty(srcName) || TextUtils.isEmpty(destName)){
+    public static void renameTo(String root, String srcName, String destName) {
+        if (TextUtils.isEmpty(root) || TextUtils.isEmpty(srcName) || TextUtils.isEmpty(destName)) {
             return;
         }
 
         File srcFile = new File(root + srcName);
         File newPath = new File(root + destName);
 
-        if(srcFile.exists()) {
+        if (srcFile.exists()) {
             srcFile.renameTo(newPath);
         }
     }
 
     public static File getTackPicFilePath() {
-        File localFile = new File(getExternalStorePath()+ "/ECSDK_Demo/.tempchat" , "temp.jpg");
+        File localFile = new File(getExternalStorePath() + "/ECSDK_Demo/.tempchat", "temp.jpg");
         if ((!localFile.getParentFile().exists())
                 && (!localFile.getParentFile().mkdirs())) {
             LogUtil.e("hhe", "SD卡不存在");

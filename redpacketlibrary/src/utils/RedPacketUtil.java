@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.easemob.redpacketsdk.bean.AuthData;
@@ -26,7 +27,6 @@ public class RedPacketUtil {
      * @param requestCode
      */
     public static void startRedPacketActivityForResult(Fragment fragment, JSONObject jsonObject, int requestCode) {
-
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_FROM_AVATAR_URL);
         redPacketInfo.fromNickName = jsonObject.getString(RedPacketConstant.KEY_FROM_NICK_NAME);
@@ -37,7 +37,7 @@ public class RedPacketUtil {
             redPacketInfo.chatType = 1;
         } else if (chatType == 2) {
             redPacketInfo.toGroupId = jsonObject.getString(RedPacketConstant.KEY_GROUP_ID);
-            redPacketInfo.groupMemberCount = jsonObject.getInteger(RedPacketConstant.KEY_GROUO_MEMBERS_COUNT);
+            redPacketInfo.groupMemberCount = jsonObject.getInteger(RedPacketConstant.KEY_GROUP_MEMBERS_COUNT);
             redPacketInfo.chatType = 2;
         }
         String currentId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
@@ -101,13 +101,13 @@ public class RedPacketUtil {
 
             @Override
             public void onError(String code, String message) {
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
     public interface OpenRedPacketSuccess {
-
         void onSuccess(String senderId, String senderNickname);
     }
 
@@ -117,7 +117,6 @@ public class RedPacketUtil {
      */
 
     public static void startChangeActivity(FragmentActivity fragmentActivity, String fromNickname, String fromAvatarUrl, String userId) {
-
         Intent intent = new Intent(fragmentActivity, RPChangeActivity.class);
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromNickName = fromNickname;

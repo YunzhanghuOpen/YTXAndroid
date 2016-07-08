@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.base;
+ */
+package com.yuntongxun.ecdemo.common.base;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -26,6 +27,7 @@ public class CCPCustomViewPager extends ViewPager {
      * 控制页面是否可以左右滑动
      */
     private boolean mSlidenabled = true;
+
     /**
      * @param context
      */
@@ -44,14 +46,14 @@ public class CCPCustomViewPager extends ViewPager {
     /**
      * 设置是否可以滑动
      */
-    public final void setSlideEnabled (boolean enabled) {
+    public final void setSlideEnabled(boolean enabled) {
         mSlidenabled = enabled;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
 
-        if(!mSlidenabled) {
+        if (!mSlidenabled) {
             return false;
         }
         return super.onInterceptTouchEvent(arg0);
@@ -60,7 +62,7 @@ public class CCPCustomViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
 
-        if(!mSlidenabled) {
+        if (!mSlidenabled) {
             return false;
         }
         return super.onTouchEvent(arg0);

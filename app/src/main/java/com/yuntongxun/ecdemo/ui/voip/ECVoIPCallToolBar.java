@@ -25,7 +25,7 @@ public class ECVoIPCallToolBar extends LinearLayout {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         View.inflate(getContext(), R.layout.ec_voip_toolbar, this);
     }
 }

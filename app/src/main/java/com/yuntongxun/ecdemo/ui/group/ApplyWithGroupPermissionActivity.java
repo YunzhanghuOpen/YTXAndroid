@@ -36,106 +36,111 @@ import com.yuntongxun.ecsdk.im.ECGroup;
 
 /**
  * 申请加入群组界面
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-31
  * @version 4.0
+ * @date 2014-12-31
  */
 public class ApplyWithGroupPermissionActivity extends ECSuperActivity implements
-		GroupService.Callback ,View.OnClickListener , GroupService.OnApplyGroupCallbackListener{
+        GroupService.Callback, View.OnClickListener, GroupService.OnApplyGroupCallbackListener {
 
     private static final String TAG = "ECDemo.ApplyWithGroupPermissionActivity";
-	/**群组ID*/
-	private ECGroup mGroup;
-	/**群组公告*/
-	private EditText mNotice;
-	String appTitle;
-	/**
-	 * 群组基本信息
-	 */
-	private GroupProfileView mGroupProfileView;
-	private ECProgressDialog mPostingdialog;
-	
-	@Override
-	protected int getLayoutId() {
-		return R.layout.apply_group_activity;
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		String groupId = getIntent().getStringExtra(GroupInfoActivity.GROUP_ID);
-		if(TextUtils.isEmpty(groupId)) {
-			ToastUtil.showMessage("群组ID为空");
-			finish();
-			return ;
-		}
-		
-		initView();
-		mGroup = GroupSqlManager.getECGroup(groupId);
-		syncGroupInf(groupId);
-		GroupService.syncGroupInfo(groupId);
-	}
+    /**
+     * 群组ID
+     */
+    private ECGroup mGroup;
+    /**
+     * 群组公告
+     */
+    private EditText mNotice;
+    String appTitle;
+    /**
+     * 群组基本信息
+     */
+    private GroupProfileView mGroupProfileView;
+    private ECProgressDialog mPostingdialog;
 
-	/**
-	 * 初始化
-	 */
-	private void initView() {
-		mGroupProfileView = (GroupProfileView) findViewById(R.id.group_file);
-		mNotice = (EditText) findViewById(R.id.group_notice);
-		mNotice.setEnabled(false);
-		
-		TextView view = (TextView) findViewById(R.id.red_btn);
-		view.setBackgroundResource(R.drawable.btn_style_red);
-		view.setOnClickListener(this);
-		view.setText(R.string.group_apply_btn);
-	}
-	
-	private void syncGroupInf(String groupId) {
-		mGroup = GroupSqlManager.getECGroup(groupId);
-		if(mGroup == null) {
-			return ;
-		}
+    @Override
+    protected int getLayoutId() {
+        return R.layout.apply_group_activity;
+    }
 
-		if(!TextUtils.isEmpty(mGroup.getName())) {
-			mGroupProfileView.setNameText(appTitle = mGroup.getName());
-			getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt, -1, mGroup.getName(), this);
-		}
-		if(!TextUtils.isEmpty(mGroup.getOwner())) {
-			ECContacts contact = ContactSqlManager.getContact(mGroup.getOwner());
-			if(contact != null) {
-				mGroupProfileView.setOwnerText(contact.getNickname());
-			}
-		}
-		mGroupProfileView.setGroupIdText(DemoUtils.getGroupShortId(mGroup.getGroupId()));
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        String groupId = getIntent().getStringExtra(GroupInfoActivity.GROUP_ID);
+        if (TextUtils.isEmpty(groupId)) {
+            ToastUtil.showMessage("群组ID为空");
+            finish();
+            return;
+        }
+
+        initView();
+        mGroup = GroupSqlManager.getECGroup(groupId);
+        syncGroupInf(groupId);
+        GroupService.syncGroupInfo(groupId);
+    }
+
+    /**
+     * 初始化
+     */
+    private void initView() {
+        mGroupProfileView = (GroupProfileView) findViewById(R.id.group_file);
+        mNotice = (EditText) findViewById(R.id.group_notice);
+        mNotice.setEnabled(false);
+
+        TextView view = (TextView) findViewById(R.id.red_btn);
+        view.setBackgroundResource(R.drawable.btn_style_red);
+        view.setOnClickListener(this);
+        view.setText(R.string.group_apply_btn);
+    }
+
+    private void syncGroupInf(String groupId) {
+        mGroup = GroupSqlManager.getECGroup(groupId);
+        if (mGroup == null) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(mGroup.getName())) {
+            mGroupProfileView.setNameText(appTitle = mGroup.getName());
+            getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt, -1, mGroup.getName(), this);
+        }
+        if (!TextUtils.isEmpty(mGroup.getOwner())) {
+            ECContacts contact = ContactSqlManager.getContact(mGroup.getOwner());
+            if (contact != null) {
+                mGroupProfileView.setOwnerText(contact.getNickname());
+            }
+        }
+        mGroupProfileView.setGroupIdText(DemoUtils.getGroupShortId(mGroup.getGroupId()));
 
 
-		mNotice.setText(mGroup.getDeclare());
-		mNotice.setSelection(mNotice.getText().length());
+        mNotice.setText(mGroup.getDeclare());
+        mNotice.setSelection(mNotice.getText().length());
 
 
-	}
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		GroupService.addListener(this);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GroupService.addListener(this);
+    }
 
-	@Override
-	public void onSyncGroup() {
-		
-	}
+    @Override
+    public void onSyncGroup() {
 
-	@Override
-	public void onSyncGroupInfo(String groupId) {
-		syncGroupInf(groupId);
-	}
+    }
 
-	@Override
-	public void onGroupDel(String groupId) {
-		
-	}
+    @Override
+    public void onSyncGroupInfo(String groupId) {
+        syncGroupInf(groupId);
+    }
+
+    @Override
+    public void onGroupDel(String groupId) {
+
+    }
 
     @Override
     public void onError(ECError error) {
@@ -143,33 +148,33 @@ public class ApplyWithGroupPermissionActivity extends ECSuperActivity implements
     }
 
     @Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.btn_left:
-			hideSoftKeyboard();
-			finish();
-			break;
-		case R.id.red_btn:
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_left:
+                hideSoftKeyboard();
+                finish();
+                break;
+            case R.id.red_btn:
 
-            if(mGroup.getPermission() == ECGroup.Permission.NEED_AUTH) {
-                // 需要权限
-                Intent intent = new Intent(ApplyWithGroupPermissionActivity.this , EditConfigureActivity.class);
-                intent.putExtra("setting_type" , -1);
-                intent.putExtra("edit_title" , "申请理由");
-                startActivityForResult(intent , 0x2a);
-                return ;
-            }
-            applyGroup("");
-			break;
-		default:
-			break;
-		}
-	}
+                if (mGroup.getPermission() == ECGroup.Permission.NEED_AUTH) {
+                    // 需要权限
+                    Intent intent = new Intent(ApplyWithGroupPermissionActivity.this, EditConfigureActivity.class);
+                    intent.putExtra("setting_type", -1);
+                    intent.putExtra("edit_title", "申请理由");
+                    startActivityForResult(intent, 0x2a);
+                    return;
+                }
+                applyGroup("");
+                break;
+            default:
+                break;
+        }
+    }
 
     private void applyGroup(String declare) {
         mPostingdialog = new ECProgressDialog(this, R.string.loading_press);
         mPostingdialog.show();
-        if(TextUtils.isEmpty(declare)) {
+        if (TextUtils.isEmpty(declare)) {
             String userName = CCPAppManager.getClientUser().getUserName();
             declare = getString(R.string.group_apply_reason, userName);
         }
@@ -193,46 +198,45 @@ public class ApplyWithGroupPermissionActivity extends ECSuperActivity implements
             return;
         }
 
-        if(requestCode == 0x2a) {
+        if (requestCode == 0x2a) {
             applyGroup(data.getStringExtra("result_data"));
         }
     }
 
     /**
-	 * 关闭对话框
-	 */
-	private void dismissPostingDialog() {
-		if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-			return ;
-		}
-		mPostingdialog.dismiss();
-		mPostingdialog = null;
-	}
+     * 关闭对话框
+     */
+    private void dismissPostingDialog() {
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
+        }
+        mPostingdialog.dismiss();
+        mPostingdialog = null;
+    }
 
-	@Override
-	public void onApplyGroup(boolean success) {
-		dismissPostingDialog();
-		if(!success) {
-			return ;
-		}
+    @Override
+    public void onApplyGroup(boolean success) {
+        dismissPostingDialog();
+        if (!success) {
+            return;
+        }
 
-        if(mGroup.getPermission() == ECGroup.Permission.AUTO_JOIN) {
-            GroupSqlManager.updateJoinStatus(mGroup.getGroupId() , true);
+        if (mGroup.getPermission() == ECGroup.Permission.AUTO_JOIN) {
+            GroupSqlManager.updateJoinStatus(mGroup.getGroupId(), true);
             // 直接加入
-			CCPAppManager.startChattingAction(ApplyWithGroupPermissionActivity.this ,mGroup.getGroupId() , mGroup.getName() );
+            CCPAppManager.startChattingAction(ApplyWithGroupPermissionActivity.this, mGroup.getGroupId(), mGroup.getName());
         } else {
             ToastUtil.showMessage("申请加入群组" + appTitle + "成功，请等待管理员审核");
         }
-		finish();
-	}
+        finish();
+    }
 
-	@Override
-	public void onUpdateGroupAnonymitySuccess(String groupId,
-			boolean isAnonymity) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onUpdateGroupAnonymitySuccess(String groupId,
+                                              boolean isAnonymity) {
+        // TODO Auto-generated method stub
 
-	
-	
+    }
+
+
 }

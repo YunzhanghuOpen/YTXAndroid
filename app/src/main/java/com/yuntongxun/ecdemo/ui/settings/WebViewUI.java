@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -110,7 +107,7 @@ public class WebViewUI extends ECSuperActivity {
         }
 
         @Override
-        public void onShowCustomView(View view,CustomViewCallback callback) {
+        public void onShowCustomView(View view, CustomViewCallback callback) {
 
             // if a view already exists then immediately terminate the new one
             if (mCustomView != null) {

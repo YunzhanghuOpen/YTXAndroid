@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui;
+ */
+package com.yuntongxun.ecdemo.ui;
 
 import android.view.KeyEvent;
 
@@ -23,7 +24,7 @@ public abstract class TabFragment extends BaseFragment {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             return false;
         }
 

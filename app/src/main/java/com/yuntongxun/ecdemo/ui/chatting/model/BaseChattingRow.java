@@ -29,8 +29,6 @@ import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.contact.ContactDetailActivity;
 import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
-import com.yuntongxun.ecsdk.ECMeetingManager.ECMeetingType;
-import com.yuntongxun.ecsdk.ECMessage.Type;
 import com.yuntongxun.ecsdk.ECMessage;
 
 import java.util.HashMap;
@@ -41,9 +39,10 @@ import java.util.HashMap;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan
- * @date 2014-4-17
  * @version 1.0
+ * @date 2014-4-17
  */
 public abstract class BaseChattingRow implements IChattingRow {
 
@@ -51,36 +50,37 @@ public abstract class BaseChattingRow implements IChattingRow {
     private HashMap<String, String> hashMap = new HashMap<String, String>();
     int mRowType;
 
-    public BaseChattingRow(int  type) {
+    public BaseChattingRow(int type) {
         mRowType = type;
     }
 
     /**
      * 处理消息的发送状态设置
+     *
      * @param position 消息的列表所在位置
-     * @param holder 消息ViewHolder
+     * @param holder   消息ViewHolder
      * @param l
      */
-    protected static void getMsgStateResId(int position , BaseHolder holder , ECMessage msg , View.OnClickListener l){
-        if(msg != null && msg.getDirection() == ECMessage.Direction.SEND) {
+    protected static void getMsgStateResId(int position, BaseHolder holder, ECMessage msg, View.OnClickListener l) {
+        if (msg != null && msg.getDirection() == ECMessage.Direction.SEND) {
             ECMessage.MessageStatus msgStatus = msg.getMsgStatus();
-            if(msgStatus == ECMessage.MessageStatus.FAILED) {
+            if (msgStatus == ECMessage.MessageStatus.FAILED) {
                 holder.getUploadState().setImageResource(R.drawable.msg_state_failed_resend);
                 holder.getUploadState().setVisibility(View.VISIBLE);
-                if(holder.getUploadProgressBar() != null) {
+                if (holder.getUploadProgressBar() != null) {
                     holder.getUploadProgressBar().setVisibility(View.GONE);
                 }
-            } else  if (msgStatus == ECMessage.MessageStatus.SUCCESS || msgStatus == ECMessage.MessageStatus.RECEIVE) {
+            } else if (msgStatus == ECMessage.MessageStatus.SUCCESS || msgStatus == ECMessage.MessageStatus.RECEIVE) {
                 holder.getUploadState().setImageResource(0);
                 holder.getUploadState().setVisibility(View.GONE);
-                if(holder.getUploadProgressBar() != null) {
+                if (holder.getUploadProgressBar() != null) {
                     holder.getUploadProgressBar().setVisibility(View.GONE);
                 }
 
-            } else  if (msgStatus == ECMessage.MessageStatus.SENDING) {
+            } else if (msgStatus == ECMessage.MessageStatus.SENDING) {
                 holder.getUploadState().setImageResource(0);
                 holder.getUploadState().setVisibility(View.GONE);
-                if(holder.getUploadProgressBar() != null) {
+                if (holder.getUploadProgressBar() != null) {
                     holder.getUploadProgressBar().setVisibility(View.VISIBLE);
                 }
 //                if(msg!=null&&msg.getType()==Type.FILE){
@@ -92,60 +92,58 @@ public abstract class BaseChattingRow implements IChattingRow {
 //                }
 
             } else {
-                if(holder.getUploadProgressBar() != null) {
+                if (holder.getUploadProgressBar() != null) {
                     holder.getUploadProgressBar().setVisibility(View.GONE);
                 }
                 LogUtil.d(TAG, "getMsgStateResId: not found this state");
             }
 
-            ViewHolderTag holderTag = ViewHolderTag.createTag(msg, ViewHolderTag.TagType.TAG_RESEND_MSG , position);
+            ViewHolderTag holderTag = ViewHolderTag.createTag(msg, ViewHolderTag.TagType.TAG_RESEND_MSG, position);
             holder.getUploadState().setTag(holderTag);
             holder.getUploadState().setOnClickListener(l);
         }
     }
 
 
-    public void setAutoLinkForTextView(TextView tv){
+    public void setAutoLinkForTextView(TextView tv) {
 
-        if(tv!=null){
-               String text = tv.getText().toString();
-               if(!TextUtils.isEmpty(text)){
-                   if(text.startsWith("http://")||text.startsWith("https://")||text.startsWith("www.")){
-                       tv.setAutoLinkMask(Linkify.WEB_URLS);
-                   }
-               }
+        if (tv != null) {
+            String text = tv.getText().toString();
+            if (!TextUtils.isEmpty(text)) {
+                if (text.startsWith("http://") || text.startsWith("https://") || text.startsWith("www.")) {
+                    tv.setAutoLinkMask(Linkify.WEB_URLS);
+                }
+            }
         }
     }
 
     /**
-     *
      * @param contextMenu
      * @param targetView
      * @param detail
      * @return
      */
-    public abstract boolean onCreateRowContextMenu(ContextMenu contextMenu , View targetView , ECMessage detail);
+    public abstract boolean onCreateRowContextMenu(ContextMenu contextMenu, View targetView, ECMessage detail);
 
 
     /**
-     *
      * @param baseHolder
      * @param displayName
      */
-    public static void setDisplayName(BaseHolder baseHolder , String displayName) {
-        if(baseHolder == null || baseHolder.getChattingUser() == null) {
-            return ;
+    public static void setDisplayName(BaseHolder baseHolder, String displayName) {
+        if (baseHolder == null || baseHolder.getChattingUser() == null) {
+            return;
         }
 
-        if(TextUtils.isEmpty(displayName)) {
+        if (TextUtils.isEmpty(displayName)) {
             baseHolder.getChattingUser().setVisibility(View.GONE);
-            return ;
+            return;
         }
         baseHolder.getChattingUser().setText(displayName);
         baseHolder.getChattingUser().setVisibility(View.VISIBLE);
     }
 
-    protected abstract void buildChattingData(Context context , BaseHolder baseHolder , ECMessage detail , int position);
+    protected abstract void buildChattingData(Context context, BaseHolder baseHolder, ECMessage detail, int position);
 
     @Override
     public void buildChattingBaseData(Context context, BaseHolder baseHolder, ECMessage detail, int position) {
@@ -153,11 +151,11 @@ public abstract class BaseChattingRow implements IChattingRow {
         // 处理其他使用逻辑
         buildChattingData(context, baseHolder, detail, position);
 
-        setContactPhoto(baseHolder , detail);
-        if(((ChattingActivity) context).isPeerChat() && detail.getDirection() == ECMessage.Direction.RECEIVE&& CheckRedPacketMessageUtil.isRedPacketAckedMessage(detail)==null) {
+        setContactPhoto(baseHolder, detail);
+        if (((ChattingActivity) context).isPeerChat() && detail.getDirection() == ECMessage.Direction.RECEIVE && CheckRedPacketMessageUtil.isRedPacketAckMessage(detail) == null) {
             ECContacts contact = ContactSqlManager.getContact(detail.getForm());
-            if(contact != null) {
-                if(TextUtils.isEmpty(contact.getNickname())) {
+            if (contact != null) {
+                if (TextUtils.isEmpty(contact.getNickname())) {
                     contact.setNickname(contact.getContactid());
                 }
                 setDisplayName(baseHolder, contact.getNickname());
@@ -165,17 +163,17 @@ public abstract class BaseChattingRow implements IChattingRow {
                 setDisplayName(baseHolder, detail.getForm());
             }
         }
-        setContactPhotoClickListener(context ,baseHolder , detail);
+        setContactPhotoClickListener(context, baseHolder, detail);
     }
 
-    private void setContactPhotoClickListener(final Context context ,BaseHolder baseHolder, final ECMessage detail) {
-        if(baseHolder.getChattingAvatar() != null && detail != null) {
+    private void setContactPhotoClickListener(final Context context, BaseHolder baseHolder, final ECMessage detail) {
+        if (baseHolder.getChattingAvatar() != null && detail != null) {
             baseHolder.getChattingAvatar().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ECContacts contact = ContactSqlManager.getContact(detail.getForm());
-                    if(contact == null || contact.getId() == -1) {
-                        return ;
+                    if (contact == null || contact.getId() == -1) {
+                        return;
                     }
                     Intent intent = new Intent(context, ContactDetailActivity.class);
                     intent.putExtra(ContactDetailActivity.RAW_ID, contact.getId());
@@ -186,17 +184,17 @@ public abstract class BaseChattingRow implements IChattingRow {
             baseHolder.getChattingAvatar().setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if(context instanceof  ChattingActivity) {
+                    if (context instanceof ChattingActivity) {
                         final ChattingActivity activity = (ChattingActivity) context;
-                        if(activity.isPeerChat() &&  !activity.mChattingFragment.mAtsomeone) {
+                        if (activity.isPeerChat() && !activity.mChattingFragment.mAtsomeone) {
                             activity.mChattingFragment.mAtsomeone = true;
                             // 群组
                             ECContacts contact = ContactSqlManager.getContact(detail.getForm());
-                            if(contact != null) {
-                                if(TextUtils.isEmpty(contact.getNickname() )) {
+                            if (contact != null) {
+                                if (TextUtils.isEmpty(contact.getNickname())) {
                                     contact.setNickname(contact.getContactid());
                                 }
-                                activity.mChattingFragment.getChattingFooter().setLastText(activity.mChattingFragment.getChattingFooter().getLastText() + "@" + contact.getNickname() + (char)(8197));
+                                activity.mChattingFragment.getChattingFooter().setLastText(activity.mChattingFragment.getChattingFooter().getLastText() + "@" + contact.getNickname() + (char) (8197));
                                 activity.mChattingFragment.getChattingFooter().putSomebody(contact);
                                 activity.mChattingFragment.getChattingFooter().setMode(1);
                                 v.postDelayed(new Runnable() {
@@ -204,7 +202,7 @@ public abstract class BaseChattingRow implements IChattingRow {
                                     public void run() {
                                         activity.mChattingFragment.mAtsomeone = false;
                                     }
-                                },2000L);
+                                }, 2000L);
                             }
                         }
                     }
@@ -218,11 +216,12 @@ public abstract class BaseChattingRow implements IChattingRow {
 
     /**
      * 添加用户头像
+     *
      * @param baseHolder
      * @param detail
      */
     private void setContactPhoto(BaseHolder baseHolder, ECMessage detail) {
-        if(baseHolder.getChattingAvatar() != null) {
+        if (baseHolder.getChattingAvatar() != null) {
             try {
                 if (TextUtils.isEmpty(detail.getForm())) {
                     return;

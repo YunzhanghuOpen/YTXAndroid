@@ -34,12 +34,12 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-10
  * @version 4.0
+ * @date 2014-12-10
  */
 public class CCPFlipper extends ViewGroup {
-
 
 
     Interpolator mFLipperInterpolator;
@@ -69,7 +69,7 @@ public class CCPFlipper extends ViewGroup {
     /**
      *
      */
-    private int mLastScreen ;
+    private int mLastScreen;
 
     /**
      * current screen view index.
@@ -112,13 +112,13 @@ public class CCPFlipper extends ViewGroup {
     }
 
     public CCPFlipper(Context context, AttributeSet attrs) {
-        this(context, attrs , 0);
+        this(context, attrs, 0);
 
         initFlipper(context);
     }
 
     public CCPFlipper(Context context) {
-        this(context , null);
+        this(context, null);
 
         initFlipper(context);
     }
@@ -138,7 +138,7 @@ public class CCPFlipper extends ViewGroup {
     /**
      * @param l
      */
-    public void setOnCCPFlipperMeasureListener (OnCCPFlipperMeasureListener l ){
+    public void setOnCCPFlipperMeasureListener(OnCCPFlipperMeasureListener l) {
         this.onCCPFlipperMeasureListener = l;
     }
 
@@ -174,30 +174,30 @@ public class CCPFlipper extends ViewGroup {
      * @param screenIndex
      * @param duration
      */
-    public void processVelocity(int screenIndex , int duration) {
+    public void processVelocity(int screenIndex, int duration) {
 
         int index = Math.max(0, Math.min(screenIndex, getChildCount() - 1));
 
         Scroller scroller = null;
         int unScrollx = 0;
         int scrollx = 0;
-        if(getScrollX() != index * getWidth()) {
+        if (getScrollX() != index * getWidth()) {
 
             unScrollx = index * getWidth() - getScrollX();
             scroller = this.mScroller;
             scrollx = getScrollX();
 
-            if(duration > 0 ) {
+            if (duration > 0) {
                 return;
             }
 
-            int _duration = DensityUtil.round(getContext(), 2 * Math.abs(unScrollx)) ;
-            if(duration > 0 ) {
+            int _duration = DensityUtil.round(getContext(), 2 * Math.abs(unScrollx));
+            if (duration > 0) {
                 _duration = duration;
             }
 
             scroller.startScroll(scrollx, 0, unScrollx, 0, _duration);
-            if(mCurScreen != index) {
+            if (mCurScreen != index) {
                 this.mExecutFlipper = true;
                 this.mToScreen += index - this.mCurScreen;
             }
@@ -220,15 +220,16 @@ public class CCPFlipper extends ViewGroup {
 
     /**
      * Sliding to the specified page
+     *
      * @param index
      */
     public final void slipInto(int index) {
         int maxIndex = Math.max(0, Math.min(index, -1 + getChildCount()));
         mExecutFlipper = false;
-        if(mScroller != null && !mScroller.isFinished()) {
+        if (mScroller != null && !mScroller.isFinished()) {
             mScroller.abortAnimation();
         }
-        if(onFlipperPageListener != null) {
+        if (onFlipperPageListener != null) {
             onFlipperPageListener.onFlipperPage(mLastScreen, maxIndex);
         }
         mLastScreen = mCurScreen;
@@ -250,7 +251,7 @@ public class CCPFlipper extends ViewGroup {
         // Returns true if the animation is not over.
         // Because of the previous startScroll,
         // so only in the completion of startScroll then false
-        if(this.mScroller.computeScrollOffset()) {
+        if (this.mScroller.computeScrollOffset()) {
 
             // The animation effect, according to the current value of each scrolling
             scrollTo(this.mScroller.getCurrX(), this.mScroller.getCurrY());
@@ -258,9 +259,9 @@ public class CCPFlipper extends ViewGroup {
             // At this time also need to refresh the View, otherwise there may be errors
             postInvalidate();
         } else {
-            if(this.mExecutFlipper) {
+            if (this.mExecutFlipper) {
                 this.mExecutFlipper = false;
-                if(this.onFlipperPageListener != null) {
+                if (this.onFlipperPageListener != null) {
                     this.onFlipperPageListener.onFlipperPage(this.mLastScreen, this.mToScreen);
                 }
             }
@@ -270,7 +271,6 @@ public class CCPFlipper extends ViewGroup {
     }
 
     /**
-     *
      * @param enabled
      */
     public void setInterceptTouchEvent(boolean enabled) {
@@ -281,7 +281,7 @@ public class CCPFlipper extends ViewGroup {
      * release the velocityTracker
      */
     void releaseVelocityTracker() {
-        if(null != this.mTracker) {
+        if (null != this.mTracker) {
             this.mTracker.clear();
             this.mTracker.recycle();
             this.mTracker = null;
@@ -297,14 +297,15 @@ public class CCPFlipper extends ViewGroup {
     /**
      * Implement this method to intercept hover events before they are handled
      * by child views.
+     *
      * @return True if the view group would like to intercept the hover event
-     * 			and prevent its children from receiving it.
+     * and prevent its children from receiving it.
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 
-        if(!mEnabled) {
+        if (!mEnabled) {
             return super.onInterceptTouchEvent(ev);
         }
 
@@ -315,7 +316,7 @@ public class CCPFlipper extends ViewGroup {
             return true;
         }
 
-        if(getChildCount() != 1) {
+        if (getChildCount() != 1) {
             int action = ev.getAction();
             //if(action != MotionEvent.ACTION_MOVE) {
 
@@ -335,8 +336,8 @@ public class CCPFlipper extends ViewGroup {
                     // Judge ACTION_MOVE events between mobile X coordinate space
                     int distanceX = (int) Math.abs(this.mTouchX - x);
                     int distanceY = (int) Math.abs(this.mTouchY - y);
-                    LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class),  "xDif = " + distanceX + ", yDif = " + distanceY);
-                    if((distanceX > this.minScaledTouchSlop) && (distanceY < this.minScaledTouchSlop)) {
+                    LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class), "xDif = " + distanceX + ", yDif = " + distanceY);
+                    if ((distanceX > this.minScaledTouchSlop) && (distanceY < this.minScaledTouchSlop)) {
                         LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class),
                                 "CCPFlipper.onInterceptHoverEvent distanceX:"
                                         + distanceX + " , distanceY:"
@@ -366,8 +367,8 @@ public class CCPFlipper extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(getChildCount() != 1) {
-            if(mTracker == null) {
+        if (getChildCount() != 1) {
+            if (mTracker == null) {
                 // Returns a new VelocityTracker.
                 mTracker = VelocityTracker.obtain();
             }
@@ -380,7 +381,7 @@ public class CCPFlipper extends ViewGroup {
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
 
-                    if(mScroller != null
+                    if (mScroller != null
                             && !mScroller.isFinished()) {
                         // stop the Flipper animation.
                         mScroller.abortAnimation();
@@ -406,9 +407,9 @@ public class CCPFlipper extends ViewGroup {
                     int xVelocity = (int) tracker.getXVelocity();
 
                     // when the X axis sliding speed is greater than 600, and mCurScreen > 0
-                    if((xVelocity > 600) && (this.mCurScreen > 0)) {
+                    if ((xVelocity > 600) && (this.mCurScreen > 0)) {
                         // mobile picture to the left
-                        processVelocity(this.mCurScreen - 1 , -1);
+                        processVelocity(this.mCurScreen - 1, -1);
 
                     } else if ((xVelocity < -600) && (this.mCurScreen < getChildCount() - 1)) {
                         // Move to the right of the picture
@@ -436,11 +437,11 @@ public class CCPFlipper extends ViewGroup {
         long elapsedRealtime = SystemClock.elapsedRealtime();
         int childCount = getChildCount();
         int left = 0;
-        for(int k = 0 ; k < childCount; k ++ ) {
+        for (int k = 0; k < childCount; k++) {
             View view = getChildAt(k);
-            if(view != null && view.getVisibility() != View.GONE) {
+            if (view != null && view.getVisibility() != View.GONE) {
                 int measuredWidth = view.getMeasuredWidth();
-                LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class),  "CCPFlipper onLayout childWidth : " + measuredWidth);
+                LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class), "CCPFlipper onLayout childWidth : " + measuredWidth);
                 view.layout(left, 0, left + measuredWidth, view.getMeasuredHeight());
 
                 left += measuredWidth;
@@ -448,7 +449,7 @@ public class CCPFlipper extends ViewGroup {
         }
 
         long curElapsedRealtime = SystemClock.elapsedRealtime();
-        LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class),  "CCPFlipper.onLayout use " + (curElapsedRealtime - elapsedRealtime)
+        LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class), "CCPFlipper.onLayout use " + (curElapsedRealtime - elapsedRealtime)
                 + " ms, CCPFlipper onLayout changed:" + changed
                 + " Left,Top,Right,Bottom:" + l + "," + t + "," + r + "," + b);
     }
@@ -469,17 +470,17 @@ public class CCPFlipper extends ViewGroup {
             throw new IllegalStateException("CCPFlipper.onMeasure error mode");
         }
 
-        if(this.onCCPFlipperMeasureListener != null) {
+        if (this.onCCPFlipperMeasureListener != null) {
             this.onCCPFlipperMeasureListener.onCCPFlipperMeasure(sizeWidth, sizeHeight);
         }
 
         int childCount = getChildCount();
-        for(int index = 0 ; index < childCount ; index ++) {
+        for (int index = 0; index < childCount; index++) {
             getChildAt(index).measure(widthMeasureSpec, heightMeasureSpec);
         }
         scrollTo(sizeWidth * mCurScreen, 0);
         long curElapsedRealtime = SystemClock.elapsedRealtime();
-        LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class),  "CCPFlipper onMeasure:" + sizeWidth
+        LogUtil.d(LogUtil.getLogUtilsTag(CCPFlipper.class), "CCPFlipper onMeasure:" + sizeWidth
                 + "," + MeasureSpec.getSize(heightMeasureSpec)
                 + " childCount:" + childCount + ", use "
                 + (curElapsedRealtime - elapsedRealtime));
@@ -487,11 +488,11 @@ public class CCPFlipper extends ViewGroup {
 
 
     /**
-     *
      * <p>Title: FlipperInterpolator</p>
      * <p>Description: An interpolator where the change dot then Slide the spring back effect. </p>
      * <p>Company: http://www.cloopen.com/</p>
-     * @author  Jorstin Chan
+     *
+     * @author Jorstin Chan
      * @version 3.6
      * @date 2013-12-24
      */
@@ -516,19 +517,20 @@ public class CCPFlipper extends ViewGroup {
      * should be overriden by subclasses to provide accurate and efficient
      * measurement of their contents.</p>
      * <p>Company: http://www.cloopen.com/</p>
-     * @author  Jorstin Chan
+     *
+     * @author Jorstin Chan
      * @version 3.6
      * @date 2013-12-24
      */
     public abstract interface OnCCPFlipperMeasureListener {
 
         /**
-         * @param widthMeasureSpec horizontal space requirements as imposed by the parent.
-         *                         The requirements are encoded with
-         *                         {@link android.view.View.MeasureSpec}.
+         * @param widthMeasureSpec  horizontal space requirements as imposed by the parent.
+         *                          The requirements are encoded with
+         *                          {@link android.view.View.MeasureSpec}.
          * @param heightMeasureSpec vertical space requirements as imposed by the parent.
-         *                         The requirements are encoded with
-         *                         {@link android.view.View.MeasureSpec}.
+         *                          The requirements are encoded with
+         *                          {@link android.view.View.MeasureSpec}.
          */
         public abstract void onCCPFlipperMeasure(int widthMeasureSpec, int heightMeasureSpec);
     }
@@ -537,7 +539,8 @@ public class CCPFlipper extends ViewGroup {
      * <p>Title: OnFlipperPageListener</p>
      * <p>Description: </p>
      * <p>Company: http://www.cloopen.com/</p>
-     * @author  Jorstin Chan
+     *
+     * @author Jorstin Chan
      * @version 3.6
      * @date 2013-12-24
      */

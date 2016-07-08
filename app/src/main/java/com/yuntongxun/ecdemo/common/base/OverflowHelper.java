@@ -32,15 +32,25 @@ import com.yuntongxun.ecdemo.common.view.PopupMenuListView;
 public class OverflowHelper {
 
     private Context mContext;
-    /**菜单承载区域View*/
+    /**
+     * 菜单承载区域View
+     */
     private PopupWindow mPopupWindow;
-    /**菜单选项*/
+    /**
+     * 菜单选项
+     */
     private LinearLayout mPopupLayout;
-    /**下拉菜单显示区域*/
+    /**
+     * 下拉菜单显示区域
+     */
     private PopupMenuListView mListView;
-    /**下拉菜单数据适配器*/
+    /**
+     * 下拉菜单数据适配器
+     */
     private OverflowAdapter mAdapter;
-    /**菜单颜色状态*/
+    /**
+     * 菜单颜色状态
+     */
     private int mNormalColor;
     private int mDisabledColor;
 
@@ -64,22 +74,24 @@ public class OverflowHelper {
 
     /**
      * 显示菜单
+     *
      * @param anchor
      * @param xoff
      * @param yoff
      */
-    public void showAsDropDown(View anchor , float xoff ,float yoff) {
+    public void showAsDropDown(View anchor, float xoff, float yoff) {
         mPopupWindow.showAsDropDown(anchor, DensityUtil.dip2px(xoff), DensityUtil.dip2px(yoff));
     }
 
     public void showAsDropDown(View anchor) {
-        if(mPopupWindow!=null&&anchor!=null) {
+        if (mPopupWindow != null && anchor != null) {
             mPopupWindow.showAsDropDown(anchor, DensityUtil.dip2px(0.0F), DensityUtil.dip2px(-11.0F));
         }
     }
 
     /**
      * 这是点击事件监听
+     *
      * @param itemClickListener
      */
     public void setOnOverflowItemClickListener(AdapterView.OnItemClickListener itemClickListener) {
@@ -88,6 +100,7 @@ public class OverflowHelper {
 
     /**
      * 设置菜单显示数据
+     *
      * @param items
      */
     public void setOverflowItems(OverflowAdapter.OverflowItem[] items) {
@@ -101,6 +114,7 @@ public class OverflowHelper {
 
     /**
      * 是否菜单显示
+     *
      * @return
      */
     public boolean isOverflowShowing() {
@@ -111,8 +125,8 @@ public class OverflowHelper {
      * 关闭菜单
      */
     public void dismiss() {
-        if(!mPopupWindow.isShowing()) {
-            return ;
+        if (!mPopupWindow.isShowing()) {
+            return;
         }
         mPopupWindow.dismiss();
     }
@@ -137,7 +151,7 @@ public class OverflowHelper {
 
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if(event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() != KeyEvent.ACTION_DOWN) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() != KeyEvent.ACTION_DOWN) {
                 return false;
             }
             dismiss();

@@ -34,194 +34,191 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan
- * @date 2014-8-16
  * @version 1.0
+ * @date 2014-8-16
  */
 public class CCPFormInputView extends LinearLayout {
 
-	public static final String TAG = "ECDemo.CCPFormInputView";
+    public static final String TAG = "ECDemo.CCPFormInputView";
 
-	private Context mContext;
-	private TextView mTitleView;
-	private EditText mContentEditText;
-	private int mLayout = -1;
-	private CharSequence mTitle;
-	private CharSequence mHint;
+    private Context mContext;
+    private TextView mTitleView;
+    private EditText mContentEditText;
+    private int mLayout = -1;
+    private CharSequence mTitle;
+    private CharSequence mHint;
 
-	private OnFocusChangeListener mOnFocusChangeListener;
+    private OnFocusChangeListener mOnFocusChangeListener;
 
-	/**
-	 * @param context
-	 */
-	public CCPFormInputView(Context context) {
-		super(context);
-		mContext = null;
-		mOnFocusChangeListener = null;
-		mLayout = -1;
-		mContext = context;
-	}
+    /**
+     * @param context
+     */
+    public CCPFormInputView(Context context) {
+        super(context);
+        mContext = null;
+        mOnFocusChangeListener = null;
+        mLayout = -1;
+        mContext = context;
+    }
 
-	/**
-	 * @param context
-	 * @param attrs
-	 */
-	public CCPFormInputView(Context context, AttributeSet attrs) {
-		this(context, attrs , -1);
-	}
+    /**
+     * @param context
+     * @param attrs
+     */
+    public CCPFormInputView(Context context, AttributeSet attrs) {
+        this(context, attrs, -1);
+    }
 
-	/**
-	 * @param context
-	 * @param attrs
-	 * @param defStyle
-	 */
-	@TargetApi(VERSION_CODES.HONEYCOMB)
-	public CCPFormInputView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs);
-		mContext = null;
-		mLayout = -1;
-		mOnFocusChangeListener = null;
+    /**
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
+    @TargetApi(VERSION_CODES.HONEYCOMB)
+    public CCPFormInputView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs);
+        mContext = null;
+        mLayout = -1;
+        mOnFocusChangeListener = null;
 
-		if(isInEditMode()) {
-			return ;
-		}
-		TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, R.styleable.form_input, defStyle, 0);
-		mTitle = obtainStyledAttributes.getString(R.styleable.form_input_form_title);
-		mHint = obtainStyledAttributes.getString(R.styleable.form_input_form_hint);
-		mLayout = obtainStyledAttributes.getResourceId(R.styleable.form_input_form_layout , mLayout);
-		obtainStyledAttributes.recycle();
-		inflate(context, mLayout, this);
-		mContext = context;
-	}
+        if (isInEditMode()) {
+            return;
+        }
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, R.styleable.form_input, defStyle, 0);
+        mTitle = obtainStyledAttributes.getString(R.styleable.form_input_form_title);
+        mHint = obtainStyledAttributes.getString(R.styleable.form_input_form_hint);
+        mLayout = obtainStyledAttributes.getResourceId(R.styleable.form_input_form_layout, mLayout);
+        obtainStyledAttributes.recycle();
+        inflate(context, mLayout, this);
+        mContext = context;
+    }
 
-	/**
-	 *
-	 * @param l
-	 */
-	public void setOnFormInputViewFocusChangeListener(OnFocusChangeListener l) {
-		mOnFocusChangeListener = l;
-	}
+    /**
+     * @param l
+     */
+    public void setOnFormInputViewFocusChangeListener(OnFocusChangeListener l) {
+        mOnFocusChangeListener = l;
+    }
 
-	/**
-	 * Change the editor type integer associated with the text view, which
-	 * will be reported to an IME with {@link android.view.inputmethod.EditorInfo#imeOptions} when it
-	 * has focus.
-	 */
-	public void setFormInputViewImeOptions() {
-		if(mContentEditText != null) {
-			mContentEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-			return ;
-		}
-		LogUtil.e(TAG, "mContentEditText is null");
-	}
+    /**
+     * Change the editor type integer associated with the text view, which
+     * will be reported to an IME with {@link android.view.inputmethod.EditorInfo#imeOptions} when it
+     * has focus.
+     */
+    public void setFormInputViewImeOptions() {
+        if (mContentEditText != null) {
+            mContentEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            return;
+        }
+        LogUtil.e(TAG, "mContentEditText is null");
+    }
 
-	/**
-	 *
-	 */
-	public void setFormInputViewInputTypeForPhone() {
-		if(mContentEditText != null) {
-			mContentEditText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
-			return ;
-		}
-		LogUtil.e(TAG, "mContentEditText is null");
-	}
+    /**
+     *
+     */
+    public void setFormInputViewInputTypeForPhone() {
+        if (mContentEditText != null) {
+            mContentEditText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
+            return;
+        }
+        LogUtil.e(TAG, "mContentEditText is null");
+    }
 
-	public EditText getFormInputEditView() {
-		return mContentEditText;
-	}
+    public EditText getFormInputEditView() {
+        return mContentEditText;
+    }
 
-	/**
-	 *
-	 * @param textWatcher
-	 */
-	public void addTextChangedListener(TextWatcher textWatcher) {
+    /**
+     * @param textWatcher
+     */
+    public void addTextChangedListener(TextWatcher textWatcher) {
 
-		if(mContentEditText != null) {
-			mContentEditText.addTextChangedListener(textWatcher);
-			return ;
-		}
-		LogUtil.w(TAG, "watcher : " + textWatcher + " ,mContentEditText : " + mContentEditText);
-	}
+        if (mContentEditText != null) {
+            mContentEditText.addTextChangedListener(textWatcher);
+            return;
+        }
+        LogUtil.w(TAG, "watcher : " + textWatcher + " ,mContentEditText : " + mContentEditText);
+    }
 
-	/**
-	 *
-	 * @return
-	 */
-	public Editable getText() {
-		if(mContentEditText != null) {
-			return mContentEditText.getText();
-		}
+    /**
+     * @return
+     */
+    public Editable getText() {
+        if (mContentEditText != null) {
+            return mContentEditText.getText();
+        }
 
-		LogUtil.e(TAG, "mContentEditText is null");
-		return null;
-	}
+        LogUtil.e(TAG, "mContentEditText is null");
+        return null;
+    }
 
-	@Override
-	public boolean isInEditMode() {
-		return super.isInEditMode();
-	}
+    @Override
+    public boolean isInEditMode() {
+        return super.isInEditMode();
+    }
 
-	/**
-	 *
-	 * @param text
-	 */
-	public void setText(CharSequence text) {
-		if(mContentEditText != null) {
-			mContentEditText.setText(text);
-		}
+    /**
+     * @param text
+     */
+    public void setText(CharSequence text) {
+        if (mContentEditText != null) {
+            mContentEditText.setText(text);
+        }
 
-		LogUtil.e(TAG, "mContentEditText is null");
-	}
+        LogUtil.e(TAG, "mContentEditText is null");
+    }
 
-	public void setInputTitle(CharSequence text) {
-		if(mTitleView != null) {
-			mTitleView.setText(text);
-		}
-	}
+    public void setInputTitle(CharSequence text) {
+        if (mTitleView != null) {
+            mTitleView.setText(text);
+        }
+    }
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
 
-		mTitleView = (TextView) findViewById(R.id.title);
-		mContentEditText = (EditText) findViewById(R.id.edittext);
+        mTitleView = (TextView) findViewById(R.id.title);
+        mContentEditText = (EditText) findViewById(R.id.edittext);
 
-		if(mTitleView == null || mContentEditText == null) {
-			if(!isInEditMode()) {
-				LogUtil.w(TAG, "mTitleView: " + mTitleView + " ,mContentEditText: " + mContentEditText);
-			}
-		} else {
-			if (mContentEditText != null ) {
-				mContentEditText.setOnFocusChangeListener(new  OnFocusChangeListener() {
+        if (mTitleView == null || mContentEditText == null) {
+            if (!isInEditMode()) {
+                LogUtil.w(TAG, "mTitleView: " + mTitleView + " ,mContentEditText: " + mContentEditText);
+            }
+        } else {
+            if (mContentEditText != null) {
+                mContentEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
 
-						if(v == mContentEditText) {
-							if(hasFocus) {
-								setBackgroundResource(R.drawable.input_bar_bg_active);
-							} else {
-								setBackgroundResource(R.drawable.input_bar_bg_normal);
-							}
+                        if (v == mContentEditText) {
+                            if (hasFocus) {
+                                setBackgroundResource(R.drawable.input_bar_bg_active);
+                            } else {
+                                setBackgroundResource(R.drawable.input_bar_bg_normal);
+                            }
 
-							if(mOnFocusChangeListener != null) {
-								mOnFocusChangeListener.onFocusChange(v, hasFocus);
-							}
-						}
-					}
-				});
-			}
+                            if (mOnFocusChangeListener != null) {
+                                mOnFocusChangeListener.onFocusChange(v, hasFocus);
+                            }
+                        }
+                    }
+                });
+            }
 
-			if(mTitle != null) {
-				mTitleView.setText(mTitle);
-			}
+            if (mTitle != null) {
+                mTitleView.setText(mTitle);
+            }
 
-			if(mHint != null) {
-				mContentEditText.setHint(mHint);
-			}
-		}
+            if (mHint != null) {
+                mContentEditText.setHint(mHint);
+            }
+        }
 
 
-	}
+    }
 
 }

@@ -10,7 +10,7 @@ import java.util.Arrays;
  * com.yuntongxun.ecdemo.ui.contact in ECDemo_Android
  * Created by Jorstin on 2015/3/21.
  */
-public class CustomSectionIndexer  implements SectionIndexer {
+public class CustomSectionIndexer implements SectionIndexer {
     private final String[] mSections;//
     private final int[] mPositions;
     private final int mCount;
@@ -31,7 +31,7 @@ public class CustomSectionIndexer  implements SectionIndexer {
         mPositions = new int[counts.length];
         int position = 0;
         for (int i = 0; i < counts.length; i++) {
-            if(mSections[i] == null) {
+            if (mSections[i] == null) {
                 mSections[i] = "";
             } else {
                 mSections[i] = mSections[i].trim();

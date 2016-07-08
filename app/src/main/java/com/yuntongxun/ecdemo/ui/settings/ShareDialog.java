@@ -1,4 +1,5 @@
 package com.yuntongxun.ecdemo.ui.settings;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -21,8 +22,8 @@ public class ShareDialog {
     private GridView gridView;
     private RelativeLayout cancelButton;
     private SimpleAdapter saImageItems;
-    private int[] image = {R.drawable.share_wechat,R.drawable.share_wechat_moments};
-    private String[] name = { "微信好友", "微信朋友圈"};
+    private int[] image = {R.drawable.share_wechat, R.drawable.share_wechat_moments};
+    private String[] name = {"微信好友", "微信朋友圈"};
 
     public ShareDialog(Context context) {
 

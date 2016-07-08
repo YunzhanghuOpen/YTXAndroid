@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.utils;
+ */
+package com.yuntongxun.ecdemo.common.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -28,7 +29,6 @@ public class DensityUtil {
     private static float density = -1.0F;
 
     /**
-     *
      * @param context
      * @param pixels
      * @return
@@ -40,33 +40,35 @@ public class DensityUtil {
     }
 
 
-    public static int getImageWeidth(Context context , float pixels) {
+    public static int getImageWeidth(Context context, float pixels) {
         LogUtil.e("screen width " + context.getResources().getDisplayMetrics().widthPixels);
         return context.getResources().getDisplayMetrics().widthPixels - 66 - getDisplayMetrics(context, pixels);
     }
 
     /**
      * 像素转化dip
+     *
      * @param context
      * @param pxValue
      * @return
      */
-    public static int px2dip(Context context, float pxValue){
+    public static int px2dip(Context context, float pxValue) {
 
         final float scale = context.getResources().getDisplayMetrics().density;
 
-        return (int)(pxValue / scale + 0.5f);
+        return (int) (pxValue / scale + 0.5f);
 
     }
 
     /**
      * dip转化像素
+     *
      * @param dipValue
      * @return
      */
-    public static int dip2px(float dipValue){
+    public static int dip2px(float dipValue) {
         final float scale = Resources.getSystem().getDisplayMetrics().density;
-        return (int)(dipValue * scale + 0.5f);
+        return (int) (dipValue * scale + 0.5f);
 
     }
 
@@ -75,7 +77,7 @@ public class DensityUtil {
      * @param height
      * @return
      */
-    public static int getMetricsDensity(Context context , float height) {
+    public static int getMetricsDensity(Context context, float height) {
         DisplayMetrics localDisplayMetrics = new DisplayMetrics();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
                 .getDefaultDisplay().getMetrics(localDisplayMetrics);

@@ -47,7 +47,7 @@ public class RedPacketAckRxRow extends BaseChattingRow {
         if (message != null) {
 
             if (message.getType() == ECMessage.Type.TXT) {
-                JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketAckedMessage(message);
+                JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketAckMessage(message);
                 if (jsonObject != null) {
                     holder.getChattingAvatar().setVisibility(View.GONE);
                     holder.getChattingUser().setVisibility(View.GONE);
@@ -71,7 +71,7 @@ public class RedPacketAckRxRow extends BaseChattingRow {
                         text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
 
                     }
-                    holder.getMoneyMsgTv().setText(text);
+                    holder.getRedPacketAckMsgTv().setText(text);
 
                 }
 

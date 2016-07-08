@@ -74,8 +74,8 @@ public class ShowMaxImageView extends ImageView {
     }
 
     private void getHeight(Bitmap bm) {
-        if(bm == null) {
-            return ;
+        if (bm == null) {
+            return;
         }
 
         float bitmapWidth = bm.getWidth();

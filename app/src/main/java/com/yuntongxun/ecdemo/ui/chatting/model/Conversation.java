@@ -20,8 +20,8 @@ import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 
 /**
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-13
  * @version 4.0
+ * @date 2014-12-13
  */
 public class Conversation {
 
@@ -34,12 +34,14 @@ public class Conversation {
     private String username;
     private String contactId;
     private boolean isNotice;
+
     /**
      * @return the sessionId
      */
     public String getSessionId() {
         return sessionId;
     }
+
     /**
      * @param sessionId the sessionId to set
      */
@@ -53,66 +55,77 @@ public class Conversation {
     public int getMsgType() {
         return msgType;
     }
+
     /**
      * @param msgType the msgType to set
      */
     public void setMsgType(int msgType) {
         this.msgType = msgType;
     }
+
     /**
      * @return the dateTime
      */
     public long getDateTime() {
         return dateTime;
     }
+
     /**
      * @param dateTime the dateTime to set
      */
     public void setDateTime(long dateTime) {
         this.dateTime = dateTime;
     }
+
     /**
      * @return the sendStatus
      */
     public int getSendStatus() {
         return sendStatus;
     }
+
     /**
      * @param sendStatus the sendStatus to set
      */
     public void setSendStatus(int sendStatus) {
         this.sendStatus = sendStatus;
     }
+
     /**
      * @return the unreadCount
      */
     public int getUnreadCount() {
         return unreadCount;
     }
+
     /**
      * @param unreadCount the unreadCount to set
      */
     public void setUnreadCount(int unreadCount) {
         this.unreadCount = unreadCount;
     }
+
     /**
      * @return the content
      */
     public String getContent() {
         return content;
     }
+
     /**
      * @param content the content to set
      */
     public void setContent(String content) {
         this.content = content;
     }
+
     /**
      * @return the username
      */
     public String getUsername() {
         return username;
     }
+
     /**
      * @param username the username to set
      */
@@ -145,19 +158,19 @@ public class Conversation {
         this.content = cursor.getString(5);
         this.username = cursor.getString(6);
 
-        if(this.sessionId.toLowerCase().startsWith("g")) {
+        if (this.sessionId.toLowerCase().startsWith("g")) {
             this.username = cursor.getString(7);
         }
-        if(this.username == null && !this.sessionId.toUpperCase().startsWith("G")) {
+        if (this.username == null && !this.sessionId.toUpperCase().startsWith("G")) {
             ECContacts contacts = ContactSqlManager.getCacheContact(sessionId);
-            if(contacts != null) {
+            if (contacts != null) {
                 username = contacts.getNickname();
             } else {
                 username = sessionId;
             }
         }
-        if(TextUtils.isEmpty(this.username)) {
-            this.username  = sessionId;
+        if (TextUtils.isEmpty(this.username)) {
+            this.username = sessionId;
         }
         this.contactId = cursor.getString(8);
         this.isNotice = !(cursor.getInt(9) == 2);

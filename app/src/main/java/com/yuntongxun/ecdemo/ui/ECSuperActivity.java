@@ -1,9 +1,6 @@
 package com.yuntongxun.ecdemo.ui;
 
-import java.util.Set;
-
 import android.app.Activity;
-
 import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,11 +25,13 @@ import com.yuntongxun.ecdemo.common.utils.CrashHandler;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.common.view.TopBarView;
 
+import java.util.Set;
+
 /**
  * Created by Jorstin on 2015/3/17.
  */
 @ActivityTransition(0)
-public abstract class ECSuperActivity extends ECFragmentActivity implements GestureDetector.OnGestureListener{
+public abstract class ECSuperActivity extends ECFragmentActivity implements GestureDetector.OnGestureListener {
 
     private static final String TAG = ECSuperActivity.class.getSimpleName();
     /**
@@ -49,7 +48,9 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
     private boolean mIsChildScrolling = false;
     private int mMinExitScrollX = 0;
 
-    /**屏幕资源*/
+    /**
+     * 屏幕资源
+     */
     private KeyguardManager.KeyguardLock mKeyguardLock = null;
     private KeyguardManager mKeyguardManager = null;
     private PowerManager.WakeLock mWakeLock;
@@ -65,7 +66,6 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
         onActivityCreate();
     }
-
 
 
     /**
@@ -87,7 +87,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
      */
     protected void initProwerManager() {
         mWakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP , "CALL_ACTIVITY#" + super.getClass().getName());
+                PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "CALL_ACTIVITY#" + super.getClass().getName());
         mKeyguardManager = ((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE));
     }
 
@@ -127,15 +127,17 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
         registerReceiver(internalReceiver, intentfilter);
     }
 
-   
 
     /**
      * The sub Activity implement, set the Ui Layout
+     *
      * @return
      */
     protected abstract int getLayoutId();
+
     /**
      * 子类重载该方法自定义标题布局文件
+     *
      * @return
      */
     public int getTitleLayout() {
@@ -148,15 +150,16 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
     /**
      * 如果子界面需要拦截处理注册的广播
      * 需要实现该方法
+     *
      * @param context
      * @param intent
      */
     protected void handleReceiver(Context context, Intent intent) {
         // 广播处理
-        if(intent == null ) {
-            return ;
+        if (intent == null) {
+            return;
         }
-        if(SDKCoreHelper.ACTION_KICK_OFF.equals(intent.getAction())) {
+        if (SDKCoreHelper.ACTION_KICK_OFF.equals(intent.getAction())) {
             finish();
         }
     }
@@ -211,7 +214,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(mBaseActivity.onKeyDown(keyCode, event)) {
+        if (mBaseActivity.onKeyDown(keyCode, event)) {
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -220,7 +223,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if(mBaseActivity.onKeyUp(keyCode, event)) {
+        if (mBaseActivity.onKeyUp(keyCode, event)) {
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -238,10 +241,11 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     /**
      * 跳转
+     *
      * @param clazz
      * @param intent
      */
-    protected void startCCPActivity(Class<? extends Activity> clazz , Intent intent) {
+    protected void startCCPActivity(Class<? extends Activity> clazz, Intent intent) {
         intent.setClass(this, clazz);
         startActivity(intent);
     }
@@ -252,15 +256,15 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent == null || intent.getAction() == null ) {
-                return ;
+            if (intent == null || intent.getAction() == null) {
+                return;
             }
             handleReceiver(context, intent);
         }
     }
 
     public Activity getActivitContext() {
-        if(getParent() != null) {
+        if (getParent() != null) {
             return getParent();
         }
         return null;
@@ -272,6 +276,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     /**
      * 设置ActionBar标题
+     *
      * @param resid
      */
     public void setActionBarTitle(int resid) {
@@ -280,6 +285,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     /**
      * 设置ActionBar标题
+     *
      * @param text
      */
     public void setActionBarTitle(CharSequence text) {
@@ -288,6 +294,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     /**
      * 返回ActionBar 标题
+     *
      * @return
      */
     public final CharSequence getActionBarTitle() {
@@ -296,6 +303,7 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
 
     /**
      * #getLayoutId()
+     *
      * @return
      */
     public View getActivityLayoutView() {
@@ -379,20 +387,19 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
             return false;
         }
         this.mIsHorizontalScrolling = true;
-        if(e1 == null || e2 == null) {
+        if (e1 == null || e2 == null) {
             return false;
         }
         float f1 = 0.0F;
         if (!(this.mIsChildScrolling)) {
-            if(e1 != null) {
+            if (e1 != null) {
                 f1 = e1.getX();
             }
             float f2 = 0.0F;
             if (e2 != null) {
                 f2 = e2.getX();
             }
-            if (f1 - f2 < getMinExitScrollX())
-            {
+            if (f1 - f2 < getMinExitScrollX()) {
                 this.mScrollLimit = 5;
                 close();
                 return true;
@@ -402,7 +409,6 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
     }
 
     /**
-     *
      * @param mute
      */
     public SpannableString setNewMessageMute(boolean mute) {
@@ -434,21 +440,23 @@ public abstract class ECSuperActivity extends ECFragmentActivity implements Gest
     public void close() {
         finish();
     }
-    private ECProgressDialog mPostingdialog;
-    public void showCommonProcessDialog(String tips) {
-		mPostingdialog = new ECProgressDialog(this, R.string.progress_common);
-		mPostingdialog.show();
-	}
 
-	/**
-	 * 关闭对话框
-	 */
-	public void dismissCommonPostingDialog() {
-		if (mPostingdialog == null || !mPostingdialog.isShowing()) {
-			return;
-		}
-		mPostingdialog.dismiss();
-		mPostingdialog = null;
-	}
+    private ECProgressDialog mPostingdialog;
+
+    public void showCommonProcessDialog(String tips) {
+        mPostingdialog = new ECProgressDialog(this, R.string.progress_common);
+        mPostingdialog.show();
+    }
+
+    /**
+     * 关闭对话框
+     */
+    public void dismissCommonPostingDialog() {
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
+        }
+        mPostingdialog.dismiss();
+        mPostingdialog = null;
+    }
 
 }

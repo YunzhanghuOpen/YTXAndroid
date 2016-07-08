@@ -2,24 +2,18 @@ package com.yuntongxun.ecdemo.ui.chatting.model;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
 import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
-import com.yuntongxun.ecdemo.ui.chatting.holder.DescriptionViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
-import com.yuntongxun.ecsdk.im.ECCallMessageBody;
-import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 
 import utils.RedPacketConstant;
 

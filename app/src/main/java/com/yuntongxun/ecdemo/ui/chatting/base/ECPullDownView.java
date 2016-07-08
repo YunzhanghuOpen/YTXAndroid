@@ -17,7 +17,7 @@ import com.yuntongxun.ecdemo.R;
  * com.yuntongxun.ecdemo.ui.chatting.base in ECDemo_Android
  * Created by Jorstin on 2015/4/17.
  */
-public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGestureListener {
+public class ECPullDownView extends FrameLayout implements GestureDetector.OnGestureListener {
 
 
     private static final String TAG = "ECPullDownView";
@@ -52,21 +52,21 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     private int bgColor = Color.parseColor("#ffffffff");
     private Context context;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             switch (scrollType) {
                 case 0:
-                    if(mOnRefreshAdapterDataListener != null){
+                    if (mOnRefreshAdapterDataListener != null) {
                         mOnRefreshAdapterDataListener.refreshData();
                     }
-                    if(topView.getVisibility() != View.VISIBLE){
+                    if (topView.getVisibility() != View.VISIBLE) {
                         break;
                     }
                     scrollTo(0, topViewHeight);
                     break;
                 case 1:
-                    if(bottomView.getVisibility() != View.VISIBLE){
+                    if (bottomView.getVisibility() != View.VISIBLE) {
                         break;
                     }
                     scrollTo(0, bottomViewHeight);
@@ -74,15 +74,17 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
 
             }
             startScroll();
-        };
+        }
+
+        ;
     };
 
     public ECPullDownView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ECPullDownView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public ECPullDownView(Context context, AttributeSet attrs, int defStyle) {
@@ -96,7 +98,7 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
                             int bottom) {
-        if (!this.bAD){
+        if (!this.bAD) {
             View localView2 = inflate(this.context, R.layout.loading_view, null);
             View localView1 = inflate(this.context, R.layout.loading_view, null);
             addView(localView2, 0, new FrameLayout.LayoutParams(-1, -2));
@@ -106,8 +108,8 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
         int m = getChildCount();
         int j = 0;
         int i = 0;
-        while (true){
-            if (j >= m){
+        while (true) {
+            if (j >= m) {
                 this.topView = getChildAt(0);
                 this.bottomView = getChildAt(-1 + getChildCount());
                 this.topView.setVisibility(View.INVISIBLE);
@@ -115,7 +117,7 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
                 this.topViewHeight = this.topView.getHeight();
                 this.bottomViewHeight = this.bottomView.getHeight();
                 this.topViewHeightCurrentPotion = this.topViewHeight;
-                if ((!this.isHideTopView) && (this.topViewHeight != 0)){
+                if ((!this.isHideTopView) && (this.topViewHeight != 0)) {
                     this.isHideTopView = true;
                     scrollTo(0, this.topViewHeight);
                 }
@@ -123,7 +125,7 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
             }
             View localView3 = getChildAt(j);
             int k = localView3.getMeasuredHeight();
-            if (localView3.getVisibility() != View.GONE){
+            if (localView3.getVisibility() != View.GONE) {
                 localView3.layout(0, i, localView3.getMeasuredWidth(), i + k);
                 i += k;
             }
@@ -131,22 +133,22 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
         }
     }
 
-    public final int getTopViewHeight(){
+    public final int getTopViewHeight() {
         return this.topViewHeight;
     }
 
-    public final void startTopScroll(){
-        if (!this.isCloseTopAllowRefersh){
-            if (this.topView.getVisibility() == View.INVISIBLE){
+    public final void startTopScroll() {
+        if (!this.isCloseTopAllowRefersh) {
+            if (this.topView.getVisibility() == View.INVISIBLE) {
                 this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY() + this.topViewHeight, 200);
             }
-            if (this.topView.getVisibility() == View.VISIBLE){
+            if (this.topView.getVisibility() == View.VISIBLE) {
                 this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY(), 200);
             }
             this.scrollType = 0;
             this.isScrollStoped = true;
             this.isFristTouch = false;
-        }else{
+        } else {
             this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY() + this.topViewHeight, 200);
         }
         postInvalidate();
@@ -190,16 +192,16 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     @Override
     protected void onScrollChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
         super.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-        if (this.bAJ){
-            if (this.topViewHeightCurrentPotion == -2147483648){
+        if (this.bAJ) {
+            if (this.topViewHeightCurrentPotion == -2147483648) {
                 this.topViewHeightCurrentPotion = this.topViewHeight;
             }
-            if ((paramInt2 > this.topViewHeightCurrentPotion) || (this.bAL == bAI)){
-                if ((paramInt2 > this.topViewHeightCurrentPotion) && (this.bAL != this.bgColor)){
+            if ((paramInt2 > this.topViewHeightCurrentPotion) || (this.bAL == bAI)) {
+                if ((paramInt2 > this.topViewHeightCurrentPotion) && (this.bAL != this.bgColor)) {
                     setBackgroundColor(this.bgColor);
                     this.bAL = this.bgColor;
                 }
-            }else{
+            } else {
                 // setBackgroundResource(2130838685);
                 this.bAL = bAI;
             }
@@ -207,10 +209,9 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     }
 
 
-
     @Override
     public boolean onDown(MotionEvent e) {
-        if (!this.mScroller.isFinished()){
+        if (!this.mScroller.isFinished()) {
             this.mScroller.abortAnimation();
         }
         this.isMoveTop = true;
@@ -218,7 +219,8 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     }
 
     @Override
-    public void onShowPress(MotionEvent e) {}
+    public void onShowPress(MotionEvent e) {
+    }
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
@@ -230,24 +232,24 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
                             float distanceY) {
         int i = -1;
         int j = 1;
-        if (distanceY <= 0.0F){
+        if (distanceY <= 0.0F) {
             this.isMoveDown = false;
-        }else{
+        } else {
             this.isMoveDown = true;
         }
         int k;
 
         if (((!this.isMoveDown) || (!this.isScrollFarTop)) &&
-                ((this.isMoveDown) || (getScrollY() - this.topViewHeight <= 0) || (!this.isScrollFarTop))){
+                ((this.isMoveDown) || (getScrollY() - this.topViewHeight <= 0) || (!this.isScrollFarTop))) {
 
             if (((this.isMoveDown) || (!this.isScrollToTop)) &&
-                    ((!this.isMoveDown) || (getScrollY() - this.topViewHeight >= 0) || (!this.isScrollToTop))){
+                    ((!this.isMoveDown) || (getScrollY() - this.topViewHeight >= 0) || (!this.isScrollToTop))) {
                 j = 0;
-            }else{
-                k = (int)(0.5D * distanceY);
-                if (k != 0){
+            } else {
+                k = (int) (0.5D * distanceY);
+                if (k != 0) {
                     i = k;
-                }else if (distanceY > 0.0F){
+                } else if (distanceY > 0.0F) {
                     i = j;
                 }
                 if (i + getScrollY() > this.topViewHeight)
@@ -255,11 +257,11 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
                 scrollBy(0, i);
                 return true;
             }
-        }else{
-            k = (int)(0.5D * distanceY);
-            if (k != 0){
+        } else {
+            k = (int) (0.5D * distanceY);
+            if (k != 0) {
                 i = k;
-            }else if (distanceY > 0.0F){
+            } else if (distanceY > 0.0F) {
                 i = j;
             }
             if ((i + getScrollY() < this.topViewHeight) && (!this.isMoveDown))
@@ -276,7 +278,7 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
 
     }
 
-    public final void nh(String paramString){
+    public final void nh(String paramString) {
         this.bgColor = Color.parseColor(paramString);
         this.bAL = this.bgColor;
     }
@@ -288,24 +290,24 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     }
 
     private void startScroll() {
-        if (getScrollY() - this.topViewHeight < 0){
-            if (!this.isCloseTopAllowRefersh){
-                if (this.topView.getVisibility() == View.INVISIBLE){
+        if (getScrollY() - this.topViewHeight < 0) {
+            if (!this.isCloseTopAllowRefersh) {
+                if (this.topView.getVisibility() == View.INVISIBLE) {
                     this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY() + this.topViewHeight, 200);
                 }
-                if (this.topView.getVisibility() == View.VISIBLE){
+                if (this.topView.getVisibility() == View.VISIBLE) {
                     this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY(), 200);
                 }
                 this.scrollType = 0;
                 this.isScrollStoped = true;
                 this.isFristTouch = false;
-            }else{
+            } else {
                 this.mScroller.startScroll(0, getScrollY(), 0, -getScrollY() + this.topViewHeight, 200);
             }
             postInvalidate();
         }
-        if (getScrollY() > this.bottomViewHeight){
-            if (!this.hasbottomViewWithoutscroll){
+        if (getScrollY() > this.bottomViewHeight) {
+            if (!this.hasbottomViewWithoutscroll) {
                 if (this.bottomView.getVisibility() == View.INVISIBLE)
                     this.mScroller.startScroll(0, getScrollY(), 0, this.bottomViewHeight - getScrollY(), 200);
                 if (this.bottomView.getVisibility() == View.VISIBLE)
@@ -313,7 +315,7 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
                 this.scrollType = 1;
                 this.isScrollStoped = true;
                 this.isFristTouch = false;
-            } else{
+            } else {
                 this.mScroller.startScroll(0, getScrollY(), 0, this.bottomViewHeight - getScrollY(), 200);
             }
             postInvalidate();
@@ -325,44 +327,44 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     @Override
     public boolean dispatchTouchEvent(MotionEvent paramMotionEvent) {
         boolean bool = true;
-        if (this.isFristTouch ){
-            if (this.mOnListViewTopListener != null){
+        if (this.isFristTouch) {
+            if (this.mOnListViewTopListener != null) {
                 this.isScrollToTop = this.mOnListViewTopListener.getIsListViewToTop();
-            }else{
+            } else {
                 this.isScrollToTop = false;
             }
-            if (this.mOnListViewBottomListener != null){
+            if (this.mOnListViewBottomListener != null) {
                 this.isScrollFarTop = this.mOnListViewBottomListener.getIsListViewToBottom();
-            }else{
+            } else {
                 this.isScrollFarTop = false;
             }
-            if (this.topViewInitializeVisibility == View.VISIBLE){
-                if (!this.isCloseTopAllowRefersh){
+            if (this.topViewInitializeVisibility == View.VISIBLE) {
+                if (!this.isCloseTopAllowRefersh) {
                     this.topView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     this.topView.setVisibility(View.INVISIBLE);
                 }
             }
-            if (this.bottomViewInitializeVisibility == 0){
-                if (!this.hasbottomViewWithoutscroll){
+            if (this.bottomViewInitializeVisibility == 0) {
+                if (!this.hasbottomViewWithoutscroll) {
                     this.bottomView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     this.bottomView.setVisibility(View.INVISIBLE);
                 }
             }
             if (paramMotionEvent.getAction() != MotionEvent.ACTION_UP) {
-                if (paramMotionEvent.getAction() != MotionEvent.ACTION_CANCEL){
-                    if (!this.mGestureDetector.onTouchEvent(paramMotionEvent)){
+                if (paramMotionEvent.getAction() != MotionEvent.ACTION_CANCEL) {
+                    if (!this.mGestureDetector.onTouchEvent(paramMotionEvent)) {
                         bool = super.dispatchTouchEvent(paramMotionEvent);
                     } else {
                         paramMotionEvent.setAction(MotionEvent.ACTION_CANCEL);
                         this.bAH = bool;
                         bool = super.dispatchTouchEvent(paramMotionEvent);
                     }
-                }else{
+                } else {
                     startScroll();
                 }
-            }else{
+            } else {
                 startScroll();
                 bool = super.dispatchTouchEvent(paramMotionEvent);
             }
@@ -374,12 +376,12 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
     @Override
     public void computeScroll() {//控制刷新
         super.computeScroll();
-        if (!this.mScroller.computeScrollOffset()){
-            if (this.isScrollStoped){
+        if (!this.mScroller.computeScrollOffset()) {
+            if (this.isScrollStoped) {
                 this.isScrollStoped = false;
                 this.mHandler.sendEmptyMessageDelayed(0, timeInterval);
             }
-        }else{
+        } else {
             scrollTo(this.mScroller.getCurrX(), this.mScroller.getCurrY());
             postInvalidate();
         }
@@ -388,12 +390,12 @@ public class ECPullDownView  extends FrameLayout implements GestureDetector.OnGe
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (getScrollY() - this.topViewHeight < 0){
+                if (getScrollY() - this.topViewHeight < 0) {
                     this.isScrollToTop = true;
                 }
-                if (getScrollY() > this.bottomViewHeight){
+                if (getScrollY() > this.bottomViewHeight) {
                     this.isScrollFarTop = true;
                 }
                 startScroll();

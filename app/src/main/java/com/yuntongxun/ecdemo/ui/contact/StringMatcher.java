@@ -8,15 +8,16 @@ package com.yuntongxun.ecdemo.ui.contact;
 public class StringMatcher {
     private final static char KOREAN_UNICODE_START = '가';
     private final static char KOREAN_UNICODE_END = '힣';
-    private final static char KOREAN_UNIT = '까' - '가'; 
-    private final static char[] KOREAN_INITIAL = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ',
+    private final static char KOREAN_UNIT = '까' - '가';
+    private final static char[] KOREAN_INITIAL = {'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ',
             'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ',
-            'ㅎ' };
+            'ㅎ'};
 
 
     /**
      * 字符匹配
-     * @param value 需要keyword匹配的字符串
+     *
+     * @param value   需要keyword匹配的字符串
      * @param keyword #ABCDEFGHIJKLMNOPQRSTUVWXYZ中的一个
      * @return
      */

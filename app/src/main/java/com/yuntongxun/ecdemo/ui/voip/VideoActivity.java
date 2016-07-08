@@ -30,7 +30,7 @@ import com.yuntongxun.ecsdk.voip.video.OnCameraInitListener;
  * com.yuntongxun.ecdemo.ui.voip in ECDemo_Android
  * Created by Jorstin on 2015/7/8.
  */
-public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickListener{
+public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickListener {
 
     private static final String TAG = "VideoActivity";
     private static long lastClickTime;
@@ -69,11 +69,11 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
 
         initVideoLayout();
-        isCreated=true;
+        isCreated = true;
     }
 
     private void initVideoLayout() {
-        if(mIncomingCall) {
+        if (mIncomingCall) {
             // 来电
             mCallId = getIntent().getStringExtra(ECDevice.CALLID);
             mCallNumber = getIntent().getStringExtra(ECDevice.CALLER);
@@ -87,7 +87,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
 
         ECDevice.getECVoIPSetupManager().setVideoView(mVideoView, mCaptureView);
 
-        if(!mIncomingCall) {
+        if (!mIncomingCall) {
             mVideoTopTips.setText(R.string.ec_voip_call_connecting_server);
             mCallId = VoIPCallHelper.makeCall(mCallType, mCallNumber);
         } else {
@@ -98,8 +98,8 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
             mVideoTopTips.setVisibility(View.VISIBLE);
         }
 
-        if(mIncomingCall){
-        	mVideoStop.setEnabled(true);
+        if (mIncomingCall) {
+            mVideoStop.setEnabled(true);
         }
     }
 
@@ -113,13 +113,13 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         mVideoCancle = (Button) findViewById(R.id.video_botton_cancle);
         mVideoBegin = (Button) findViewById(R.id.video_botton_begin);
         mVideoStop = (Button) findViewById(R.id.video_stop);
-        mDmfInput=(EditText) findViewById(R.id.dial_input_numer_TXT);
+        mDmfInput = (EditText) findViewById(R.id.dial_input_numer_TXT);
         mDiaerpadBtn = (ImageView) findViewById(R.id.layout_call_dialnum);
         mDiaerpadBtn.setOnClickListener(this);
-        daiLayout=(LinearLayout) findViewById(R.id.layout_dial_panel);
-        
+        daiLayout = (LinearLayout) findViewById(R.id.layout_dial_panel);
+
         setupKeypad();
-        
+
         mVideoStop.setEnabled(false);
 
         mVideoCancle.setOnClickListener(this);
@@ -132,7 +132,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         mCaptureView.setOnCameraInitListener(new OnCameraInitListener() {
             @Override
             public void onCameraInit(boolean result) {
-                if(!result)ToastUtil.showMessage("摄像头被占用");
+                if (!result) ToastUtil.showMessage("摄像头被占用");
             }
         });
         mCaptureView.setZOrderMediaOverlay(true);
@@ -176,7 +176,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         mDiaerpadBtn.setEnabled(false);
 
     }
-    
+
 
     /**
      * 根据状态,修改按钮属性及关闭操作
@@ -239,7 +239,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         if (mCallType == ECVoIPCallManager.CallType.VIDEO) {
-            if(mCaptureView != null) {
+            if (mCaptureView != null) {
                 mCaptureView.onResume();
             }
         }
@@ -249,7 +249,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         VoIPCallHelper.mHandlerVideoCall = false;
-        isCreated=false;
+        isCreated = false;
     }
 
     @Override
@@ -270,7 +270,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
     public void onCallAnswered(String callId) {
         if (callId != null && callId.equals(mCallId) && !isConnect) {
             initResVideoSuccess();
-            if(ECDevice.getECVoIPSetupManager() != null) {
+            if (ECDevice.getECVoIPSetupManager() != null) {
                 ECDevice.getECVoIPSetupManager().enableLoudSpeaker(true);
             }
         }
@@ -287,7 +287,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
     @Override
     public void onCallReleased(String callId) {
         if (callId != null && callId.equals(mCallId)) {
-        	VoIPCallHelper.releaseMuteAndHandFree();
+            VoIPCallHelper.releaseMuteAndHandFree();
             finishCalling();
         }
     }
@@ -306,83 +306,83 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
                 break;
             case R.id.camera_switch:
                 mCameraSwitch.setEnabled(false);
-                if(mCaptureView != null) {
+                if (mCaptureView != null) {
                     mCaptureView.switchCamera();
                 }
                 mCameraSwitch.setEnabled(true);
                 break;
             case R.id.layout_call_dialnum:
-				setDialerpadUI();
-				break;
+                setDialerpadUI();
+                break;
             default:
-            	onKeyBordClick(v.getId());
+                onKeyBordClick(v.getId());
                 break;
         }
     }
-    
-	private void onKeyBordClick(int id) {
-		switch (id) {
-		case R.id.zero: {
-			keyPressed(KeyEvent.KEYCODE_0);
-			return;
-		}
-		case R.id.one: {
-			keyPressed(KeyEvent.KEYCODE_1);
-			return;
-		}
-		case R.id.two: {
-			keyPressed(KeyEvent.KEYCODE_2);
-			return;
-		}
-		case R.id.three: {
-			keyPressed(KeyEvent.KEYCODE_3);
-			return;
-		}
-		case R.id.four: {
-			keyPressed(KeyEvent.KEYCODE_4);
-			return;
-		}
-		case R.id.five: {
-			keyPressed(KeyEvent.KEYCODE_5);
-			return;
-		}
-		case R.id.six: {
-			keyPressed(KeyEvent.KEYCODE_6);
-			return;
-		}
-		case R.id.seven: {
-			keyPressed(KeyEvent.KEYCODE_7);
-			return;
-		}
-		case R.id.eight: {
-			keyPressed(KeyEvent.KEYCODE_8);
-			return;
-		}
-		case R.id.nine: {
-			keyPressed(KeyEvent.KEYCODE_9);
-			return;
-		}
-		case R.id.star: {
-			keyPressed(KeyEvent.KEYCODE_STAR);
-			return;
-		}
-		case R.id.pound: {
-			keyPressed(KeyEvent.KEYCODE_POUND);
-			return;
-		}
-		}
-	}
 
-	private EditText mDmfInput;
+    private void onKeyBordClick(int id) {
+        switch (id) {
+            case R.id.zero: {
+                keyPressed(KeyEvent.KEYCODE_0);
+                return;
+            }
+            case R.id.one: {
+                keyPressed(KeyEvent.KEYCODE_1);
+                return;
+            }
+            case R.id.two: {
+                keyPressed(KeyEvent.KEYCODE_2);
+                return;
+            }
+            case R.id.three: {
+                keyPressed(KeyEvent.KEYCODE_3);
+                return;
+            }
+            case R.id.four: {
+                keyPressed(KeyEvent.KEYCODE_4);
+                return;
+            }
+            case R.id.five: {
+                keyPressed(KeyEvent.KEYCODE_5);
+                return;
+            }
+            case R.id.six: {
+                keyPressed(KeyEvent.KEYCODE_6);
+                return;
+            }
+            case R.id.seven: {
+                keyPressed(KeyEvent.KEYCODE_7);
+                return;
+            }
+            case R.id.eight: {
+                keyPressed(KeyEvent.KEYCODE_8);
+                return;
+            }
+            case R.id.nine: {
+                keyPressed(KeyEvent.KEYCODE_9);
+                return;
+            }
+            case R.id.star: {
+                keyPressed(KeyEvent.KEYCODE_STAR);
+                return;
+            }
+            case R.id.pound: {
+                keyPressed(KeyEvent.KEYCODE_POUND);
+                return;
+            }
+        }
+    }
 
-	void keyPressed(int keyCode) {
-		KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
-		mDmfInput.getText().clear();
-		mDmfInput.onKeyDown(keyCode, event);
-		sendDTMF(mDmfInput.getText().toString().toCharArray()[0]);
-	}
+    private EditText mDmfInput;
 
-	
+    void keyPressed(int keyCode) {
+        KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
+        mDmfInput.getText().clear();
+        mDmfInput.onKeyDown(keyCode, event);
+        sendDTMF(mDmfInput.getText().toString().toCharArray()[0]);
+    }
+
+
     protected void doHandUpReleaseCall() {
 
         // Hang up the video call...
@@ -390,12 +390,12 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
                 "[VideoActivity] onClick: Voip talk hand up, CurrentCallId " + mCallId);
         try {
             if (mCallId != null) {
-            	
-            	if(mIncomingCall&&!isConnect){
-            		VoIPCallHelper.rejectCall(mCallId);
-            	}else {
-                	VoIPCallHelper.releaseCall(mCallId);
-            	}
+
+                if (mIncomingCall && !isConnect) {
+                    VoIPCallHelper.rejectCall(mCallId);
+                } else {
+                    VoIPCallHelper.releaseCall(mCallId);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -404,42 +404,43 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
             finish();
         }
     }
-    
-    private void setupKeypad() {
-		/** Setup the listeners for the buttons */
-		findViewById(R.id.zero).setOnClickListener(this);
-		findViewById(R.id.one).setOnClickListener(this);
-		findViewById(R.id.two).setOnClickListener(this);
-		findViewById(R.id.three).setOnClickListener(this);
-		findViewById(R.id.four).setOnClickListener(this);
-		findViewById(R.id.five).setOnClickListener(this);
-		findViewById(R.id.six).setOnClickListener(this);
-		findViewById(R.id.seven).setOnClickListener(this);
-		findViewById(R.id.eight).setOnClickListener(this);
-		findViewById(R.id.nine).setOnClickListener(this);
-		findViewById(R.id.star).setOnClickListener(this);
-		findViewById(R.id.pound).setOnClickListener(this);
-	}
-    
-	@Override
-	public void onMakeCallback(ECError arg0, String arg1, String arg2) {
 
-	}
-	
-	public boolean isCreated=false;
+    private void setupKeypad() {
+        /** Setup the listeners for the buttons */
+        findViewById(R.id.zero).setOnClickListener(this);
+        findViewById(R.id.one).setOnClickListener(this);
+        findViewById(R.id.two).setOnClickListener(this);
+        findViewById(R.id.three).setOnClickListener(this);
+        findViewById(R.id.four).setOnClickListener(this);
+        findViewById(R.id.five).setOnClickListener(this);
+        findViewById(R.id.six).setOnClickListener(this);
+        findViewById(R.id.seven).setOnClickListener(this);
+        findViewById(R.id.eight).setOnClickListener(this);
+        findViewById(R.id.nine).setOnClickListener(this);
+        findViewById(R.id.star).setOnClickListener(this);
+        findViewById(R.id.pound).setOnClickListener(this);
+    }
 
     @Override
-	protected void onNewIntent(Intent intent) {
-    	
-    	if(!isCreated){
-        setIntent(intent);
-        super.onNewIntent(intent);
-        initVideoLayout();
-    	}
+    public void onMakeCallback(ECError arg0, String arg1, String arg2) {
+
+    }
+
+    public boolean isCreated = false;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+
+        if (!isCreated) {
+            setIntent(intent);
+            super.onNewIntent(intent);
+            initVideoLayout();
+        }
     }
 
     /**
      * 远端视频分辨率到达，标识收到视频图像
+     *
      * @param videoRatio 视频分辨率信息
      */
     @Override
@@ -448,17 +449,17 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         /*if(mVideoView != null && videoRatio != null) {
             mVideoView.getHolder().setFixedSize(videoRatio.getWidth() , videoRatio.getHeight());
         }*/
-        if(videoRatio == null) {
-            return ;
+        if (videoRatio == null) {
+            return;
         }
         int width = videoRatio.getWidth();
         int height = videoRatio.getHeight();
-        if(width == 0 || height == 0) {
-            LogUtil.e(TAG , "invalid video width(" + width + ") or height(" + height + ")");
-            return ;
+        if (width == 0 || height == 0) {
+            LogUtil.e(TAG, "invalid video width(" + width + ") or height(" + height + ")");
+            return;
         }
         mVideoView.setVisibility(View.VISIBLE);
-        if(width > height) {
+        if (width > height) {
             DisplayMetrics dm = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dm);
             int mSurfaceViewWidth = dm.widthPixels;
@@ -474,7 +475,7 @@ public class VideoActivity extends ECVoIPBaseActivity implements View.OnClickLis
         }
     }
 
-	public void setDialerpadUI() {
-    	daiLayout.setVisibility(daiLayout.getVisibility() != View.GONE ? View.GONE : View.VISIBLE);
-	}
+    public void setDialerpadUI() {
+        daiLayout.setVisibility(daiLayout.getVisibility() != View.GONE ? View.GONE : View.VISIBLE);
+    }
 }

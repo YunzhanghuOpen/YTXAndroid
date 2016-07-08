@@ -12,166 +12,148 @@
  */
 package com.yuntongxun.ecdemo.ui.chatting;
 
-import java.io.InvalidClassException;
-import java.util.List;
-
-
-
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.CrashHandler;
-import com.yuntongxun.ecdemo.common.utils.ECPreferenceSettings;
-import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.ui.ECFragmentActivity;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
 import com.yuntongxun.ecdemo.ui.chatting.view.CCPChattingFooter2;
-import com.yuntongxun.ecsdk.ECDevice;
-import com.yuntongxun.ecsdk.ECError;
-import com.yuntongxun.ecsdk.ECMessage;
 
 /**
  * @author 容联•云通讯
- * @date 2014-12-9
  * @version 4.0
+ * @date 2014-12-9
  */
 public class ChattingActivity extends ECFragmentActivity implements
-		ChattingFragment.OnChattingAttachListener {
+        ChattingFragment.OnChattingAttachListener {
 
-	private static final String TAG = "ECSDK_Demo.ChattingActivity";
-	public ChattingFragment mChattingFragment;
-	private MyReceiver myReceiver;
+    private static final String TAG = "ECSDK_Demo.ChattingActivity";
+    public ChattingFragment mChattingFragment;
+    private MyReceiver myReceiver;
 
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		LogUtil.d(TAG, "chatting ui dispatch key event :" + event);
-		if (mChattingFragment != null
-				&& mChattingFragment.onKeyDown(event.getKeyCode(), event)) {
-			return true;
-		}
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        LogUtil.d(TAG, "chatting ui dispatch key event :" + event);
+        if (mChattingFragment != null
+                && mChattingFragment.onKeyDown(event.getKeyCode(), event)) {
+            return true;
+        }
 
-		return super.dispatchKeyEvent(event);
-	}
+        return super.dispatchKeyEvent(event);
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		CrashHandler.getInstance().setContext(this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CrashHandler.getInstance().setContext(this);
 
-		IntentFilter filter1 = new IntentFilter();
+        IntentFilter filter1 = new IntentFilter();
 
-		filter1.addAction("com.yuntongxun.ecdemo.removemember");
-		filter1.addAction(SDKCoreHelper.ACTION_KICK_OFF);
+        filter1.addAction("com.yuntongxun.ecdemo.removemember");
+        filter1.addAction(SDKCoreHelper.ACTION_KICK_OFF);
 
-		registerReceiver(myReceiver, filter1);
-		
-	}
+        registerReceiver(myReceiver, filter1);
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		unregisterReceiver(myReceiver);
-	}
+    }
 
-	public class MyReceiver extends BroadcastReceiver
-	{
-		// 可用Intent的getAction()区分接收到的不同广播
-		@Override
-		public void onReceive(Context arg0, Intent intent)
-		{
-			if(intent==null){
-				return;
-			}
-			if (intent.getAction().equals(SDKCoreHelper.ACTION_KICK_OFF)
-					|| intent.getAction().equals(
-							"com.yuntongxun.ecdemo.removemember"))
-				finish();
-		}
-	}
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        unregisterReceiver(myReceiver);
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		LogUtil.d(TAG, "onCreate");
-		super.onCreate(null);
-		getWindow().setFormat(PixelFormat.TRANSPARENT);
+    public class MyReceiver extends BroadcastReceiver {
+        // 可用Intent的getAction()区分接收到的不同广播
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent == null) {
+                return;
+            }
+            if (intent.getAction().equals(SDKCoreHelper.ACTION_KICK_OFF)
+                    || intent.getAction().equals(
+                    "com.yuntongxun.ecdemo.removemember"))
+                finish();
+        }
+    }
 
-		myReceiver = new MyReceiver();
-		String recipients = getIntent().getStringExtra(
-				ChattingFragment.RECIPIENTS);
-		if (recipients == null) {
-			finish();
-			LogUtil.e(TAG, "recipients is null !!");
-			return;
-		}
-		setContentView(R.layout.chattingui_activity_container);
-		mChattingFragment = new ChattingFragment();
-		Bundle bundle = getIntent().getExtras();
-		bundle.putBoolean(ChattingFragment.FROM_CHATTING_ACTIVITY, true);
-		mChattingFragment.setArguments(bundle);
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.ccp_root_view, mChattingFragment).commit();
-		onActivityCreate();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        LogUtil.d(TAG, "onCreate");
+        super.onCreate(null);
+        getWindow().setFormat(PixelFormat.TRANSPARENT);
 
-		if (isChatToSelf(recipients) || isPeerChat(recipients)) {
-			AppPanelControl.setShowVoipCall(false);
-		}
+        myReceiver = new MyReceiver();
+        String recipients = getIntent().getStringExtra(
+                ChattingFragment.RECIPIENTS);
+        if (recipients == null) {
+            finish();
+            LogUtil.e(TAG, "recipients is null !!");
+            return;
+        }
+        setContentView(R.layout.chattingui_activity_container);
+        mChattingFragment = new ChattingFragment();
+        Bundle bundle = getIntent().getExtras();
+        bundle.putBoolean(ChattingFragment.FROM_CHATTING_ACTIVITY, true);
+        mChattingFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.ccp_root_view, mChattingFragment).commit();
+        onActivityCreate();
 
-	}
+        if (isChatToSelf(recipients) || isPeerChat(recipients)) {
+            AppPanelControl.setShowVoipCall(false);
+        }
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		LogUtil.d(TAG, "chatting ui on key down, " + keyCode + ", " + event);
-		
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0&&CCPChattingFooter2.isRecodering) {
-			// do nothing.
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
-	
-	
-	
-	
+    }
 
-	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		LogUtil.d(TAG, "chatting ui on key up");
-		return super.onKeyUp(keyCode, event);
-	}
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LogUtil.d(TAG, "chatting ui on key down, " + keyCode + ", " + event);
 
-	public boolean isPeerChat() {
-		if (mChattingFragment != null) {
-			return mChattingFragment.isPeerChat();
-		}
-		return false;
-	}
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 && CCPChattingFooter2.isRecodering) {
+            // do nothing.
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
-	public boolean isChatToSelf(String sessionId) {
 
-		String userId = CCPAppManager.getUserId();
-		return sessionId != null
-				&& (sessionId.equalsIgnoreCase(userId) ? true : false);
-	}
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        LogUtil.d(TAG, "chatting ui on key up");
+        return super.onKeyUp(keyCode, event);
+    }
 
-	public boolean isPeerChat(String sessionId) {
+    public boolean isPeerChat() {
+        if (mChattingFragment != null) {
+            return mChattingFragment.isPeerChat();
+        }
+        return false;
+    }
 
-		return sessionId.toLowerCase().startsWith("g");
-	}
+    public boolean isChatToSelf(String sessionId) {
 
-	@Override
-	public void onChattingAttach() {
-		LogUtil.d(TAG, "onChattingAttach");
-	}
+        String userId = CCPAppManager.getUserId();
+        return sessionId != null
+                && (sessionId.equalsIgnoreCase(userId) ? true : false);
+    }
+
+    public boolean isPeerChat(String sessionId) {
+
+        return sessionId.toLowerCase().startsWith("g");
+    }
+
+    @Override
+    public void onChattingAttach() {
+        LogUtil.d(TAG, "onChattingAttach");
+    }
 }

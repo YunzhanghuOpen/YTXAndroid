@@ -9,10 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui;
-
-import java.util.ArrayList;
-import java.util.List;
+ */
+package com.yuntongxun.ecdemo.ui;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -39,6 +37,9 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.common.view.TopBarView;
 import com.yuntongxun.ecdemo.common.view.VerticalImageSpan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 界面处理
  * Created by Jorstin on 2015/3/17.
@@ -47,7 +48,7 @@ public abstract class CCPActivityBase {
 
     private FragmentActivity mActionBarActivity;
 
-    private AudioManager mAudioManager ;
+    private AudioManager mAudioManager;
 
     /**
      * CCPActivity root view
@@ -64,7 +65,7 @@ public abstract class CCPActivityBase {
     /**
      * Manager dialog.
      */
-    private List<Dialog> mAppDialogCache ;
+    private List<Dialog> mAppDialogCache;
 
     /**
      * The volume of music
@@ -88,7 +89,7 @@ public abstract class CCPActivityBase {
      */
     private boolean isMute = false;
 
-    public void init(Context context , FragmentActivity activity)  {
+    public void init(Context context, FragmentActivity activity) {
         mActionBarActivity = activity;
         onInit();
 
@@ -102,8 +103,8 @@ public abstract class CCPActivityBase {
         LinearLayout mRootView = (LinearLayout) mBaseLayoutView.findViewById(R.id.ccp_root_view);
         mContentFrameLayout = (FrameLayout) mBaseLayoutView.findViewById(R.id.ccp_content_fl);
 
-        if(getTitleLayout() != -1) {
-            mTopBarView = mLayoutInflater.inflate(getTitleLayout() , null);
+        if (getTitleLayout() != -1) {
+            mTopBarView = mLayoutInflater.inflate(getTitleLayout(), null);
             mRootView.addView(mTopBarView,
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -112,7 +113,7 @@ public abstract class CCPActivityBase {
         if (layoutId != -1) {
 
             mContentView = getContentLayoutView();
-            if(mContentView == null) {
+            if (mContentView == null) {
                 mContentView = mLayoutInflater.inflate(getLayoutId(), null);
             }
             mRootView.addView(mContentView, LinearLayout.LayoutParams.MATCH_PARENT,
@@ -139,8 +140,8 @@ public abstract class CCPActivityBase {
      * hideTitleView
      */
     public final void hideTitleView() {
-        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "hideTitleView hasTitle :" + (mTopBarView != null? true: false));
-        if(mTopBarView != null) {
+        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "hideTitleView hasTitle :" + (mTopBarView != null ? true : false));
+        if (mTopBarView != null) {
             mTopBarView.setVisibility(View.GONE);
         }
     }
@@ -149,8 +150,8 @@ public abstract class CCPActivityBase {
      * showTitleView
      */
     public final void showTitleView() {
-        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "showTitleView hasTitle :" + (mTopBarView != null? true: false));
-        if(mTopBarView != null) {
+        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "showTitleView hasTitle :" + (mTopBarView != null ? true : false));
+        if (mTopBarView != null) {
             mTopBarView.setVisibility(View.VISIBLE);
         }
     }
@@ -158,12 +159,13 @@ public abstract class CCPActivityBase {
 
     /**
      * isTitleShowing
+     *
      * @return
      */
     public final boolean isTitleShowing() {
-        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "isTitleShowing hasTitle :" + (mTopBarView != null? true: false));
-        if(mTopBarView == null) {
-            return  false;
+        LogUtil.d(LogUtil.getLogUtilsTag(ECSuperActivity.class), "isTitleShowing hasTitle :" + (mTopBarView != null ? true : false));
+        if (mTopBarView == null) {
+            return false;
         }
 
         return mTopBarView.getVisibility() == View.VISIBLE;
@@ -171,10 +173,11 @@ public abstract class CCPActivityBase {
 
     /**
      * The height of acitonBar
+     *
      * @return
      */
     public final int getActionBarHeight() {
-        if(mTopBarView == null) {
+        if (mTopBarView == null) {
             return 0;
         }
 
@@ -182,7 +185,6 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @return
      */
     public View getActivityLayoutView() {
@@ -194,22 +196,20 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @param visiable
      */
     public void setActionBarVisiable(int visiable) {
-        if(mTopBarView == null) {
-            return ;
+        if (mTopBarView == null) {
+            return;
         }
-        if(visiable == View.VISIBLE) {
+        if (visiable == View.VISIBLE) {
             showTitleView();
-            return ;
+            return;
         }
         hideTitleView();
     }
 
     /**
-     *
      * @return
      */
     public FragmentActivity getFragmentActivity() {
@@ -218,11 +218,10 @@ public abstract class CCPActivityBase {
 
 
     /**
-     *
      * @param contentDescription
      */
     public final void setActionContentDescription(CharSequence contentDescription) {
-        if(TextUtils.isEmpty(contentDescription)) {
+        if (TextUtils.isEmpty(contentDescription)) {
             return;
         }
         String description = mActionBarActivity.getString(R.string.common_enter_activity) + contentDescription;
@@ -240,7 +239,7 @@ public abstract class CCPActivityBase {
         if (inputMethodManager != null) {
             View localView = activity.getCurrentFocus();
             if (localView != null && localView.getWindowToken() != null) {
-                inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }
     }
@@ -267,9 +266,9 @@ public abstract class CCPActivityBase {
      */
     public void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) mActionBarActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(inputMethodManager != null ) {
+        if (inputMethodManager != null) {
             View localView = mActionBarActivity.getCurrentFocus();
-            if(localView != null && localView.getWindowToken() != null ) {
+            if (localView != null && localView.getWindowToken() != null) {
                 IBinder windowToken = localView.getWindowToken();
                 inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
             }
@@ -284,7 +283,6 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @return
      */
     public int getStreamMaxVolume() {
@@ -292,7 +290,6 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @return
      */
     public int getStreamVolume() {
@@ -301,22 +298,22 @@ public abstract class CCPActivityBase {
 
     /**
      * 设置ActionBar标题
+     *
      * @param title
      */
     public final void setActionBarTitle(CharSequence title) {
-        if(mTopBarView == null) {
+        if (mTopBarView == null) {
             return;
         }
 
         mTitleText = title;
-        if(mTopBarView instanceof TopBarView) {
-            ((TopBarView) mTopBarView ).setTitle(title!= null ?title.toString():"");
+        if (mTopBarView instanceof TopBarView) {
+            ((TopBarView) mTopBarView).setTitle(title != null ? title.toString() : "");
         }
         setActionContentDescription(title);
     }
 
     /**
-     *
      * @return
      */
     public final CharSequence getActionBarTitle() {
@@ -324,33 +321,31 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @return
      */
     public final TopBarView getTitleBar() {
-        return (TopBarView)mTopBarView;
+        return (TopBarView) mTopBarView;
     }
 
 
     /**
-     *
      * @param keyCode
      * @param event
      * @return
      */
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if((event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP)
+        if ((event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP)
                 && mAudioManager != null) {
             int streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-            if(streamVolume >= mMusicMaxVolume) {
+            if (streamVolume >= mMusicMaxVolume) {
                 LogUtil.d(LogUtil.getLogUtilsTag(BaseFragment.class), "has set the max volume");
                 return true;
             }
 
             int mean = mMusicMaxVolume / 7;
-            if(mean == 0) {
+            if (mean == 0) {
                 mean = 1;
             }
 
@@ -358,11 +353,11 @@ public abstract class CCPActivityBase {
                     streamVolume + mean, AudioManager.FLAG_PLAY_SOUND
                             | AudioManager.FLAG_SHOW_UI);
         }
-        if((event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN)
+        if ((event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN)
                 && mAudioManager != null) {
             int streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             int mean = mMusicMaxVolume / 7;
-            if(mean == 0) {
+            if (mean == 0) {
                 mean = 1;
             }
 
@@ -375,15 +370,14 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @param keyCode
      * @param event
      * @return
      */
     public boolean onKeyUp(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
-			/*if(mOverFlowAction != null && mOverFlowAction.isEnabled()) {
+        if (keyCode == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
+            /*if(mOverFlowAction != null && mOverFlowAction.isEnabled()) {
 				callMenuCallback(mOverFlowMenuItem, mOverFlowAction);
 				return true;
 			}*/
@@ -391,11 +385,11 @@ public abstract class CCPActivityBase {
         return false;
     }
 
-    public void onResume(){
+    public void onResume() {
 
     }
 
-    public void onPause(){
+    public void onPause() {
 
     }
 
@@ -412,12 +406,12 @@ public abstract class CCPActivityBase {
      *
      */
     private void releaseDialogList() {
-        if(mAppDialogCache == null) {
+        if (mAppDialogCache == null) {
             return;
         }
 
-        for(Dialog dialog : mAppDialogCache) {
-            if(dialog == null || !dialog.isShowing()) {
+        for (Dialog dialog : mAppDialogCache) {
+            if (dialog == null || !dialog.isShowing()) {
                 continue;
             }
             dialog.dismiss();
@@ -429,6 +423,7 @@ public abstract class CCPActivityBase {
 
     /**
      * 子类重载该方法自定义标题布局文件
+     *
      * @return
      */
     public int getTitleLayout() {
@@ -436,7 +431,7 @@ public abstract class CCPActivityBase {
     }
 
     public TopBarView getTopBarView() {
-        if(mTopBarView instanceof TopBarView) {
+        if (mTopBarView instanceof TopBarView) {
             return (TopBarView) mTopBarView;
         }
         return null;
@@ -446,10 +441,13 @@ public abstract class CCPActivityBase {
 
     /**
      * The sub Activity implement, set the Ui Layout
+     *
      * @return
      */
     protected abstract int getLayoutId();
+
     protected abstract View getContentLayoutView();
+
     protected abstract String getClassName();
 
     /**
@@ -458,11 +456,11 @@ public abstract class CCPActivityBase {
     protected abstract void dealContentView(View contentView);
 
     public void addDialog(Dialog dialog) {
-        if(dialog == null) {
+        if (dialog == null) {
             return;
         }
 
-        if(mAppDialogCache == null) {
+        if (mAppDialogCache == null) {
             mAppDialogCache = new ArrayList<Dialog>();
         }
         mAppDialogCache.add(dialog);
@@ -476,14 +474,14 @@ public abstract class CCPActivityBase {
 
         int mutIndex = 0;
         String format = "%s";
-        if(isMute) {
+        if (isMute) {
             format = format + " #";
             mutIndex += 2;
         }
 
         SpannableString spannableString = EmoticonUtil.getTextFormat(mActionBarActivity, String.format(format, new Object[]{mTitleText}), dimensionPixelSize);
-        if(isMute) {
-            if(mMuteIcon == null) {
+        if (isMute) {
+            if (mMuteIcon == null) {
                 mMuteIcon = getTitleIconTips(dimensionPixelSize, R.drawable.chat_mute_notify_title_icon);
             }
             int length = spannableString.length() - mutIndex + 1;
@@ -493,12 +491,11 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @param padding
      * @param iconRes
      * @return
      */
-    private VerticalImageSpan getTitleIconTips(int padding , int iconRes) {
+    private VerticalImageSpan getTitleIconTips(int padding, int iconRes) {
         Drawable drawable = mActionBarActivity.getResources().getDrawable(iconRes);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         VerticalImageSpan imageSpan = new VerticalImageSpan(drawable);
@@ -507,7 +504,6 @@ public abstract class CCPActivityBase {
     }
 
     /**
-     *
      * @param mute
      */
     public CharSequence setMute(boolean mute) {

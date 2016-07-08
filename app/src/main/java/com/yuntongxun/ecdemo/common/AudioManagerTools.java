@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common;
+ */
+package com.yuntongxun.ecdemo.common;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -20,17 +21,22 @@ import android.media.AudioManager;
  */
 public class AudioManagerTools {
 
-    /**AudioManager */
+    /**
+     * AudioManager
+     */
     private AudioManager mAudioManager = null;
     private static AudioManagerTools mInstance;
+
     private AudioManagerTools() {
 
     }
 
-    /**单例方法*/
+    /**
+     * 单例方法
+     */
     public static AudioManagerTools getInstance() {
 
-        if(mInstance == null) {
+        if (mInstance == null) {
             mInstance = new AudioManagerTools();
         }
 
@@ -39,10 +45,11 @@ public class AudioManagerTools {
 
     /**
      * 返回当前所持有的AudioManager访问实例
+     *
      * @return
      */
     public final AudioManager getAudioManager() {
-        if(mAudioManager == null) {
+        if (mAudioManager == null) {
             mAudioManager = (AudioManager) CCPAppManager.getContext().getSystemService(Context.AUDIO_SERVICE);
         }
 

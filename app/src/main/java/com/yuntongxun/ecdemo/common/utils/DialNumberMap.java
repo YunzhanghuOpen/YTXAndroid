@@ -8,6 +8,7 @@ import java.util.HashMap;
  */
 public class DialNumberMap {
     public static HashMap<Character, Integer> numberMap = new HashMap<Character, Integer>();
+
     static {
         numberMap.put('a', 2);
         numberMap.put('b', 2);

@@ -25,48 +25,49 @@ import com.yuntongxun.ecdemo.R;
 
 /**
  * @author 容联•云通讯
- * @date 2014-12-9
  * @version 4.0
+ * @date 2014-12-9
  */
 public class FileRowViewHolder extends BaseHolder {
 
-	public TextView contentTv;
-	public ImageView ivVideoMp4;
-	
-	public FrameLayout fl;
-	public Button buPlayVideo;
-	
-	public TextView tvFile;
-	/**
-	 * @param type
-	 */
-	public FileRowViewHolder(int type) {
-		super(type);
+    public TextView contentTv;
+    public ImageView ivVideoMp4;
 
-	}
-	
-	public BaseHolder initBaseHolder(View baseView , boolean receive) {
-		super.initBaseHolder(baseView);
-		
-		chattingTime = (TextView) baseView.findViewById(R.id.chatting_time_tv);
-		chattingUser = ((TextView) baseView.findViewById(R.id.chatting_user_tv));
-		checkBox = ((CheckBox) baseView.findViewById(R.id.chatting_checkbox));
-		chattingMaskView = baseView.findViewById(R.id.chatting_maskview);
-		uploadState = ((ImageView) baseView.findViewById(R.id.chatting_state_iv));
-		contentTv = ((TextView) baseView.findViewById(R.id.chatting_content_itv));
-		
-		ivVideoMp4=(ImageView) baseView.findViewById(R.id.iv_file_mp4);
-		fl=(FrameLayout) baseView.findViewById(R.id.fl_chatting_video);
-		buPlayVideo=(Button) baseView.findViewById(R.id.btn_play_video);
-		tvFile=(TextView) baseView.findViewById(R.id.tv_filesize);
-		if(receive) {
-			type = 3;
-			return this;
-		}
-		
-		progressBar = (ProgressBar) baseView.findViewById(R.id.uploading_pb);
-		type = 4;
-		return this;
-	}
+    public FrameLayout fl;
+    public Button buPlayVideo;
+
+    public TextView tvFile;
+
+    /**
+     * @param type
+     */
+    public FileRowViewHolder(int type) {
+        super(type);
+
+    }
+
+    public BaseHolder initBaseHolder(View baseView, boolean receive) {
+        super.initBaseHolder(baseView);
+
+        chattingTime = (TextView) baseView.findViewById(R.id.chatting_time_tv);
+        chattingUser = ((TextView) baseView.findViewById(R.id.chatting_user_tv));
+        checkBox = ((CheckBox) baseView.findViewById(R.id.chatting_checkbox));
+        chattingMaskView = baseView.findViewById(R.id.chatting_maskview);
+        uploadState = ((ImageView) baseView.findViewById(R.id.chatting_state_iv));
+        contentTv = ((TextView) baseView.findViewById(R.id.chatting_content_itv));
+
+        ivVideoMp4 = (ImageView) baseView.findViewById(R.id.iv_file_mp4);
+        fl = (FrameLayout) baseView.findViewById(R.id.fl_chatting_video);
+        buPlayVideo = (Button) baseView.findViewById(R.id.btn_play_video);
+        tvFile = (TextView) baseView.findViewById(R.id.tv_filesize);
+        if (receive) {
+            type = 3;
+            return this;
+        }
+
+        progressBar = (ProgressBar) baseView.findViewById(R.id.uploading_pb);
+        type = 4;
+        return this;
+    }
 
 }

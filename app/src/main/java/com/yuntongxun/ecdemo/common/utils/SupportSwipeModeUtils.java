@@ -18,20 +18,20 @@ public class SupportSwipeModeUtils {
     public static void switchSwipebackMode(boolean enable) {
         SharedPreferences sharePreference = CCPAppManager.getSharePreference();
         boolean supportSwipe = sharePreference.getBoolean("settings_support_swipe", true);
-        if(supportSwipe != enable) {
+        if (supportSwipe != enable) {
             sharePreference.edit().putBoolean("settings_support_swipe", enable).commit();
         }
-        LogUtil.d(TAG , "switchSwipebackMode, from " + supportSwipe + " to " + enable);
+        LogUtil.d(TAG, "switchSwipebackMode, from " + supportSwipe + " to " + enable);
     }
 
     public static boolean isEnable() {
-        if(DemoUtils.nullAsNil(Build.VERSION.INCREMENTAL).toLowerCase().contains("flyme")
+        if (DemoUtils.nullAsNil(Build.VERSION.INCREMENTAL).toLowerCase().contains("flyme")
                 || DemoUtils.nullAsNil(Build.DISPLAY).toLowerCase().contains("flyme")) {
             return false;
         }
 
-        if(mode == 0) {
-            if(!CCPAppManager.getSharePreference().getBoolean("settings_support_swipe", true)) {
+        if (mode == 0) {
+            if (!CCPAppManager.getSharePreference().getBoolean("settings_support_swipe", true)) {
                 mode = 2;
             } else {
                 mode = 1;
@@ -39,4 +39,4 @@ public class SupportSwipeModeUtils {
         }
         return mode == 1;
     }
- }
+}

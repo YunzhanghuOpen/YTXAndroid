@@ -14,15 +14,15 @@ public class ViewImageInfo implements Parcelable {
 
 
     public static final Parcelable.Creator<ViewImageInfo> CREATOR
-                 = new Parcelable.Creator<ViewImageInfo>() {
-                 public ViewImageInfo createFromParcel(Parcel in) {
-                         return new ViewImageInfo(in);
-                     }
+            = new Parcelable.Creator<ViewImageInfo>() {
+        public ViewImageInfo createFromParcel(Parcel in) {
+            return new ViewImageInfo(in);
+        }
 
-                 public ViewImageInfo[] newArray(int size) {
-                         return new ViewImageInfo[size];
-                     }
-             };
+        public ViewImageInfo[] newArray(int size) {
+            return new ViewImageInfo[size];
+        }
+    };
 
 
     private int index;
@@ -32,7 +32,7 @@ public class ViewImageInfo implements Parcelable {
     private boolean isDownload = false;
     private boolean isGif = false;
 
-    public ViewImageInfo(int index , String thumb , String url) {
+    public ViewImageInfo(int index, String thumb, String url) {
         this.index = index;
         this.thumbnailurl = thumb;
         this.picurl = url;
@@ -49,7 +49,7 @@ public class ViewImageInfo implements Parcelable {
 
     }
 
-    public ViewImageInfo(String thumb , String url) {
+    public ViewImageInfo(String thumb, String url) {
         this(0, thumb, url);
     }
 
@@ -80,10 +80,10 @@ public class ViewImageInfo implements Parcelable {
     }
 
     private void checkGif() {
-        if(!isGif && this.thumbnailurl != null) {
+        if (!isGif && this.thumbnailurl != null) {
             isGif = this.thumbnailurl.endsWith(".gif");
         }
-        if(!isGif && this.picurl != null) {
+        if (!isGif && this.picurl != null) {
             isGif = this.picurl.endsWith(".gif");
         }
     }

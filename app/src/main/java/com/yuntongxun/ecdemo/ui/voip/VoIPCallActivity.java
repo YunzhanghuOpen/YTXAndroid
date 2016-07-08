@@ -7,30 +7,26 @@ import android.text.TextUtils;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.common.utils.ToastUtil;
-import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
-import com.yuntongxun.ecdemo.ui.voip.ECCallHeadUILayout.OnSendDTMFDelegate;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
-import com.yuntongxun.ecsdk.ECVoIPCallManager;
 import com.yuntongxun.ecsdk.ECVoIPCallManager.CallType;
-import com.yuntongxun.ecsdk.ECVoIPSetupManager;
 import com.yuntongxun.ecsdk.SdkErrorCode;
 
 /**
  * com.yuntongxun.ecdemo.ui.voip in ECDemo_Android
  * Created by Jorstin on 2015/7/3.
  */
-public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCallManager.OnCallProcessMultiDataListener*/{
+public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCallManager.OnCallProcessMultiDataListener*/ {
 
     private static final String TAG = "ECSDK_Demo.VoIPCallActivity";
-	private boolean isCallBack;
-	
+    private boolean isCallBack;
+
 
     @Override
     protected int getLayoutId() {
         return R.layout.ec_call_interface;
     }
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +34,15 @@ public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCall
 
 
         initCall();
-        isCreated=true;
-        
+        isCreated = true;
+
     }
 
     private void initCall() {
-        if(mIncomingCall) {
+        if (mIncomingCall) {
             // 来电
             mCallId = getIntent().getStringExtra(ECDevice.CALLID);
-            LogUtil.e("mCallId----"+mCallId);
+            LogUtil.e("mCallId----" + mCallId);
             mCallNumber = getIntent().getStringExtra(ECDevice.CALLER);
         } else {
             // 呼出
@@ -71,13 +67,13 @@ public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCall
                 //ECDevice.getECVoIPCallManager().setProcessDataEnabled(null , true , true , this);
                 mCallId = VoIPCallHelper.makeCall(mCallType, mCallNumber);
                 if (TextUtils.isEmpty(mCallId)) {
-                    ToastUtil .showMessage(R.string.ec_app_err_disconnect_server_tip);
+                    ToastUtil.showMessage(R.string.ec_app_err_disconnect_server_tip);
                     LogUtil.d(TAG, "Call fail, callId " + mCallId);
                     finish();
                     return;
                 }
             }
-            mCallHeaderView .setCallTextMsg(R.string.ec_voip_call_connecting_server);
+            mCallHeaderView.setCallTextMsg(R.string.ec_voip_call_connecting_server);
         } else {
             mCallHeaderView.setCallTextMsg(" ");
         }
@@ -85,12 +81,13 @@ public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCall
 
     @Override
     protected void onNewIntent(Intent intent) {
-    	if(!isCreated){
-         super.onNewIntent(intent);
-         initCall();
-    	}
+        if (!isCreated) {
+            super.onNewIntent(intent);
+            initCall();
+        }
     }
-    private boolean isCreated=false;
+
+    private boolean isCreated = false;
 
     private void initView() {
         mCallHeaderView = (ECCallHeadUILayout) findViewById(R.id.call_header_ll);
@@ -116,84 +113,88 @@ public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCall
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isCreated=false;
+        isCreated = false;
 
     }
 
     /**
      * 连接到服务器
+     *
      * @param callId 通话的唯一标识
      */
     @Override
     public void onCallProceeding(String callId) {
-        if(mCallHeaderView == null || !needNotify(callId)) {
-            return ;
+        if (mCallHeaderView == null || !needNotify(callId)) {
+            return;
         }
-        LogUtil.d(TAG , "onUICallProceeding:: call id " + callId);
+        LogUtil.d(TAG, "onUICallProceeding:: call id " + callId);
         mCallHeaderView.setCallTextMsg(R.string.ec_voip_call_connect);
     }
 
     /**
      * 连接到对端用户，播放铃音
+     *
      * @param callId 通话的唯一标识
      */
     @Override
     public void onCallAlerting(String callId) {
-        if(!needNotify(callId) || mCallHeaderView == null) {
-            return ;
+        if (!needNotify(callId) || mCallHeaderView == null) {
+            return;
         }
-        LogUtil.d(TAG , "onUICallAlerting:: call id " + callId);
+        LogUtil.d(TAG, "onUICallAlerting:: call id " + callId);
         mCallHeaderView.setCallTextMsg(R.string.ec_voip_calling_wait);
         mCallControlUIView.setCallDirect(ECCallControlUILayout.CallLayout.ALERTING);
     }
 
     /**
      * 对端应答，通话计时开始
+     *
      * @param callId 通话的唯一标识
      */
     @Override
     public void onCallAnswered(final String callId) {
-        if(!needNotify(callId)|| mCallHeaderView == null) {
-            return ;
+        if (!needNotify(callId) || mCallHeaderView == null) {
+            return;
         }
-        LogUtil.d(TAG , "onUICallAnswered:: call id " + callId);
+        LogUtil.d(TAG, "onUICallAnswered:: call id " + callId);
         mCallHeaderView.setCalling(true);
         isConnect = true;
-        
-        
+
+
     }
 
     @Override
-    public void onMakeCallFailed(String callId , int reason) {
-        if(mCallHeaderView == null || !needNotify(callId)) {
-            return ;
+    public void onMakeCallFailed(String callId, int reason) {
+        if (mCallHeaderView == null || !needNotify(callId)) {
+            return;
         }
         LogUtil.d(TAG, "onUIMakeCallFailed:: call id " + callId + " ,reason " + reason);
         mCallHeaderView.setCalling(false);
         isConnect = false;
         mCallHeaderView.setCallTextMsg(CallFailReason.getCallFailReason(reason));
-        if(reason != SdkErrorCode.REMOTE_CALL_BUSY && reason != SdkErrorCode.REMOTE_CALL_DECLINED) {
+        if (reason != SdkErrorCode.REMOTE_CALL_BUSY && reason != SdkErrorCode.REMOTE_CALL_DECLINED) {
             VoIPCallHelper.releaseCall(mCallId);
             finish();
         }
     }
-    
+
     @Override
     protected void onResume() {
-    	// TODO Auto-generated method stub
-    	super.onResume();
+        // TODO Auto-generated method stub
+        super.onResume();
     }
 
     /**
      * 通话结束，通话计时结束
+     *
      * @param callId 通话的唯一标识
      */
     @Override
     public void onCallReleased(String callId) {
-        if(mCallHeaderView == null || !needNotify(callId)) {
-            return ;
+        if (mCallHeaderView == null || !needNotify(callId)) {
+            return;
         }
-        LogUtil.d(TAG , "onUICallReleased:: call id " + callId);
+        LogUtil.d(TAG, "onUICallReleased:: call id " + callId);
         mCallHeaderView.setCalling(false);
         isConnect = false;
         mCallHeaderView.setCallTextMsg(R.string.ec_voip_calling_finish);
@@ -201,26 +202,26 @@ public class VoIPCallActivity extends ECVoIPBaseActivity /*implements ECVoIPCall
         finish();
     }
 
-	@Override
-	public void onMakeCallback(ECError ecError, String caller, String called) {
-		if(!TextUtils.isEmpty(mCallId)) {
-			return ;
-		}
-		if(ecError.errorCode != SdkErrorCode.REQUEST_SUCCESS) {
-			mCallHeaderView .setCallTextMsg("回拨呼叫失败[" + ecError.errorCode + "]");
-		} else {
-			mCallHeaderView .setCallTextMsg(R.string.ec_voip_call_back_success);
-		}
-		mCallHeaderView.setCalling(false);
+    @Override
+    public void onMakeCallback(ECError ecError, String caller, String called) {
+        if (!TextUtils.isEmpty(mCallId)) {
+            return;
+        }
+        if (ecError.errorCode != SdkErrorCode.REQUEST_SUCCESS) {
+            mCallHeaderView.setCallTextMsg("回拨呼叫失败[" + ecError.errorCode + "]");
+        } else {
+            mCallHeaderView.setCallTextMsg(R.string.ec_voip_call_back_success);
+        }
+        mCallHeaderView.setCalling(false);
         isConnect = false;
         mCallControlUIView.setControlEnable(false);
-		finish();
-	}
+        finish();
+    }
 
-	@Override
-	public void setDialerpadUI() {
-		mCallHeaderView.controllerDiaNumUI();
-	}
+    @Override
+    public void setDialerpadUI() {
+        mCallHeaderView.controllerDiaNumUI();
+    }
 
    /* @Override
     public byte[] onCallProcessData(byte[] inByte, boolean upLink) {

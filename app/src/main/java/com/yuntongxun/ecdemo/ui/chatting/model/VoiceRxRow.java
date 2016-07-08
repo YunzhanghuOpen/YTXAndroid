@@ -29,52 +29,53 @@ import com.yuntongxun.ecsdk.ECMessage;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan
- * @date 2014-4-17
  * @version 1.0
+ * @date 2014-4-17
  */
 public class VoiceRxRow extends BaseChattingRow {
 
-	public VoiceRxRow(int type) {
-		super(type);
-	}
-	
-	@Override
-	public View buildChatView(LayoutInflater inflater, View convertView) {
+    public VoiceRxRow(int type) {
+        super(type);
+    }
+
+    @Override
+    public View buildChatView(LayoutInflater inflater, View convertView) {
         //we have a don't have a converView so we'll have to create a new one
         if (convertView == null) {
             convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_from_voice);
-            
+
             //use the view holder pattern to save of already looked up subviews
             VoiceRowViewHolder holder = new VoiceRowViewHolder(mRowType);
             convertView.setTag(holder.initBaseHolder(convertView, true));
-        } 
-		return convertView;
-	}
-
-	@Override
-	public void buildChattingData(Context context, BaseHolder baseHolder,
-			final ECMessage detail, int position) {
-		
-		VoiceRowViewHolder holder = (VoiceRowViewHolder) baseHolder;
-        if(detail != null) {
-        	VoiceRowViewHolder.initVoiceRow(holder, detail, position, (ChattingActivity) context, true);
-        	holder.voiceAnim.setVoiceFrom(true);
         }
-	}
-	
+        return convertView;
+    }
 
-	@Override
-	public int getChatViewType() {
+    @Override
+    public void buildChattingData(Context context, BaseHolder baseHolder,
+                                  final ECMessage detail, int position) {
 
-		return ChattingRowType.VOICE_ROW_RECEIVED.ordinal();
-	}
+        VoiceRowViewHolder holder = (VoiceRowViewHolder) baseHolder;
+        if (detail != null) {
+            VoiceRowViewHolder.initVoiceRow(holder, detail, position, (ChattingActivity) context, true);
+            holder.voiceAnim.setVoiceFrom(true);
+        }
+    }
 
-	@Override
-	public boolean onCreateRowContextMenu(ContextMenu contextMenu,
-			View targetView, ECMessage detail) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
+    @Override
+    public int getChatViewType() {
+
+        return ChattingRowType.VOICE_ROW_RECEIVED.ordinal();
+    }
+
+    @Override
+    public boolean onCreateRowContextMenu(ContextMenu contextMenu,
+                                          View targetView, ECMessage detail) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

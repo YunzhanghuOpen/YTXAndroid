@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 public class OnLayoutChangedLinearLayout extends LinearLayout {
 
     public OnLayoutChangedListener mListener;
+
     public OnLayoutChangedLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -25,8 +26,8 @@ public class OnLayoutChangedLinearLayout extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        if(mListener == null) {
-            return ;
+        if (mListener == null) {
+            return;
         }
         mListener.onLayoutChanged();
     }

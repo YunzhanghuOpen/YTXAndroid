@@ -25,9 +25,10 @@ import com.yuntongxun.ecsdk.ECMessage;
 
 /**
  * 数据库访问接口
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-11
  * @version 4.0
+ * @date 2014-12-11
  */
 public abstract class AbstractSQLManager {
 
@@ -42,7 +43,7 @@ public abstract class AbstractSQLManager {
 
     private void openDatabase(Context context, int databaseVersion) {
         if (databaseHelper == null) {
-            databaseHelper = new DatabaseHelper(context,this , databaseVersion);
+            databaseHelper = new DatabaseHelper(context, this, databaseVersion);
         }
         //DatabaseManager.initializeInstance(databaseHelper);
         if (sqliteDB == null) {
@@ -68,7 +69,8 @@ public abstract class AbstractSQLManager {
             if (isReadonly) {
                 sqliteDB = databaseHelper.getReadableDatabase();
             } else {
-                sqliteDB = databaseHelper.getWritableDatabase();/*DatabaseManager.getInstance().openDatabase()*/;
+                sqliteDB = databaseHelper.getWritableDatabase();/*DatabaseManager.getInstance().openDatabase()*/
+                ;
             }
         }
     }
@@ -82,8 +84,8 @@ public abstract class AbstractSQLManager {
     private void closeDB() {
         if (sqliteDB != null) {
             //DatabaseManager.getInstance().closeDatabase();
-             sqliteDB.close();
-             sqliteDB = null;
+            sqliteDB.close();
+            sqliteDB = null;
         }
     }
 
@@ -93,13 +95,14 @@ public abstract class AbstractSQLManager {
     }
 
 
-
     /**
      * 创建基础表结构
      */
     static class DatabaseHelper extends SQLiteOpenHelper {
 
-        /**数据库名称*/
+        /**
+         * 数据库名称
+         */
         static final String DATABASE_NAME = "ECSDK_Msg.db";
         static final String DESC = "DESC";
         static final String ASC = "ASC";
@@ -114,15 +117,16 @@ public abstract class AbstractSQLManager {
 
 
         private AbstractSQLManager mAbstractSQLManager;
-        public DatabaseHelper(Context context, AbstractSQLManager manager ,int version) {
-            this(context, manager , CCPAppManager.getClientUser().getUserId() + "_" + DATABASE_NAME, null, version);
+
+        public DatabaseHelper(Context context, AbstractSQLManager manager, int version) {
+            this(context, manager, CCPAppManager.getClientUser().getUserId() + "_" + DATABASE_NAME, null, version);
 
         }
 
-        public DatabaseHelper(Context context, AbstractSQLManager manager , String name,
+        public DatabaseHelper(Context context, AbstractSQLManager manager, String name,
                               CursorFactory factory, int version) {
             super(context, name, factory, version);
-            mAbstractSQLManager = manager ;
+            mAbstractSQLManager = manager;
         }
 
         @Override
@@ -133,21 +137,21 @@ public abstract class AbstractSQLManager {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             onTriggerUpgrade(db);
-            if(oldVersion < 9) {
+            if (oldVersion < 9) {
                 onUpdateOld(db);
             }
             createTables(db);
-            if(oldVersion < 9) {
+            if (oldVersion < 9) {
                 onGroupUpgrade(db);
             }
-            if(oldVersion<17){
-            	onUpdateGroupTable(db);
+            if (oldVersion < 17) {
+                onUpdateGroupTable(db);
             }
-            
+
         }
 
         private void onAddHistoryTable(SQLiteDatabase db) {
-        	String sql = "CREATE TABLE IF NOT EXISTS "
+            String sql = "CREATE TABLE IF NOT EXISTS "
                     + TABLES_NAME_IM_MESSAGE_HISTORY
                     + " ("
                     + IMessageColumn.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -169,38 +173,39 @@ public abstract class AbstractSQLManager {
                     + ")";
             LogUtil.v(TAG + ":" + sql);
             db.execSQL(sql);
-			
-		}
 
-		private void onUpdateGroupTable(SQLiteDatabase db) {
-        	
-        	String sql = "ALTER TABLE groups2 ADD  COLUMN isdiscussion Integer";
+        }
 
-        	db.execSQL(sql);
-		}
+        private void onUpdateGroupTable(SQLiteDatabase db) {
 
-		private void onUpdateOld(SQLiteDatabase db) {
-            String[] sqls = new String[]{TABLES_NAME_IM_SESSION ,
+            String sql = "ALTER TABLE groups2 ADD  COLUMN isdiscussion Integer";
+
+            db.execSQL(sql);
+        }
+
+        private void onUpdateOld(SQLiteDatabase db) {
+            String[] sqls = new String[]{TABLES_NAME_IM_SESSION,
                     TABLES_NAME_IM_MESSAGE};
             String[] dropTrigger = new String[]{"delete_obsolete_threads_im",
-            "im_update_thread_on_delete",
-            "im_update_thread_on_delete2",
-            "im_update_thread_on_insert",
-            "im_update_thread_on_insert2",
-            "im_update_thread_read_on_update",
-            "im_update_thread_on_update",
-            "thread_update_im_on_delete"};
-            for(String sql : sqls) {
+                    "im_update_thread_on_delete",
+                    "im_update_thread_on_delete2",
+                    "im_update_thread_on_insert",
+                    "im_update_thread_on_insert2",
+                    "im_update_thread_read_on_update",
+                    "im_update_thread_on_update",
+                    "thread_update_im_on_delete"};
+            for (String sql : sqls) {
                 db.execSQL("DROP TABLE IF EXISTS " + sql);
             }
 
-            for(String sql : dropTrigger) {
+            for (String sql : dropTrigger) {
                 db.execSQL("DROP TRIGGER IF EXISTS " + sql);
             }
         }
 
         /**
          * 更新触发器
+         *
          * @param db
          */
         private void onTriggerUpgrade(SQLiteDatabase db) {
@@ -241,6 +246,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * 创建联系人表
+         *
          * @param db
          */
         void createTableForContacts(SQLiteDatabase db) {
@@ -264,6 +270,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * IM消息表
+         *
          * @param db
          */
         void createTableForIMessage(SQLiteDatabase db) {
@@ -294,6 +301,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * IM消息会话
+         *
          * @param db
          */
         void createTableForISession(SQLiteDatabase db) {
@@ -318,6 +326,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * 创建群组
+         *
          * @param db
          */
         void createTaleForIMGroups(SQLiteDatabase db) {
@@ -327,7 +336,7 @@ public abstract class AbstractSQLManager {
                     + GroupColumn.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + GroupColumn.GROUP_ID + " TEXT UNIQUE ON CONFLICT ABORT, "
                     + GroupColumn.GROUP_NAME + " TEXT, "
-                    + GroupColumn.GROUP_OWNER +" TEXT, "
+                    + GroupColumn.GROUP_OWNER + " TEXT, "
                     + GroupColumn.GROUP_DECLARED + "  TEXT, "
                     + GroupColumn.GROUP_TYPE + " INTEGER DEFAULT 0, "
                     + GroupColumn.GROUP_PERMISSION + " INTEGER DEFAULT 0, "
@@ -343,6 +352,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * 创建群组成员数据库
+         *
          * @param db
          */
         void createTableGroupMembers(SQLiteDatabase db) {
@@ -395,6 +405,7 @@ public abstract class AbstractSQLManager {
 
         /**
          * 创建IM消息会话表触发器
+         *
          * @param db
          */
         void createTriggerForIMessage(SQLiteDatabase db) {
@@ -406,102 +417,100 @@ public abstract class AbstractSQLManager {
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_delete AFTER DELETE ON " + TABLES_NAME_IM_MESSAGE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_delete AFTER DELETE ON " + TABLES_NAME_IM_MESSAGE + " "
                     + "BEGIN   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_IM_MESSAGE + ".id) FROM " + TABLES_NAME_IM_MESSAGE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + IMessageColumn.OWN_THREAD_ID +  " WHERE " + IMessageColumn.OWN_THREAD_ID +  " = old." + IMessageColumn.OWN_THREAD_ID +  " AND " + TABLES_NAME_IM_MESSAGE + "." + IMessageColumn.BOX_TYPE + " != 3 )   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_IM_MESSAGE + ".id) FROM " + TABLES_NAME_IM_MESSAGE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + IMessageColumn.OWN_THREAD_ID + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " AND " + TABLES_NAME_IM_MESSAGE + "." + IMessageColumn.BOX_TYPE + " != 3 )   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BODY + " AS " + IThreadColumn.SNIPPET + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " =  (SELECT " + IMessageColumn.CREATE_DATE + " FROM (SELECT " + IMessageColumn.CREATE_DATE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.CREATE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = (SELECT " + IMessageColumn.BOX_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BOX_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = (SELECT " + IMessageColumn.SEND_STATUS + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.SEND_STATUS + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_TYPE + " = (SELECT " + IMessageColumn.MESSAGE_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.MESSAGE_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = (SELECT " + IMessageColumn.BOX_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BOX_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = (SELECT " + IMessageColumn.SEND_STATUS + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.SEND_STATUS + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_TYPE + " = (SELECT " + IMessageColumn.MESSAGE_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.MESSAGE_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ")    WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
 
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
-            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_delete2 AFTER DELETE ON " + TABLES_NAME_IM_MESSAGE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_delete2 AFTER DELETE ON " + TABLES_NAME_IM_MESSAGE + " "
                     + "BEGIN   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.CONTACT_ID
-                        + " = (SELECT " + IMessageColumn.sender + " FROM (SELECT " + IMessageColumn.sender + ", " + IMessageColumn.CREATE_DATE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") "
-                        + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.CREATE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + " = (SELECT " + IMessageColumn.sender + " FROM (SELECT " + IMessageColumn.sender + ", " + IMessageColumn.CREATE_DATE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") "
+                    + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.CREATE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_insert AFTER INSERT ON " + TABLES_NAME_IM_MESSAGE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_insert AFTER INSERT ON " + TABLES_NAME_IM_MESSAGE + " "
                     + "BEGIN  "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET "
                     + IThreadColumn.DATE + " = new." + IMessageColumn.CREATE_DATE + ","
                     + IThreadColumn.SNIPPET + " = new." + IMessageColumn.BODY + ", "
                     + IThreadColumn.BOX_TYPE + "=new." + IMessageColumn.BOX_TYPE + ","
                     + IThreadColumn.SEND_STATUS + "=new." + IMessageColumn.SEND_STATUS + ","
-                    + IThreadColumn.MESSAGE_TYPE + "=new." + IMessageColumn.MESSAGE_TYPE + " WHERE " + TABLES_NAME_IM_SESSION+ ".id = new." + IMessageColumn.OWN_THREAD_ID + "; "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_IM_MESSAGE+ ".id) FROM " + TABLES_NAME_IM_MESSAGE+ " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + IMessageColumn.OWN_THREAD_ID + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = new." + IMessageColumn.OWN_THREAD_ID + " AND " + TABLES_NAME_IM_MESSAGE + "." + IMessageColumn.BOX_TYPE + " != 3 )   WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + IThreadColumn.MESSAGE_TYPE + "=new." + IMessageColumn.MESSAGE_TYPE + " WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID + "; "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_IM_MESSAGE + ".id) FROM " + TABLES_NAME_IM_MESSAGE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + IMessageColumn.OWN_THREAD_ID + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = new." + IMessageColumn.OWN_THREAD_ID + " AND " + TABLES_NAME_IM_MESSAGE + "." + IMessageColumn.BOX_TYPE + " != 3 )   WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.UNREAD_COUNT + " =(" +
-                        "(SELECT " + IThreadColumn.UNREAD_COUNT + " FROM " + TABLES_NAME_IM_SESSION+ " WHERE " + IThreadColumn.ID + " = new." + IMessageColumn.OWN_THREAD_ID +")+1) "
-                        + " WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID +  " AND new." + IMessageColumn.BOX_TYPE + " == 1 ;"
+                    "(SELECT " + IThreadColumn.UNREAD_COUNT + " FROM " + TABLES_NAME_IM_SESSION + " WHERE " + IThreadColumn.ID + " = new." + IMessageColumn.OWN_THREAD_ID + ")+1) "
+                    + " WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID + " AND new." + IMessageColumn.BOX_TYPE + " == 1 ;"
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
-            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_insert2 AFTER INSERT ON " + TABLES_NAME_IM_MESSAGE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_insert2 AFTER INSERT ON " + TABLES_NAME_IM_MESSAGE + " "
                     + "BEGIN  "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET "
-                    + IThreadColumn.CONTACT_ID + " = new." + IMessageColumn.sender + " WHERE " + TABLES_NAME_IM_SESSION+ ".id = new." + IMessageColumn.OWN_THREAD_ID + "; "
+                    + IThreadColumn.CONTACT_ID + " = new." + IMessageColumn.sender + " WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + IMessageColumn.OWN_THREAD_ID + "; "
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-           
 
-            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_update AFTER  UPDATE ON " + TABLES_NAME_IM_MESSAGE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS im_update_thread_on_update AFTER  UPDATE ON " + TABLES_NAME_IM_MESSAGE + " "
                     + "BEGIN   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = (SELECT " + IMessageColumn.CREATE_DATE + " FROM (SELECT " + IMessageColumn.CREATE_DATE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.CREATE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BODY + " AS " + IThreadColumn.SNIPPET + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = (SELECT " + IMessageColumn.BOX_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BOX_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = (SELECT " + IMessageColumn.SEND_STATUS + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.SEND_STATUS + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID+ " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = (SELECT " + IMessageColumn.CREATE_DATE + " FROM (SELECT " + IMessageColumn.CREATE_DATE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.CREATE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BODY + " AS " + IThreadColumn.SNIPPET + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = (SELECT " + IMessageColumn.BOX_TYPE + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.BOX_TYPE + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = (SELECT " + IMessageColumn.SEND_STATUS + " FROM (SELECT " + IMessageColumn.RECEIVE_DATE + ", " + IMessageColumn.SEND_STATUS + ", " + IMessageColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_IM_MESSAGE + ") WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IMessageColumn.OWN_THREAD_ID + " ORDER BY " + IMessageColumn.RECEIVE_DATE + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + IMessageColumn.OWN_THREAD_ID + ";   "
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS thread_update_im_on_delete AFTER DELETE ON " + TABLES_NAME_IM_SESSION +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS thread_update_im_on_delete AFTER DELETE ON " + TABLES_NAME_IM_SESSION + " "
                     + "BEGIN DELETE FROM " + TABLES_NAME_IM_MESSAGE + " WHERE " + IMessageColumn.OWN_THREAD_ID + " = old." + IThreadColumn.ID + ";END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
         }
-        
-       
 
 
         /**
          * 创建系统通知表触发器
+         *
          * @param db
          */
         void createTriggerForSystemNotice(SQLiteDatabase db) {
-            String sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_delete AFTER DELETE ON " + TABLES_NAME_SYSTEM_NOTICE +" "
+            String sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_delete AFTER DELETE ON " + TABLES_NAME_SYSTEM_NOTICE + " "
                     + "BEGIN   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_SYSTEM_NOTICE + ".id) FROM " + TABLES_NAME_SYSTEM_NOTICE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + SystemNoticeColumn.OWN_THREAD_ID +  " WHERE " + SystemNoticeColumn.OWN_THREAD_ID +  " = old." + SystemNoticeColumn.OWN_THREAD_ID +  ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_SYSTEM_NOTICE + ".id) FROM " + TABLES_NAME_SYSTEM_NOTICE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + SystemNoticeColumn.OWN_THREAD_ID + " WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.UNREAD_COUNT + " =(SELECT COUNT(*) FROM " + TABLES_NAME_SYSTEM_NOTICE + " WHERE " + SystemNoticeColumn.NOTICE_READ_STATUS + " = 0 AND " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.NOTICE_VERIFYMSG + " AS " + IThreadColumn.SNIPPET + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ")    WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " =    (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ")    WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = " + ECMessage.Direction.RECEIVE .ordinal()+ "; "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = " + ECMessage.Direction.RECEIVE.ordinal() + "; "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = " + ECMessage.MessageStatus.SUCCESS.ordinal() + " ;   "
-                   // + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_TYPE + " = " + com.speedtong.example.storage.GroupNoticeSqlManager.NOTICE_MSG_TYPE + " ;   "
+                    // + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_TYPE + " = " + com.speedtong.example.storage.GroupNoticeSqlManager.NOTICE_MSG_TYPE + " ;   "
 
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_insert AFTER INSERT ON " + TABLES_NAME_SYSTEM_NOTICE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_insert AFTER INSERT ON " + TABLES_NAME_SYSTEM_NOTICE + " "
                     + "BEGIN  "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = new." + SystemNoticeColumn.NOTICE_DATECREATED + "," + IThreadColumn.SNIPPET + " = new." + SystemNoticeColumn.NOTICE_VERIFYMSG + "," + IThreadColumn.BOX_TYPE + "=" + ECMessage.Direction.RECEIVE.ordinal() + "," + IThreadColumn.SEND_STATUS + "=" + ECMessage.MessageStatus.SUCCESS.ordinal() + "," + IThreadColumn.MESSAGE_TYPE + "=" + GroupNoticeSqlManager.NOTICE_MSG_TYPE + " WHERE " + TABLES_NAME_IM_SESSION+ ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + "; "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_SYSTEM_NOTICE+ ".id) FROM " + TABLES_NAME_SYSTEM_NOTICE+ " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + SystemNoticeColumn.OWN_THREAD_ID + " WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID + "  )   WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.NOTICE_VERIFYMSG + " AS " + IThreadColumn.SNIPPET + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID+ " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.UNREAD_COUNT + " =(SELECT COUNT(*) FROM " + TABLES_NAME_SYSTEM_NOTICE+ " WHERE " + SystemNoticeColumn.NOTICE_READ_STATUS+ " = 0  AND " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID + ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";  "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = new." + SystemNoticeColumn.NOTICE_DATECREATED + "," + IThreadColumn.SNIPPET + " = new." + SystemNoticeColumn.NOTICE_VERIFYMSG + "," + IThreadColumn.BOX_TYPE + "=" + ECMessage.Direction.RECEIVE.ordinal() + "," + IThreadColumn.SEND_STATUS + "=" + ECMessage.MessageStatus.SUCCESS.ordinal() + "," + IThreadColumn.MESSAGE_TYPE + "=" + GroupNoticeSqlManager.NOTICE_MSG_TYPE + " WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + "; "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.MESSAGE_COUNT + " = (SELECT COUNT(" + TABLES_NAME_SYSTEM_NOTICE + ".id) FROM " + TABLES_NAME_SYSTEM_NOTICE + " LEFT JOIN " + TABLES_NAME_IM_SESSION + " ON " + TABLES_NAME_IM_SESSION + ".id = " + SystemNoticeColumn.OWN_THREAD_ID + " WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID + "  )   WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.NOTICE_VERIFYMSG + " AS " + IThreadColumn.SNIPPET + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID + " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.UNREAD_COUNT + " =(SELECT COUNT(*) FROM " + TABLES_NAME_SYSTEM_NOTICE + " WHERE " + SystemNoticeColumn.NOTICE_READ_STATUS + " = 0  AND " + SystemNoticeColumn.OWN_THREAD_ID + " = new." + SystemNoticeColumn.OWN_THREAD_ID + ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = new." + SystemNoticeColumn.OWN_THREAD_ID + ";  "
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_read_on_update AFTER  UPDATE OF " + SystemNoticeColumn.NOTICE_READ_STATUS + "  ON " + TABLES_NAME_SYSTEM_NOTICE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_read_on_update AFTER  UPDATE OF " + SystemNoticeColumn.NOTICE_READ_STATUS + "  ON " + TABLES_NAME_SYSTEM_NOTICE + " "
                     + "BEGIN   "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.UNREAD_COUNT + " =(SELECT COUNT(*) FROM " + TABLES_NAME_SYSTEM_NOTICE + " WHERE " + SystemNoticeColumn.NOTICE_READ_STATUS + " = 0 AND " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + ")  WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + "; "
                     + "END;";
@@ -509,24 +518,24 @@ public abstract class AbstractSQLManager {
             db.execSQL(sql);
 
 
-            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_update AFTER  UPDATE ON " + TABLES_NAME_SYSTEM_NOTICE +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS system_update_thread_on_update AFTER  UPDATE ON " + TABLES_NAME_SYSTEM_NOTICE + " "
                     + "BEGIN   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID+ " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.NOTICE_VERIFYMSG + " AS " + IThreadColumn.SNIPPET + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID+ " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION+ ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.DATE + " = (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SNIPPET + " = (SELECT " + IThreadColumn.SNIPPET + " FROM (SELECT " + SystemNoticeColumn.NOTICE_DATECREATED + ", " + SystemNoticeColumn.NOTICE_VERIFYMSG + " AS " + IThreadColumn.SNIPPET + ", " + SystemNoticeColumn.OWN_THREAD_ID + " FROM " + TABLES_NAME_SYSTEM_NOTICE + ") WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + SystemNoticeColumn.OWN_THREAD_ID + " ORDER BY " + SystemNoticeColumn.NOTICE_DATECREATED + " DESC LIMIT 1)   WHERE " + TABLES_NAME_IM_SESSION + ".id = old." + SystemNoticeColumn.OWN_THREAD_ID + ";   "
 
-                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = " + ECMessage.Direction.RECEIVE .ordinal() + "; "
+                    + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.BOX_TYPE + " = " + ECMessage.Direction.RECEIVE.ordinal() + "; "
                     + "UPDATE " + TABLES_NAME_IM_SESSION + " SET " + IThreadColumn.SEND_STATUS + " = " + ECMessage.MessageStatus.SUCCESS.ordinal() + " ;   "
                     + "END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
 
-            sql = "CREATE TRIGGER IF NOT EXISTS thread_update_system_on_delete AFTER DELETE ON " + TABLES_NAME_IM_SESSION +" "
+            sql = "CREATE TRIGGER IF NOT EXISTS thread_update_system_on_delete AFTER DELETE ON " + TABLES_NAME_IM_SESSION + " "
                     + "BEGIN DELETE FROM " + TABLES_NAME_SYSTEM_NOTICE + " WHERE " + SystemNoticeColumn.OWN_THREAD_ID + " = old." + IThreadColumn.ID + ";END;";
             LogUtil.d(LogUtil.getLogUtilsTag(AbstractSQLManager.class), sql);
             db.execSQL(sql);
         }
 
-        public  static void createImgInfoTable(SQLiteDatabase db) {
+        public static void createImgInfoTable(SQLiteDatabase db) {
             String sql = "CREATE TABLE IF NOT EXISTS "
                     + ImgInfoSqlManager.TABLES_NAME_IMGINFO
                     + " ( "
@@ -626,40 +635,72 @@ public abstract class AbstractSQLManager {
      * 联系人表
      */
     public class ContactsColumn extends BaseColumn {
-        /**联系人账号*/
+        /**
+         * 联系人账号
+         */
         public static final String CONTACT_ID = "contact_id";
-        /**联系人昵称*/
+        /**
+         * 联系人昵称
+         */
         public static final String USERNAME = "username";
-        /**联系人账号Token*/
+        /**
+         * 联系人账号Token
+         */
         public static final String TOKEN = "token";
-        /**联系人子账号*/
+        /**
+         * 联系人子账号
+         */
         public static final String SUBACCOUNT = "subAccount";
-        /**联系人子账号Token*/
+        /**
+         * 联系人子账号Token
+         */
         public static final String SUBTOKEN = "subToken";
-        /**联系人类型*/
+        /**
+         * 联系人类型
+         */
         public static final String type = "type";
-        /**备注*/
+        /**
+         * 备注
+         */
         public static final String REMARK = "remark";
     }
 
-    class GroupColumn extends BaseColumn{
-        /**群组ID*/
+    class GroupColumn extends BaseColumn {
+        /**
+         * 群组ID
+         */
         public static final String GROUP_ID = "groupid";
-        /**群组名称*/
+        /**
+         * 群组名称
+         */
         public static final String GROUP_NAME = "name";
-        /**群组创建者*/
+        /**
+         * 群组创建者
+         */
         public static final String GROUP_OWNER = "owner";
-        /**群组类型 0:临时组(上限100人) 1:普通组(上限200人) 2:VIP组(上限500人)*/
+        /**
+         * 群组类型 0:临时组(上限100人) 1:普通组(上限200人) 2:VIP组(上限500人)
+         */
         public static final String GROUP_TYPE = "type";
-        /**群组公告*/
+        /**
+         * 群组公告
+         */
         public static final String GROUP_DECLARED = "declared";
-        /**群组创建日期*/
+        /**
+         * 群组创建日期
+         */
         public static final String GROUP_DATE_CREATED = "create_date";
-        /**群组成员数*/
+        /**
+         * 群组成员数
+         */
         public static final String GROUP_MEMBER_COUNTS = "count";
-        /**群组群组加入权限*/
+        /**
+         * 群组群组加入权限
+         */
         public static final String GROUP_PERMISSION = "permission";
-        /**群组是否加入*/
+        /**
+         * 群组是否加入
+         */
         public static final String GROUP_JOINED = "joined";
         public static final String GROUP_ISNOTICE = "isnotice";
         public static final String GROUP_Discussion = "isdiscussion";

@@ -24,9 +24,10 @@ import com.yuntongxun.ecsdk.ECMessage;
 
 /**
  * 群组通知消息数据库
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-31
  * @version 4.0
+ * @date 2014-12-31
  */
 public class GroupNoticeSqlManager extends AbstractSQLManager {
 
@@ -48,12 +49,13 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
 
     /**
      * 更新群组通知消息
+     *
      * @param notice
      * @return
      */
     public static long insertNoticeMsg(NoticeSystemMessage notice) {
         long ownThreadId = -1;
-        if(notice != null) {
+        if (notice != null) {
             // values.put("sid", "ec_group@yuntongxun.com");
             ContentValues buildContentValues = notice.buildContentValues();
             ownThreadId = ConversationSqlManager.querySessionIdForBySessionId(CONTACT_ID);
@@ -69,10 +71,10 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
                     LogUtil.e(TAG + " " + e.toString());
                 }
             }
-            if(ownThreadId > 0) {
+            if (ownThreadId > 0) {
                 buildContentValues.put(SystemNoticeColumn.OWN_THREAD_ID, ownThreadId);
                 long row = getInstance().sqliteDB().insert(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, null, buildContentValues);
-                if(row != -1) {
+                if (row != -1) {
                     getInstance().notifyChanged("ec_group@yuntongxun.com");
                 }
                 return row;
@@ -84,12 +86,13 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
 
     /**
      * 更新群组通知消息
+     *
      * @param notice
      * @return
      */
     public static long insertNoticeMsg(DemoGroupNotice notice) {
         long ownThreadId = -1;
-        if(notice != null) {
+        if (notice != null) {
             // values.put("sid", "ec_group@yuntongxun.com");
             ContentValues buildContentValues = notice.buildContentValues();
             ownThreadId = ConversationSqlManager.querySessionIdForBySessionId(notice.getSender());
@@ -106,17 +109,17 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
                     LogUtil.e(TAG + " " + e.toString());
                 }
             }
-            if(ownThreadId > 0) {
+            if (ownThreadId > 0) {
                 buildContentValues.put(SystemNoticeColumn.OWN_THREAD_ID, ownThreadId);
                 long row = -1;
-                if(!getInstance().hasNotice(notice.getId())) {
+                if (!getInstance().hasNotice(notice.getId())) {
                     row = getInstance().sqliteDB().insert(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, null, buildContentValues);
                 } else {
                     buildContentValues.remove("notice_id");
                     buildContentValues.remove("isRead");
-                    row = getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE , buildContentValues , "notice_id='" + notice.getId() + "'", null);
+                    row = getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, buildContentValues, "notice_id='" + notice.getId() + "'", null);
                 }
-                if(row != -1) {
+                if (row != -1) {
                     getInstance().notifyChanged(notice.getSender());
                 }
                 return row;
@@ -124,24 +127,25 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
         }
         return -1;
     }
+
     public static long insertNoticeMsgForSystem(DemoGroupNotice notice) {
         long ownThreadId = -1;
-        if(notice != null) {
+        if (notice != null) {
             ContentValues buildContentValues = notice.buildContentValues();
 
-                buildContentValues.put(SystemNoticeColumn.OWN_THREAD_ID, ownThreadId);
-                long row = -1;
-                if(!getInstance().hasNotice(notice.getId())) {
-                    row = getInstance().sqliteDB().insert(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, null, buildContentValues);
-                } else {
-                    buildContentValues.remove("notice_id");
-                    buildContentValues.remove("isRead");
-                    row = getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE , buildContentValues , "notice_id='" + notice.getId() + "'", null);
-                }
-                if(row != -1) {
-                    getInstance().notifyChanged(notice.getSender());
-                }
-                return row;
+            buildContentValues.put(SystemNoticeColumn.OWN_THREAD_ID, ownThreadId);
+            long row = -1;
+            if (!getInstance().hasNotice(notice.getId())) {
+                row = getInstance().sqliteDB().insert(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, null, buildContentValues);
+            } else {
+                buildContentValues.remove("notice_id");
+                buildContentValues.remove("isRead");
+                row = getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, buildContentValues, "notice_id='" + notice.getId() + "'", null);
+            }
+            if (row != -1) {
+                getInstance().notifyChanged(notice.getSender());
+            }
+            return row;
         }
         return -1;
     }
@@ -149,7 +153,7 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
     public boolean hasNotice(String noticeid) {
         String sql = "select notice_id from " + DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE + " where notice_id='" + noticeid + "'";
         Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.close();
             cursor = null;
             return true;
@@ -158,16 +162,16 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
     }
 
     /**
-     *
      * @return
      */
     public static int getMaxVersion() {
-        String sql = "select max(version) as maxVersion from " + DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE ;
-        Cursor cursor = getInstance().sqliteDB().rawQuery(sql , null);
-        if(cursor != null && cursor.getCount() > 0) {
-            if(cursor.moveToFirst()) {
+        String sql = "select max(version) as maxVersion from " + DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE;
+        Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
                 int maxVersion = cursor.getInt(cursor.getColumnIndex("maxVersion"));
-                cursor.close();;
+                cursor.close();
+                ;
                 return maxVersion;
             }
         }
@@ -176,6 +180,7 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
 
     /**
      * 查询通知
+     *
      * @return
      */
     public static Cursor getCursor() {
@@ -228,7 +233,7 @@ public class GroupNoticeSqlManager extends AbstractSQLManager {
 
     public static long updateNoticeOperation(String id, boolean isAccept) {
         ContentValues values = new ContentValues();
-        values.put("confirm" , isAccept? GroupNoticeHelper.SYSTEM_MESSAGE_THROUGH:GroupNoticeHelper.SYSTEM_MESSAGE_REFUSE);
-        return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE , values ,"notice_id='" + id +"'", null);
+        values.put("confirm", isAccept ? GroupNoticeHelper.SYSTEM_MESSAGE_THROUGH : GroupNoticeHelper.SYSTEM_MESSAGE_REFUSE);
+        return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_SYSTEM_NOTICE, values, "notice_id='" + id + "'", null);
     }
 }

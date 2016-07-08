@@ -9,9 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.photopicker;
-
-import java.util.List;
+ */
+package com.yuntongxun.ecdemo.photopicker;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,11 +25,14 @@ import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.photopicker.model.PhotoDirectory;
 import com.yuntongxun.ecdemo.photopicker.utils.PhotoUtils;
 
+import java.util.List;
+
 /**
  * 图片目录适配器
+ *
  * @author 容联•云通讯
- * @since 2016-4-6
  * @version 5.0
+ * @since 2016-4-6
  */
 public class FolderAdapter extends BaseAdapter {
 
@@ -60,7 +62,6 @@ public class FolderAdapter extends BaseAdapter {
     }
 
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -79,13 +80,13 @@ public class FolderAdapter extends BaseAdapter {
         holder.selectIV.setVisibility(View.GONE);
         holder.photoIV.setImageResource(R.drawable.picker_ic_photo_loading);
         PhotoDirectory folder = mData.get(position);
-        if(folder.isSelected()) {
+        if (folder.isSelected()) {
             holder.selectIV.setVisibility(View.VISIBLE);
         }
         holder.folderNameTV.setText(folder.getName());
         holder.photoNumTV.setText(folder.getPhotos().size() + "张");
         Glide.with(mContext).load(folder.getPhotos().get(0).getPath()).dontAnimate()
-		.thumbnail(0.1f).into(holder.photoIV);
+                .thumbnail(0.1f).into(holder.photoIV);
         return convertView;
     }
 

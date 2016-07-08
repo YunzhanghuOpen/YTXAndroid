@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui;
+ */
+package com.yuntongxun.ecdemo.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -31,7 +32,6 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.common.utils.ToastUtil;
 import com.yuntongxun.ecdemo.common.view.NetWarnBannerView;
-import com.yuntongxun.ecdemo.storage.GroupNoticeSqlManager;
 import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.CustomerServiceHelper;
@@ -54,7 +54,9 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
     private static final String TAG = "ECSDK_Demo.ConversationListFragment";
 
 
-    /**会话消息列表ListView*/
+    /**
+     * 会话消息列表ListView
+     */
     private ListView mListView;
     private NetWarnBannerView mBannerView;
     private ConversationAdapter mAdapter;
@@ -67,36 +69,37 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
         public void onItemClick(AdapterView<?> parent, View visew, int position,
                                 long id) {
 
-            if(mAdapter != null) {
+            if (mAdapter != null) {
                 int headerViewsCount = mListView.getHeaderViewsCount();
-                if(position < headerViewsCount) {
+                if (position < headerViewsCount) {
                     return;
                 }
                 int _position = position - headerViewsCount;
 
-                if(mAdapter == null || mAdapter.getItem(_position) == null) {
-                    return ;
+                if (mAdapter == null || mAdapter.getItem(_position) == null) {
+                    return;
                 }
                 Conversation conversation = mAdapter.getItem(_position);
-                     int  type =  conversation.getMsgType();
-                if(type == 1000) {
-                    Intent intent = new Intent(getActivity() , GroupNoticeActivity.class);
+                int type = conversation.getMsgType();
+                if (type == 1000) {
+                    Intent intent = new Intent(getActivity(), GroupNoticeActivity.class);
                     startActivity(intent);
-                    return ;
+                    return;
                 }
-                if(ContactLogic.isCustomService(conversation.getSessionId())) {
+                if (ContactLogic.isCustomService(conversation.getSessionId())) {
                     showProcessDialog();
                     dispatchCustomerService(conversation.getSessionId());
-                    return ;
+                    return;
                 }
 
-                CCPAppManager.startChattingAction(getActivity() , conversation.getSessionId() , conversation.getUsername());
+                CCPAppManager.startChattingAction(getActivity(), conversation.getSessionId(), conversation.getUsername());
             }
         }
     };
 
     /**
      * 处理在线客服界面请求
+     *
      * @param sessionId
      */
     private void dispatchCustomerService(String sessionId) {
@@ -104,7 +107,7 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
             @Override
             public void onServiceStart(String event) {
                 dismissPostingDialog();
-                CCPAppManager.startCustomerServiceAction(getActivity() , event);
+                CCPAppManager.startCustomerServiceAction(getActivity(), event);
             }
 
             @Override
@@ -117,7 +120,7 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
     private final AdapterView.OnItemLongClickListener mOnLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if(mAdapter != null) {
+            if (mAdapter != null) {
                 int headerViewsCount = mListView.getHeaderViewsCount();
                 if (position < headerViewsCount) {
                     return false;
@@ -130,11 +133,11 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
                 Conversation conversation = mAdapter.getItem(_position);
                 final int itemPosition = position;
                 String[] menu = buildMenu(conversation);
-                ECListDialog dialog = new ECListDialog(getActivity() , /*new String[]{getString(R.string.main_delete)}*/menu);
+                ECListDialog dialog = new ECListDialog(getActivity(), /*new String[]{getString(R.string.main_delete)}*/menu);
                 dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
                     @Override
                     public void onDialogItemClick(Dialog d, int position) {
-                        handleContentMenuClick(itemPosition ,position);
+                        handleContentMenuClick(itemPosition, position);
                     }
                 });
                 dialog.setTitle(conversation.getUsername());
@@ -146,16 +149,16 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
     };
 
     private String[] buildMenu(Conversation conversation) {
-        if(conversation != null && conversation.getSessionId() != null) {
-            if(conversation.getSessionId().toLowerCase().startsWith("g")) {
+        if (conversation != null && conversation.getSessionId() != null) {
+            if (conversation.getSessionId().toLowerCase().startsWith("g")) {
                 ECGroup ecGroup = GroupSqlManager.getECGroup(conversation.getSessionId());
-                if(ecGroup == null || !GroupSqlManager.getJoinState(ecGroup.getGroupId())) {
+                if (ecGroup == null || !GroupSqlManager.getJoinState(ecGroup.getGroupId())) {
                     return new String[]{getString(R.string.main_delete)};
                 }
-                if(ecGroup.isNotice()) {
-                    return new String[]{getString(R.string.main_delete) ,getString(R.string.menu_mute_notify)};
+                if (ecGroup.isNotice()) {
+                    return new String[]{getString(R.string.main_delete), getString(R.string.menu_mute_notify)};
                 }
-                return new String[]{getString(R.string.main_delete) ,getString(R.string.menu_notify)};
+                return new String[]{getString(R.string.main_delete), getString(R.string.menu_notify)};
             }
         }
         return new String[]{getString(R.string.main_delete)};
@@ -207,10 +210,10 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
      *
      */
     private void initView() {
-        if(mListView != null) {
+        if (mListView != null) {
             mListView.setAdapter(null);
 
-            if(mBannerView != null) {
+            if (mBannerView != null) {
                 mListView.removeHeaderView(mBannerView);
             }
         }
@@ -231,38 +234,38 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
             }
         });
         mListView.addHeaderView(mBannerView);
-        mAdapter = new ConversationAdapter(getActivity() , this);
+        mAdapter = new ConversationAdapter(getActivity(), this);
         mListView.setAdapter(mAdapter);
 
         registerForContextMenu(mListView);
     }
-    
-    
+
+
     private String getAutoRegistAccount() {
-		SharedPreferences sharedPreferences = ECPreferences
-				.getSharedPreferences();
-		ECPreferenceSettings registAuto = ECPreferenceSettings.SETTINGS_REGIST_AUTO;
-		String registAccount = sharedPreferences.getString(registAuto.getId(),
-				(String) registAuto.getDefaultValue());
-		return registAccount;
-	}
+        SharedPreferences sharedPreferences = ECPreferences
+                .getSharedPreferences();
+        ECPreferenceSettings registAuto = ECPreferenceSettings.SETTINGS_REGIST_AUTO;
+        String registAccount = sharedPreferences.getString(registAuto.getId(),
+                (String) registAuto.getDefaultValue());
+        return registAccount;
+    }
 
     private void reTryConnect() {
         ECDevice.ECConnectState connectState = SDKCoreHelper.getConnectState();
-        if(connectState == null || connectState == ECDevice.ECConnectState.CONNECT_FAILED) {
-        	
-        	if(!TextUtils.isEmpty(getAutoRegistAccount())){
-            SDKCoreHelper.init(getActivity());
-        	}
+        if (connectState == null || connectState == ECDevice.ECConnectState.CONNECT_FAILED) {
+
+            if (!TextUtils.isEmpty(getAutoRegistAccount())) {
+                SDKCoreHelper.init(getActivity());
+            }
         }
     }
 
-    public void  updateConnectState() {
-        if(!isAdded()) {
+    public void updateConnectState() {
+        if (!isAdded()) {
             return;
         }
         ECDevice.ECConnectState connect = SDKCoreHelper.getConnectState();
-        if(connect == ECDevice.ECConnectState.CONNECTING) {
+        if (connect == ECDevice.ECConnectState.CONNECTING) {
             mBannerView.setNetWarnText(getString(R.string.connecting_server));
             mBannerView.reconnect(true);
         } else if (connect == ECDevice.ECConnectState.CONNECT_FAILED) {
@@ -274,8 +277,8 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
         LogUtil.d(TAG, "updateConnectState connect :" + connect.name());
     }
 
-    private Boolean handleContentMenuClick(int convresion ,int position) {
-            if(mAdapter != null) {
+    private Boolean handleContentMenuClick(int convresion, int position) {
+        if (mAdapter != null) {
             int headerViewsCount = mListView.getHeaderViewsCount();
             if (convresion < headerViewsCount) {
                 return false;
@@ -310,14 +313,14 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
                     final boolean notify = GroupSqlManager.isGroupNotify(conversation.getSessionId());
                     ECGroupOption option = new ECGroupOption();
                     option.setGroupId(conversation.getSessionId());
-                    option.setRule(notify ? ECGroupOption.Rule.SILENCE :ECGroupOption.Rule.NORMAL);
+                    option.setRule(notify ? ECGroupOption.Rule.SILENCE : ECGroupOption.Rule.NORMAL);
                     GroupService.setGroupMessageOption(option, new GroupService.GroupOptionCallback() {
                         @Override
                         public void onComplete(String groupId) {
-                            if(mAdapter != null) {
+                            if (mAdapter != null) {
                                 mAdapter.notifyChange();
                             }
-                            ToastUtil.showMessage(notify?R.string.new_msg_mute_notify : R.string.new_msg_notify);
+                            ToastUtil.showMessage(notify ? R.string.new_msg_mute_notify : R.string.new_msg_notify);
                             dismissPostingDialog();
                         }
 
@@ -342,7 +345,7 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
 
     @Override
     public void OnListAdapterCallBack() {
-        if(mAttachListener != null) {
+        if (mAttachListener != null) {
             mAttachListener.OnUpdateMsgUnreadCounts();
         }
     }
@@ -354,9 +357,9 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
     @Override
     protected void handleReceiver(Context context, Intent intent) {
         super.handleReceiver(context, intent);
-        if(GroupService.ACTION_SYNC_GROUP.equals(intent.getAction())
+        if (GroupService.ACTION_SYNC_GROUP.equals(intent.getAction())
                 || IMessageSqlManager.ACTION_SESSION_DEL.equals(intent.getAction())) {
-            if(mAdapter != null) {
+            if (mAdapter != null) {
                 mAdapter.notifyChange();
             }
         }
@@ -371,8 +374,8 @@ public class ConversationListFragment extends TabFragment implements CCPListAdap
      * 关闭对话框
      */
     private void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;

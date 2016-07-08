@@ -1,16 +1,5 @@
 package com.yuntongxun.ecdemo.common.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.TreeSet;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
@@ -23,34 +12,61 @@ import android.text.format.Time;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.TreeSet;
+
 /**
  * com.yuntongxun.ecdemo.common.utils in ECDemo_Android
  * Created by Jorstin on 2015/6/17.
  */
-public class CrashHandler  implements Thread.UncaughtExceptionHandler {
+public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private final static String TAG = "ECSDK_Demo.UncaughtException";
-    /** CrashHandler实例 */
+    /**
+     * CrashHandler实例
+     */
     private static CrashHandler ourInstance = new CrashHandler();
-    /** 获取CrashHandler实例 ,单例模式 */
+
+    /**
+     * 获取CrashHandler实例 ,单例模式
+     */
     public static CrashHandler getInstance() {
         return ourInstance;
     }
-    /** 保证只有一个CrashHandler实例 */
+
+    /**
+     * 保证只有一个CrashHandler实例
+     */
     private CrashHandler() {
 
     }
 
-    /** 系统默认的UncaughtException处理类 */
+    /**
+     * 系统默认的UncaughtException处理类
+     */
     private Thread.UncaughtExceptionHandler mDefaultHandler;
-    /** 程序的Context对象 */
+    /**
+     * 程序的Context对象
+     */
     private Context mContext;
-    /** 使用Properties来保存设备的信息和错误堆栈信息 */
+    /**
+     * 使用Properties来保存设备的信息和错误堆栈信息
+     */
     private Properties mDeviceCrashInfo = new Properties();
     private static final String VERSION_NAME = "versionName";
     private static final String VERSION_CODE = "versionCode";
     private static final String STACK_TRACE = "STACK_TRACE";
-    /** 错误报告文件的扩展名 */
+    /**
+     * 错误报告文件的扩展名
+     */
     private static final String CRASH_REPORTER_EXTENSION = ".cr";
 
     /**
@@ -90,6 +106,7 @@ public class CrashHandler  implements Thread.UncaughtExceptionHandler {
 
     /**
      * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成. 开发者可以根据自己的情况来自定义异常处理逻辑
+     *
      * @param ex
      * @return true:如果处理了该异常信息;否则返回false
      */
@@ -204,7 +221,7 @@ public class CrashHandler  implements Thread.UncaughtExceptionHandler {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                FileOutputStream fos = new FileOutputStream(new File(dir , fileName),true);
+                FileOutputStream fos = new FileOutputStream(new File(dir, fileName), true);
                 fos.write(result.getBytes());
                 fos.close();
             } else {

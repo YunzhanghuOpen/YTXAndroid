@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.utils;
+ */
+package com.yuntongxun.ecdemo.common.utils;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -34,7 +35,6 @@ public class ResourceHelper {
     private static float density;
 
     /**
-     *
      * @param context
      * @param ratio
      * @return
@@ -44,7 +44,6 @@ public class ResourceHelper {
     }
 
     /**
-     *
      * @param context
      * @return
      */
@@ -52,20 +51,20 @@ public class ResourceHelper {
         if (context == null) {
             context = CCPAppManager.getContext();
         }
-        if (density < 0.0F){
+        if (density < 0.0F) {
             density = context.getResources().getDisplayMetrics().density;
         }
         return density;
     }
+
     /**
-     *
      * @param context
      * @param resId
      * @return
      */
-    public static Drawable getDrawableById(Context context , int resId) {
+    public static Drawable getDrawableById(Context context, int resId) {
 
-        if(context == null) {
+        if (context == null) {
             LogUtil.e(TAG, "get drawable, resId " + resId + ", but context is null");
             return null;
         }
@@ -74,17 +73,16 @@ public class ResourceHelper {
     }
 
     /**
-     *
      * @param bitmap
      * @param density
      */
-    public static Bitmap getDegreeBitmap(Bitmap bitmap , float density) {
+    public static Bitmap getDegreeBitmap(Bitmap bitmap, float density) {
         if (density % 360.0F == 0.0F) {
             return bitmap;
         }
 
         boolean filter = true;
-        if(bitmap == null) {
+        if (bitmap == null) {
             filter = false;
         }
 
@@ -95,20 +93,19 @@ public class ResourceHelper {
         Bitmap resultBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                 bitmap.getWidth(), bitmap.getHeight(), localMatrix, filter);
         LogUtil.d(TAG, "  degree:" + density + " , filter" + filter);
-        if(resultBitmap != null && resultBitmap != bitmap) {
+        if (resultBitmap != null && resultBitmap != bitmap) {
             bitmap.recycle();
         }
         return resultBitmap;
     }
 
     /**
-     *
      * @param context
      * @param resId
      * @return
      */
-    public static ColorStateList getColorStateList(Context context , int resId) {
-        if(context == null) {
+    public static ColorStateList getColorStateList(Context context, int resId) {
+        if (context == null) {
             LogUtil.e(TAG, "get drawable, resId " + resId + ", but context is null");
             return null;
         }

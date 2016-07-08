@@ -21,15 +21,25 @@ import java.util.Random;
  */
 public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
     private static final String TAG = "ECSDK_Demo.VoiceMeetingMicAnim";
-    /**底部左部声音振幅*/
+    /**
+     * 底部左部声音振幅
+     */
     private LinearLayout mLeftAmplitude;
-    /**底部右部声音振幅*/
+    /**
+     * 底部右部声音振幅
+     */
     private LinearLayout mRightAmplitude;
-    /**静音按钮*/
+    /**
+     * 静音按钮
+     */
     private ImageView mMikeView;
-    /**是否开始*/
+    /**
+     * 是否开始
+     */
     private boolean mStart = false;
-    /**是否静音*/
+    /**
+     * 是否静音
+     */
     private boolean isMikeEnable;
     private Objects mLock = new Objects();
     private OnMeetingMicEnableListener mCallback;
@@ -40,11 +50,11 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
             try {
                 mMikeView.setEnabled(false);
                 ECVoIPSetupManager setupManager = ECDevice.getECVoIPSetupManager();
-                if(setupManager != null) {
+                if (setupManager != null) {
                     setupManager.setMute(!isMikeEnable);
                     isMikeEnable = setupManager.getMuteStatus();
                 }
-                if(isMikeEnable) {
+                if (isMikeEnable) {
                     initBottomStatus(0);
                 } else {
                     synchronized (mLock) {
@@ -54,7 +64,7 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
                     }
 
                 }
-                if(mCallback != null) {
+                if (mCallback != null) {
                     mCallback.onMeetingMicEnable(isMikeEnable);
                 }
                 mMikeView.setEnabled(true);
@@ -79,6 +89,7 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
 
     /**
      * 当前Mic按钮的状态
+     *
      * @param isMikeEnable
      */
     public void setMikeEnable(boolean isMikeEnable) {
@@ -114,6 +125,7 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
 
     /**
      * 计算随机数
+     *
      * @param num
      * @return 随机数
      */
@@ -123,29 +135,29 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
     }
 
 
-    synchronized void  initBottomStatus(int num){//4
-        if(mLeftAmplitude == null || mRightAmplitude == null) {
+    synchronized void initBottomStatus(int num) {//4
+        if (mLeftAmplitude == null || mRightAmplitude == null) {
             LogUtil.w(TAG, "mLeftAmplitude: " + mLeftAmplitude + " ,mRightAmplitude: " + mRightAmplitude);
-            return ;
+            return;
         }
         mLeftAmplitude.removeAllViews();
         mRightAmplitude.removeAllViews();
         for (int i = 0; i < 6; i++) {
             ImageView imageViewl_i = new ImageView(getContext());
             ImageView imageViewR_i = new ImageView(getContext());
-            if(i > (6 - num - 1)) {//1
+            if (i > (6 - num - 1)) {//1
                 imageViewl_i.setImageResource(R.drawable.chatroom_speaker);
             } else {
                 imageViewl_i.setImageResource(R.drawable.chatroom_unspeaker);
 
             }
-            if(i >= num) {//4
+            if (i >= num) {//4
                 imageViewR_i.setImageResource(R.drawable.chatroom_unspeaker);
             } else {
                 imageViewR_i.setImageResource(R.drawable.chatroom_speaker);
             }
-            mLeftAmplitude.addView(imageViewl_i ,new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT , LayoutParams.WRAP_CONTENT , 1.0f));
-            mRightAmplitude.addView(imageViewR_i, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT , LayoutParams.WRAP_CONTENT , 1.0f));
+            mLeftAmplitude.addView(imageViewl_i, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
+            mRightAmplitude.addView(imageViewR_i, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
         }
     }
 
@@ -154,9 +166,9 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
 
         @Override
         public void run() {
-            while(mStart) {
-                LogUtil.d(TAG, "1mikeAnimRunnable isJion : "  + mStart + " , isMikeEnable :" + isMikeEnable);
-                if(isMikeEnable) {
+            while (mStart) {
+                LogUtil.d(TAG, "1mikeAnimRunnable isJion : " + mStart + " , isMikeEnable :" + isMikeEnable);
+                if (isMikeEnable) {
                     synchronized (mLock) {
                         try {
                             mLock.wait();
@@ -172,7 +184,7 @@ public class VoiceMeetingMicAnim extends LinearLayout implements Runnable {
                     e.printStackTrace();
                 }
             }
-            LogUtil.d(TAG, "1mikeAnimRunnable isJion : "  + mStart + " , isMikeEnable :" + isMikeEnable);
+            LogUtil.d(TAG, "1mikeAnimRunnable isJion : " + mStart + " , isMikeEnable :" + isMikeEnable);
         }
     };
 

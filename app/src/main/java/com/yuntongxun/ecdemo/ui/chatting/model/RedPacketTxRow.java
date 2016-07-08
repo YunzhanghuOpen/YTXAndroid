@@ -2,7 +2,6 @@ package com.yuntongxun.ecdemo.ui.chatting.model;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,20 +11,18 @@ import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
 import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
-import com.yuntongxun.ecdemo.ui.chatting.holder.DescriptionViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
-import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 
 import utils.RedPacketConstant;
 
 /**
  * Created by ustc on 2016/6/24.
  */
-public class RedPacketTxRow extends BaseChattingRow{
+public class RedPacketTxRow extends BaseChattingRow {
 
-    public RedPacketTxRow(int type){
+    public RedPacketTxRow(int type) {
         super(type);
     }
 
@@ -35,7 +32,7 @@ public class RedPacketTxRow extends BaseChattingRow{
     @Override
     public View buildChatView(LayoutInflater inflater, View convertView) {
         //we have a don't have a converView so we'll have to create a new one
-        if (convertView == null || ((BaseHolder)convertView.getTag()).getType() != mRowType) {
+        if (convertView == null || ((BaseHolder) convertView.getTag()).getType() != mRowType) {
 
             convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_redpacket_to);
 
@@ -75,7 +72,6 @@ public class RedPacketTxRow extends BaseChattingRow{
 
             }
         }
-
 
 
     }

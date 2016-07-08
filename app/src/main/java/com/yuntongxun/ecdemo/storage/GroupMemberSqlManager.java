@@ -26,17 +26,19 @@ import java.util.List;
 
 /**
  * 群组数据库接口
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-29
  * @version 4.0
+ * @date 2014-12-29
  */
 public class GroupMemberSqlManager extends AbstractSQLManager {
 
     private static final String TAG = "ECDemo.GroupMemberSqlManager";
     Object mLock = new Object();
     private static GroupMemberSqlManager sInstance;
+
     private static GroupMemberSqlManager getInstance() {
-        if(sInstance == null) {
+        if (sInstance == null) {
             sInstance = new GroupMemberSqlManager();
         }
         return sInstance;
@@ -47,18 +49,19 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
     }
 
     public static Cursor getGroupMembersByCursor(String groupId) {
-        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts where group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role" ;
-        return getInstance().sqliteDB().rawQuery(sql , null);
+        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts where group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role";
+        return getInstance().sqliteDB().rawQuery(sql, null);
     }
-    
+
     public static Cursor getGroupMembersByCursorExceptSelf(String groupId) {
-    	String selfVoip=CCPAppManager.getUserId();
-        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts  where group_members.voipaccount  != '" + selfVoip + "'   and group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role" ;
-        return getInstance().sqliteDB().rawQuery(sql , null);
+        String selfVoip = CCPAppManager.getUserId();
+        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts  where group_members.voipaccount  != '" + selfVoip + "'   and group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role";
+        return getInstance().sqliteDB().rawQuery(sql, null);
     }
 
     /**
      * 查询群组成员
+     *
      * @param groupId
      * @return
      */
@@ -67,7 +70,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
         ArrayList<ECGroupMember> list = null;
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 list = new ArrayList<ECGroupMember>();
                 while (cursor.moveToNext()) {
                     ECGroupMember groupMember = new ECGroupMember();
@@ -88,6 +91,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 查询群组成员账号
+     *
      * @param groupId
      * @return
      */
@@ -96,7 +100,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
         ArrayList<String> list = null;
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 list = new ArrayList<String>();
                 while (cursor.moveToNext()) {
                     list.add(cursor.getString(cursor.getColumnIndex(GroupMembersColumn.VOIPACCOUNT)));
@@ -111,16 +115,17 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 查询群组成员用于列表显示
+     *
      * @param groupId
      * @return
      */
     public static ArrayList<ECGroupMember> getGroupMemberWithName(String groupId) {
-        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts where group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role" ;
+        String sql = "select voipaccount ,contacts.username ,contacts.remark ,role ,isban from group_members ,contacts where group_id ='" + groupId + "' and contacts.contact_id = group_members.voipaccount order by role";
         //String sql = "select voipaccount ,remark,role , isban from group_members where group_id ='" + groupId + "'" ;
         ArrayList<ECGroupMember> list = null;
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 list = new ArrayList<ECGroupMember>();
                 while (cursor.moveToNext()) {
                     ECGroupMember groupMember = new ECGroupMember();
@@ -129,7 +134,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
                     groupMember.setDisplayName(cursor.getString(1));
                     groupMember.setRemark(cursor.getString(2));
                     int roleValue = cursor.getInt(3);
-                    if(roleValue <= 0 || roleValue >=3 ) roleValue = 3;
+                    if (roleValue <= 0 || roleValue >= 3) roleValue = 3;
                     groupMember.setRole(ECGroupMember.Role.values()[roleValue - 1]);
                     groupMember.setBan(cursor.getInt(4) == 2);
                     list.add(groupMember);
@@ -141,13 +146,13 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
         return list;
     }
 
-    public static int getSelfRoleWithGroupId(String groupId,String voipaccount) {
-        String sql = "select role from group_members  where group_id ='" + groupId + "' and voipaccount ='"+voipaccount+"'";
+    public static int getSelfRoleWithGroupId(String groupId, String voipaccount) {
+        String sql = "select role from group_members  where group_id ='" + groupId + "' and voipaccount ='" + voipaccount + "'";
         int role = 3;
         ArrayList<ECGroupMember> list = null;
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 list = new ArrayList<ECGroupMember>();
                 while (cursor.moveToNext()) {
                     role = cursor.getInt(0);
@@ -157,27 +162,28 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
             e.printStackTrace();
             return 3;
         }
-        if(role <=0 || role >= 3) {
+        if (role <= 0 || role >= 3) {
             role = 3;
         }
         return role;
     }
-    public static int updateSelfRoleWithGroupId(String groupId,int role) {
+
+    public static int updateSelfRoleWithGroupId(String groupId, int role) {
         ContentValues values = new ContentValues();
-        values.put(GroupMembersColumn.ROLE,role+"");
+        values.put(GroupMembersColumn.ROLE, role + "");
         getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, values, "group_id = ?", new String[]{groupId});
         return role;
     }
-    public static int updateSelfRoleWithGroupId(String groupId,String voip,int role) {
 
-        try{
+    public static int updateSelfRoleWithGroupId(String groupId, String voip, int role) {
+
+        try {
             ContentValues values = new ContentValues();
-            values.put(GroupMembersColumn.ROLE,role+"");
-            getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, values, "group_id = ? and voipaccount = ?", new String[]{groupId,voip});
-        }catch (Exception e){
+            values.put(GroupMembersColumn.ROLE, role + "");
+            getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, values, "group_id = ? and voipaccount = ?", new String[]{groupId, voip});
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
         return role;
@@ -200,14 +206,14 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
                 }
             }
         }
-        return count >1;
-
+        return count > 1;
 
 
     }
 
     /**
      * 查询所有群组成员帐号
+     *
      * @param groupId
      * @return
      */
@@ -216,7 +222,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
         ArrayList<String> list = null;
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 list = new ArrayList<String>();
                 while (cursor.moveToNext()) {
                     list.add(cursor.getString(cursor.getColumnIndex(GroupMembersColumn.VOIPACCOUNT)));
@@ -230,6 +236,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 更新群组成员
+     *
      * @param members
      * @return
      */
@@ -248,7 +255,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
                 for (ECGroupMember member : members) {
                     try {
                         long row = insertGroupMember(member);
-                        if(row != -1) {
+                        if (row != -1) {
                             rows.add(row);
                         }
                     } catch (Exception e) {
@@ -271,20 +278,21 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 更新群组到数据库
+     *
      * @param member
      * @return
      */
     public static long insertGroupMember(ECGroupMember member) {
-        if(member == null || TextUtils.isEmpty(member.getBelong())
+        if (member == null || TextUtils.isEmpty(member.getBelong())
                 || TextUtils.isEmpty(member.getVoipAccount())) {
             return -1L;
         }
         ContentValues values = null;
         try {
-            if(!ContactSqlManager.hasContact(member.getVoipAccount()) || needUpdateSexPhoto(member.getBelong() ,member.getVoipAccount() , member.getSex())) {
+            if (!ContactSqlManager.hasContact(member.getVoipAccount()) || needUpdateSexPhoto(member.getBelong(), member.getVoipAccount(), member.getSex())) {
                 updateContact(member);
             } else {
-                if(!TextUtils.isEmpty(member.getDisplayName())) {
+                if (!TextUtils.isEmpty(member.getDisplayName())) {
                     ContactSqlManager.updateContactName(member);
                 }
             }
@@ -297,10 +305,10 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
             values.put(GroupMembersColumn.ISBAN, member.isBan() ? 2 : 1);
             values.put(GroupMembersColumn.ROLE, member.getMemberRole().ordinal() + 1);
             values.put(GroupMembersColumn.SEX, member.getSex());
-            if(!isExitGroupMember(member.getBelong(), member.getVoipAccount())) {
+            if (!isExitGroupMember(member.getBelong(), member.getVoipAccount())) {
                 return getInstance().sqliteDB().insert(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, null, values);
             } else {
-                return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS ,values , "group_id ='" + member.getBelong() + "'" + " and voipaccount='" + member.getVoipAccount() + "'",null);
+                return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, values, "group_id ='" + member.getBelong() + "'" + " and voipaccount='" + member.getVoipAccount() + "'", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -316,7 +324,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
     private static void updateContact(ECGroupMember member) {
         ECContacts contacts = new ECContacts(member.getVoipAccount());
         contacts.setNickname(member.getDisplayName());
-        ContactSqlManager.insertContact(contacts , member.getSex());
+        ContactSqlManager.insertContact(contacts, member.getSex());
     }
 
     /**
@@ -330,11 +338,12 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
     public static boolean needUpdateSexPhoto(String belong, String userid, int sex) {
         String sql = "select voipaccount ,sex from group_members where sex !=" + sex + " and voipaccount = '" + userid + "' and group_id='" + belong + "'";
         Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             int anInt = cursor.getInt(1);
             String string = cursor.getString(0);
-            cursor.close();;
+            cursor.close();
+            ;
             return true;
         }
         return false;
@@ -342,15 +351,16 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 是否存在该联系人
+     *
      * @param groupId
      * @param member
      * @return
      */
-    public static boolean isExitGroupMember(String groupId , String member) {
+    public static boolean isExitGroupMember(String groupId, String member) {
         String sql = "select voipaccount from group_members where group_id ='" + groupId + "'" + " and voipaccount='" + member + "'";
         try {
             Cursor cursor = getInstance().sqliteDB().rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 return true;
             }
         } catch (Exception e) {
@@ -361,18 +371,19 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 更新群组成员
+     *
      * @param groupId
      * @param members
      */
-    public static void insertGroupMembers(String groupId , String[] members) {
-        if(TextUtils.isEmpty(groupId) || members == null || members.length <= 0 ) {
-            return ;
+    public static void insertGroupMembers(String groupId, String[] members) {
+        if (TextUtils.isEmpty(groupId) || members == null || members.length <= 0) {
+            return;
         }
-        for(String member :members) {
+        for (String member : members) {
             ECGroupMember groupMember = new ECGroupMember();
             groupMember.setBelong(groupId);
             groupMember.setVoipAccount(member);
-            if(CCPAppManager.getClientUser() != null && CCPAppManager.getUserId().equals(member)) {
+            if (CCPAppManager.getClientUser() != null && CCPAppManager.getUserId().equals(member)) {
                 groupMember.setRole(ECGroupMember.Role.OWNER);
             } else {
                 groupMember.setRole(ECGroupMember.Role.MEMBER);
@@ -384,6 +395,7 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 删除群组所有成员
+     *
      * @param groupId
      */
     public static void delAllMember(String groupId) {
@@ -397,11 +409,12 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 删除群组成员
+     *
      * @param groupId 群组ID
-     * @param member 群组成员
+     * @param member  群组成员
      * @return
      */
-    public static void delMember(String groupId , String member) {
+    public static void delMember(String groupId, String member) {
         String sqlWhere = "group_id ='" + groupId + "'" + " and voipaccount='" + member + "'";
         try {
             getInstance().sqliteDB().delete(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, sqlWhere, null);
@@ -412,15 +425,16 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 删除群组成员
+     *
      * @param groupId
      * @param members
      */
-    public static void delMember(String groupId , String[] members) {
+    public static void delMember(String groupId, String[] members) {
         StringBuilder builder = new StringBuilder("in(");
-        for(String member : members) {
+        for (String member : members) {
             builder.append("'").append(member).append("'").append(",");
         }
-        if(builder.toString().endsWith(",")) {
+        if (builder.toString().endsWith(",")) {
             builder.replace(builder.length() - 1, builder.length(), "");
             builder.append(")");
         } else {
@@ -436,18 +450,19 @@ public class GroupMemberSqlManager extends AbstractSQLManager {
 
     /**
      * 更新成员禁言状态
+     *
      * @param groupid
      * @param member
      * @param enabled
      * @return
      */
-    public static long updateMemberSpeakState(String groupid , String member ,boolean enabled) {
+    public static long updateMemberSpeakState(String groupid, String member, boolean enabled) {
         try {
             String where = GroupMembersColumn.VOIPACCOUNT + "='" + member + "' and " + GroupMembersColumn.OWN_GROUP_ID + "='" + groupid + "'";
             ContentValues values = new ContentValues();
-            values.put(GroupMembersColumn.ISBAN , enabled?2:1);
-            return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS , values , where , null);
-        }catch (Exception e) {
+            values.put(GroupMembersColumn.ISBAN, enabled ? 2 : 1);
+            return getInstance().sqliteDB().update(DatabaseHelper.TABLES_NAME_GROUP_MEMBERS, values, where, null);
+        } catch (Exception e) {
             e.printStackTrace();
             return -1;
         }

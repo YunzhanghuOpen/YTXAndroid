@@ -4,15 +4,14 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECMeetingManager;
-import com.yuntongxun.ecsdk.ECMeetingManager.ECMeetingType;
 import com.yuntongxun.ecsdk.OnMeetingListener;
 import com.yuntongxun.ecsdk.SdkErrorCode;
 import com.yuntongxun.ecsdk.VideoRatio;
-import com.yuntongxun.ecsdk.meeting.intercom.ECInterPhoneMeetingMsg;
 import com.yuntongxun.ecsdk.meeting.ECMeeting;
 import com.yuntongxun.ecsdk.meeting.ECMeetingMember;
-import com.yuntongxun.ecsdk.meeting.video.ECVideoMeetingMsg;
 import com.yuntongxun.ecsdk.meeting.ECVoiceMeetingMember;
+import com.yuntongxun.ecsdk.meeting.intercom.ECInterPhoneMeetingMsg;
+import com.yuntongxun.ecsdk.meeting.video.ECVideoMeetingMsg;
 import com.yuntongxun.ecsdk.meeting.voice.ECVoiceMeetingMsg;
 
 import java.lang.ref.WeakReference;
@@ -29,7 +28,7 @@ public class MeetingHelper implements OnMeetingListener {
     private static final String TAG = "ECSDK.Demo.MeetingHelper";
 
     private static MeetingHelper ourInstance = new MeetingHelper();
-    private static LinkedList<WeakReference<? extends OnMeetingCallback>> sCallbacks = new LinkedList<WeakReference<? extends  OnMeetingCallback>>();
+    private static LinkedList<WeakReference<? extends OnMeetingCallback>> sCallbacks = new LinkedList<WeakReference<? extends OnMeetingCallback>>();
     private boolean mSyncMeetings = false;
 
     public static MeetingHelper getInstance() {
@@ -42,11 +41,12 @@ public class MeetingHelper implements OnMeetingListener {
 
     /**
      * 查询会议列表
+     *
      * @param meetingType
      */
     public static boolean queryMeetings(ECMeetingManager.ECMeetingType meetingType) {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null || getInstance().mSyncMeetings) {
+        if (meetingManager == null || getInstance().mSyncMeetings) {
             return false;
         }
         getInstance().mSyncMeetings = true;
@@ -54,9 +54,9 @@ public class MeetingHelper implements OnMeetingListener {
             @Override
             public void onListAllMeetings(ECError reason, List<ECMeeting> list) {
                 getInstance().mSyncMeetings = false;
-                if(reason.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
+                if (reason.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
                     getInstance().notifyMeetings(list);
-                    return ;
+                    return;
                 }
                 getInstance().notifyError(reason);
             }
@@ -69,8 +69,8 @@ public class MeetingHelper implements OnMeetingListener {
      */
     public static void startVoiceMeeting(ECMeetingManager.ECCreateMeetingParams params) {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null ) {
-            return ;
+        if (meetingManager == null) {
+            return;
         }
         meetingManager.createMultiMeetingByType(params, ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE,
                 new ECMeetingManager.OnCreateOrJoinMeetingListener() {
@@ -87,12 +87,13 @@ public class MeetingHelper implements OnMeetingListener {
 
     /**
      * 查询会议成员
+     *
      * @param meetingNo
      */
     public static void queryMeetingMembers(String meetingNo) {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null ) {
-            return ;
+        if (meetingManager == null) {
+            return;
         }
         meetingManager.queryMeetingMembersByType(meetingNo, ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE,
                 new ECMeetingManager.OnQueryMeetingMembersListener<ECVoiceMeetingMember>() {
@@ -109,12 +110,13 @@ public class MeetingHelper implements OnMeetingListener {
 
     /**
      * 处理会议房间解散
+     *
      * @param meetingNo
      */
     public static void disMeeting(String meetingNo) {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null ) {
-            return ;
+        if (meetingManager == null) {
+            return;
         }
         meetingManager.deleteMultiMeetingByType(ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE, meetingNo,
                 new ECMeetingManager.OnDeleteMeetingListener() {
@@ -131,13 +133,14 @@ public class MeetingHelper implements OnMeetingListener {
 
     /**
      * 加入会议请求
+     *
      * @param meetingNo
      * @param password
      */
-    public static void joinMeeting(String meetingNo , String password) {
+    public static void joinMeeting(String meetingNo, String password) {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null ) {
-            return ;
+        if (meetingManager == null) {
+            return;
         }
         meetingManager.joinMeetingByType(meetingNo, password, ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE, new ECMeetingManager.OnCreateOrJoinMeetingListener() {
             @Override
@@ -153,51 +156,51 @@ public class MeetingHelper implements OnMeetingListener {
 
     public static void exitMeeting() {
         ECMeetingManager meetingManager = ECDevice.getECMeetingManager();
-        if(meetingManager == null ) {
-            return ;
+        if (meetingManager == null) {
+            return;
         }
         meetingManager.exitMeeting(ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE);
     }
 
-    private void notifyMeetingMembers(List<? extends  ECMeetingMember> members) {
-        if(sCallbacks == null) {
-            return ;
+    private void notifyMeetingMembers(List<? extends ECMeetingMember> members) {
+        if (sCallbacks == null) {
+            return;
         }
-        for(WeakReference<? extends  OnMeetingCallback> cb : sCallbacks) {
-            if(cb != null && cb.get() != null) {
+        for (WeakReference<? extends OnMeetingCallback> cb : sCallbacks) {
+            if (cb != null && cb.get() != null) {
                 cb.get().onMeetingMembers(members);
             }
         }
     }
 
     private void notifyMeetingStart(String meetingNo) {
-        if(sCallbacks == null) {
-            return ;
+        if (sCallbacks == null) {
+            return;
         }
-        for(WeakReference<? extends  OnMeetingCallback> cb : sCallbacks) {
-            if(cb != null && cb.get() != null) {
+        for (WeakReference<? extends OnMeetingCallback> cb : sCallbacks) {
+            if (cb != null && cb.get() != null) {
                 cb.get().onMeetingStart(meetingNo);
             }
         }
     }
 
     private void notifyMeetingDis(String meetingNo) {
-        if(sCallbacks == null) {
-            return ;
+        if (sCallbacks == null) {
+            return;
         }
-        for(WeakReference<? extends  OnMeetingCallback> cb : sCallbacks) {
-            if(cb != null && cb.get() != null) {
+        for (WeakReference<? extends OnMeetingCallback> cb : sCallbacks) {
+            if (cb != null && cb.get() != null) {
                 cb.get().onMeetingDismiss(meetingNo);
             }
         }
     }
 
     private void notifyMeetings(List<ECMeeting> list) {
-        if(sCallbacks == null) {
-            return ;
+        if (sCallbacks == null) {
+            return;
         }
-        for(WeakReference<? extends  OnMeetingCallback> cb : sCallbacks) {
-            if(cb != null && cb.get() != null) {
+        for (WeakReference<? extends OnMeetingCallback> cb : sCallbacks) {
+            if (cb != null && cb.get() != null) {
                 cb.get().onMeetings(list);
             }
         }
@@ -205,56 +208,60 @@ public class MeetingHelper implements OnMeetingListener {
 
     /**
      * 通知请求错误
+     *
      * @param e
      */
     private void notifyError(ECError e) {
-        notifyError(-1 , e);
+        notifyError(-1, e);
     }
 
     /**
      * 通知请求错误
+     *
      * @param e
      */
-    private void notifyError(int type , ECError e) {
-        if(sCallbacks == null) {
-            return ;
+    private void notifyError(int type, ECError e) {
+        if (sCallbacks == null) {
+            return;
         }
-        for(WeakReference<? extends  OnMeetingCallback> cb : sCallbacks) {
-            if(cb != null && cb.get() != null) {
-                cb.get().onError(type ,e);
+        for (WeakReference<? extends OnMeetingCallback> cb : sCallbacks) {
+            if (cb != null && cb.get() != null) {
+                cb.get().onError(type, e);
             }
         }
     }
 
     /**
      * 设置实时对讲监听
+     *
      * @param listener
      */
     public static void addInterPhoneCallback(OnMeetingCallback listener) {
-        if(listener == null) {
-            return ;
+        if (listener == null) {
+            return;
         }
         WeakReference<OnMeetingCallback> interListener = new WeakReference<OnMeetingCallback>(listener);
-        sCallbacks.add(0,interListener);
+        sCallbacks.add(0, interListener);
     }
 
     /**
      * 移除实时对讲状态监听
+     *
      * @param listener
      */
     public static void removeInterPhoneCallback(OnMeetingCallback listener) {
         int size = sCallbacks.size();
         LogUtil.d(TAG, "removeCallback size " + size + " , " + listener);
-        if(listener == null) {
-            return ;
+        if (listener == null) {
+            return;
         }
         LinkedList<Integer> list = new LinkedList<Integer>();
-        for(int i = 0 ; i < sCallbacks.size() ; i ++) {
-            if(listener != sCallbacks.get(i).get()) {
-                list.add(0 , Integer.valueOf(i));
+        for (int i = 0; i < sCallbacks.size(); i++) {
+            if (listener != sCallbacks.get(i).get()) {
+                list.add(0, Integer.valueOf(i));
             } else {
                 sCallbacks.remove(i);
-                LogUtil.d(TAG , "removeCallback directly, index " + i);
+                LogUtil.d(TAG, "removeCallback directly, index " + i);
             }
         }
 
@@ -262,7 +269,7 @@ public class MeetingHelper implements OnMeetingListener {
         while (iterator.hasNext()) {
             Integer next = iterator.next();
             WeakReference<? extends OnMeetingCallback> remove = sCallbacks.remove(next.intValue());
-            LogUtil.d(TAG , "removeCallback, popup " + (remove != null ? remove : "NULL-CALLBACK"));
+            LogUtil.d(TAG, "removeCallback, popup " + (remove != null ? remove : "NULL-CALLBACK"));
         }
 
     }
@@ -289,20 +296,24 @@ public class MeetingHelper implements OnMeetingListener {
 
         // 查询会议列表
         void onMeetings(List<ECMeeting> list);
+
         // 会议成员
-        void onMeetingMembers(List<? extends  ECMeetingMember> members);
+        void onMeetingMembers(List<? extends ECMeetingMember> members);
+
         // 会议开始
         void onMeetingStart(String meetingNo);
+
         // 会议解散
         void onMeetingDismiss(String meetingNo);
+
         // 会议请求错误
-        void onError(int type ,ECError e);
+        void onError(int type, ECError e);
     }
 
 
-	@Override
-	public void onVideoRatioChanged(VideoRatio arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onVideoRatioChanged(VideoRatio arg0) {
+        // TODO Auto-generated method stub
+
+    }
 }

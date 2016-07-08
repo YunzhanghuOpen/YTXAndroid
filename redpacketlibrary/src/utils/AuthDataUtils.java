@@ -25,7 +25,7 @@ public class AuthDataUtils {
      */
     public static final String PREFERENCE_NAME = "AuthData";
     private static SharedPreferences mSharedPreferences;
-    private static AuthDataUtils mPreferencemManager;
+    private static AuthDataUtils mPreferenceManager;
     private static SharedPreferences.Editor editor;
 
     private AuthDataUtils(Context cxt) {
@@ -34,8 +34,8 @@ public class AuthDataUtils {
     }
 
     public static synchronized void init(Context cxt) {
-        if (mPreferencemManager == null) {
-            mPreferencemManager = new AuthDataUtils(cxt);
+        if (mPreferenceManager == null) {
+            mPreferenceManager = new AuthDataUtils(cxt);
         }
     }
 
@@ -46,11 +46,10 @@ public class AuthDataUtils {
      * @return
      */
     public synchronized static AuthDataUtils getInstance() {
-        if (mPreferencemManager == null) {
+        if (mPreferenceManager == null) {
             throw new RuntimeException("please init first!");
         }
-
-        return mPreferencemManager;
+        return mPreferenceManager;
     }
 
 
@@ -60,7 +59,7 @@ public class AuthDataUtils {
     }
 
     public AuthData getAuthData(String userId) {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         AuthData authData = new AuthData();
         String jsonStr = mSharedPreferences.getString(userId, null);
         if (jsonStr != null) {

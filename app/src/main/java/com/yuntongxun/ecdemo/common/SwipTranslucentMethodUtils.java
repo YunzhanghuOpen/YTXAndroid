@@ -16,6 +16,7 @@ import java.lang.reflect.Proxy;
 public class SwipTranslucentMethodUtils {
 
     private static final String TAG = "ECSDK_Demo.SwipTranslucentMethodUtils";
+
     private SwipTranslucentMethodUtils() {
     }
 
@@ -23,11 +24,11 @@ public class SwipTranslucentMethodUtils {
      * Convert a translucent themed Activity
      * {@link android.R.attr#windowIsTranslucent} to a fullscreen opaque
      * Activity.
-     * <p>
+     * <p/>
      * Call this whenever the background of a translucent Activity has changed
      * to become opaque. Doing so will allow the {@link android.view.Surface} of
      * the Activity behind to be released.
-     * <p>
+     * <p/>
      * This call has no effect on non-translucent activities or on activities
      * with the {@link android.R.attr#windowIsFloating} attribute.
      */
@@ -45,14 +46,14 @@ public class SwipTranslucentMethodUtils {
      * {@link android.R.attr#windowIsTranslucent} back from opaque to
      * translucent following a call to
      * {@link #convertActivityFromTranslucent(android.app.Activity)} .
-     * <p>
+     * <p/>
      * Calling this allows the Activity behind this one to be seen again. Once
      * all such Activities have been redrawn
-     * <p>
+     * <p/>
      * This call has no effect on non-translucent activities or on activities
      * with the {@link android.R.attr#windowIsFloating} attribute.
      */
-    public static void convertActivityToTranslucent(Activity activity , MethodInvoke.SwipeInvocationHandler handler) {
+    public static void convertActivityToTranslucent(Activity activity, MethodInvoke.SwipeInvocationHandler handler) {
         try {
             Class<?>[] classes = Activity.class.getDeclaredClasses();
             Class<?> translucentConversionListenerClazz = null;
@@ -63,17 +64,17 @@ public class SwipTranslucentMethodUtils {
             }
 
             //if(translucentConversionListenerClazz != null) {
-            Object proxy = Proxy.newProxyInstance(translucentConversionListenerClazz.getClassLoader(), new Class[] {translucentConversionListenerClazz}, handler);
+            Object proxy = Proxy.newProxyInstance(translucentConversionListenerClazz.getClassLoader(), new Class[]{translucentConversionListenerClazz}, handler);
             //}
-            LogUtil.d(TAG , "proxy " + proxy);
-            if(!SDKVersionUtils.isGreaterorEqual(21)) {
-                Method method = Activity.class.getDeclaredMethod("convertToTranslucent", new Class[] {translucentConversionListenerClazz});
+            LogUtil.d(TAG, "proxy " + proxy);
+            if (!SDKVersionUtils.isGreaterorEqual(21)) {
+                Method method = Activity.class.getDeclaredMethod("convertToTranslucent", new Class[]{translucentConversionListenerClazz});
                 method.setAccessible(true);
                 method.invoke(activity, new Object[]{proxy});
             } else {
-                Method method = Activity.class.getDeclaredMethod("convertToTranslucent", new Class[] {translucentConversionListenerClazz , ActivityOptions.class});
+                Method method = Activity.class.getDeclaredMethod("convertToTranslucent", new Class[]{translucentConversionListenerClazz, ActivityOptions.class});
                 method.setAccessible(true);
-                method.invoke(activity, new Object[]{proxy ,null});
+                method.invoke(activity, new Object[]{proxy, null});
             }
 
         } catch (Throwable t) {

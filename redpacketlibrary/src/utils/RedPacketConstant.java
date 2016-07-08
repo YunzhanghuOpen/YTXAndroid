@@ -21,7 +21,7 @@ public class RedPacketConstant {
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_CHAT_TYPE = "chatType";
     public static final String KEY_GROUP_ID = "groupId";
-    public static final String KEY_GROUO_MEMBERS_COUNT = "groupMembersCount";
+    public static final String KEY_GROUP_MEMBERS_COUNT = "groupMembersCount";
 
     //点击红包消息，需要传给红包SDK的数据，json的键值对的key值常量
     public static final String KEY_TO_NICK_NAME = "toNickName";

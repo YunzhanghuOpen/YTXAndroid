@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common;
+ */
+package com.yuntongxun.ecdemo.common;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -34,19 +35,19 @@ public class ActivityTaskUtils {
 
     public String toString() {
         Context context = mContext;
-        if(context == null) {
-            return null ;
+        if (context == null) {
+            return null;
         }
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         String packageName = context.getPackageName();
-        if(activityManager == null || TextUtils.isEmpty(packageName)) {
+        if (activityManager == null || TextUtils.isEmpty(packageName)) {
             return null;
         }
 
         List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(100);
         StringBuffer buffer = new StringBuffer();
-        for(ActivityManager.RunningTaskInfo info : runningTasks) {
-            if(!info.baseActivity.getClassName().startsWith(packageName) && !info.topActivity.getClassName().startsWith(packageName)) {
+        for (ActivityManager.RunningTaskInfo info : runningTasks) {
+            if (!info.baseActivity.getClassName().startsWith(packageName) && !info.topActivity.getClassName().startsWith(packageName)) {
                 continue;
             }
             Object[] args = new Object[5];

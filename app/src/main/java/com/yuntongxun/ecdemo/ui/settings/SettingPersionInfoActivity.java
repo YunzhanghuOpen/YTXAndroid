@@ -28,7 +28,6 @@ import com.yuntongxun.ecdemo.ui.ECSuperActivity;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
 import com.yuntongxun.ecdemo.ui.chatting.IMChattingHelper;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
-import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.PersonInfo;
@@ -40,7 +39,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @ActivityTransition(2)
-public class SettingPersionInfoActivity extends ECSuperActivity implements View.OnClickListener{
+public class SettingPersionInfoActivity extends ECSuperActivity implements View.OnClickListener {
 
     private static final int TIME_SETTINGS_DIALOG = 1;
 
@@ -70,7 +69,7 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
 
     };
 
-	private CCPFormInputView signInputView;
+    private CCPFormInputView signInputView;
 
     @Override
     protected boolean isEnableSwipe() {
@@ -85,12 +84,12 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
                 getString(R.string.dialog_ok_skip),
                 getString(R.string.app_title_setting_persioninfo), null, this);
 
-        mFromRegist = getIntent().getBooleanExtra("from_regist" , false);
+        mFromRegist = getIntent().getBooleanExtra("from_regist", false);
 
         initView();
 
-        if(mFromRegist) {
-            getTopBarView().setTopBarToStatus(1 , -1 , -1 , R.string.app_title_setting_persioninfo , this);
+        if (mFromRegist) {
+            getTopBarView().setTopBarToStatus(1, -1, -1, R.string.app_title_setting_persioninfo, this);
         } else {
             getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt,
                     -1, null,
@@ -117,21 +116,21 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
 
         clientUser = CCPAppManager.getClientUser();
 
-        if(clientUser == null) {
-            return ;
+        if (clientUser == null) {
+            return;
         }
         initExpirationTimeView();
         nicknameEt.setText(clientUser.getUserName());
         nicknameEt.setSelection(nicknameEt.getText().length());
         signInputView.setText(clientUser.getSignature());
 
-            if(clientUser.getSex() == 2) {
-                ((RadioButton)mSexRg.getChildAt(0)).setChecked(false);
-                ((RadioButton)mSexRg.getChildAt(1)).setChecked(true);
-            } else {
-                ((RadioButton)mSexRg.getChildAt(0)).setChecked(true);
-                ((RadioButton)mSexRg.getChildAt(1)).setChecked(false);
-            }
+        if (clientUser.getSex() == 2) {
+            ((RadioButton) mSexRg.getChildAt(0)).setChecked(false);
+            ((RadioButton) mSexRg.getChildAt(1)).setChecked(true);
+        } else {
+            ((RadioButton) mSexRg.getChildAt(0)).setChecked(true);
+            ((RadioButton) mSexRg.getChildAt(1)).setChecked(false);
+        }
 
     }
 
@@ -144,7 +143,7 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
         return super.onKeyDown(keyCode, event);
     }
 
-        @Override
+    @Override
     protected void onResume() {
         super.onResume();
         clientUser = CCPAppManager.getClientUser();
@@ -153,7 +152,7 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
     @Override
     protected void onPause() {
         super.onPause();
-        if(clientUser != null) {
+        if (clientUser != null) {
             saveClientUser();
         }
     }
@@ -167,45 +166,44 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
     }
 
     private void handlePersionInfo() {
-        if(SDKCoreHelper.getECChatManager() == null) {
-            return ;
+        if (SDKCoreHelper.getECChatManager() == null) {
+            return;
         }
 
         String nickname = nicknameEt.getText().toString().trim();
         int checkedRadioButtonId = mSexRg.getCheckedRadioButtonId();
         PersonInfo.Sex sex = PersonInfo.Sex.MALE;
-        if(checkedRadioButtonId == R.id.female) {
+        if (checkedRadioButtonId == R.id.female) {
             sex = PersonInfo.Sex.FEMALE;
         }
 
-        if(TextUtils.isEmpty(nickname)) {
+        if (TextUtils.isEmpty(nickname)) {
             ToastUtil.showMessage("请设置用户昵称");
-            return ;
+            return;
         }
-        
-        final String signature=signInputView.getText().toString().trim();
-        if(TextUtils.isEmpty(signature)) {
+
+        final String signature = signInputView.getText().toString().trim();
+        if (TextUtils.isEmpty(signature)) {
             ToastUtil.showMessage("请设置用户签名");
-            return ;
+            return;
         }
         String birth = mBirthTv.getText().toString();
-        if(DateUtil.getChooseDayTime(birth)>DateUtil.getCurrentDayTime()){
+        if (DateUtil.getChooseDayTime(birth) > DateUtil.getCurrentDayTime()) {
             ToastUtil.showMessage("你选择的日期大于当前时间、请重新选择");
             return;
         }
-        
+
         mPostingdialog = new ECProgressDialog(this, R.string.login_posting_submit);
         mPostingdialog.show();
         final PersonInfo.Sex clientSex = sex;
-        PersonInfo personInfo =new PersonInfo();
+        PersonInfo personInfo = new PersonInfo();
         personInfo.setBirth(birth);
         personInfo.setNickName(nickname);
         personInfo.setSex(clientSex);
         personInfo.setSign(signature);
-        
-        
-        
-       ECDevice.setPersonInfo(personInfo, new ECDevice.OnSetPersonInfoListener() {
+
+
+        ECDevice.setPersonInfo(personInfo, new ECDevice.OnSetPersonInfoListener() {
             @Override
             public void onSetPersonInfoComplete(ECError e, int version) {
                 IMChattingHelper.getInstance().mServicePersonVersion = version;
@@ -253,7 +251,7 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch (id) {
             case TIME_SETTINGS_DIALOG:
-                ((DatePickerDialog)dialog).updateDate(mExpirationTimeStartYear, mExpirationTimeStartMonth, mExpirationTimeStartDay);
+                ((DatePickerDialog) dialog).updateDate(mExpirationTimeStartYear, mExpirationTimeStartMonth, mExpirationTimeStartDay);
             default:
                 break;
         }
@@ -267,15 +265,15 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
         // 获取当前日期Date对象
         Date date = new Date();
-        if(clientUser != null && clientUser.getBirth() != 0) {
+        if (clientUser != null && clientUser.getBirth() != 0) {
             date.setTime(clientUser.getBirth());
         }
         //为Calendar对象设置时间为当前日期
         calendar.setTime(date);
         // 获取Calendar对象中的年
-        mExpirationTimeStartYear = calendar .get(Calendar.YEAR);
+        mExpirationTimeStartYear = calendar.get(Calendar.YEAR);
         // 获取Calendar对象中的月
-        mExpirationTimeStartMonth = calendar .get(Calendar.MONTH);
+        mExpirationTimeStartMonth = calendar.get(Calendar.MONTH);
         //获取这个月的第几天
         mExpirationTimeStartDay = calendar.get(Calendar.DATE);
 
@@ -295,15 +293,15 @@ public class SettingPersionInfoActivity extends ECSuperActivity implements View.
      * 关闭对话框
      */
     private void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;
     }
 
     private void initExpirationTime() {
-        mBirthTv.setText(getActiveTimeString(mExpirationTimeStartYear,mExpirationTimeStartMonth, mExpirationTimeStartDay));
+        mBirthTv.setText(getActiveTimeString(mExpirationTimeStartYear, mExpirationTimeStartMonth, mExpirationTimeStartDay));
     }
 
     public static String getActiveTimeString(int year, int month, int day) {

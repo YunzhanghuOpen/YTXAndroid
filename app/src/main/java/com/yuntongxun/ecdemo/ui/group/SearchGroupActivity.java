@@ -32,9 +32,9 @@ import com.yuntongxun.ecsdk.im.ECGroupMatch;
 
 import java.util.List;
 
-public class SearchGroupActivity extends ECSuperActivity implements View.OnClickListener{
+public class SearchGroupActivity extends ECSuperActivity implements View.OnClickListener {
 
-    private int mSearchType ;
+    private int mSearchType;
     private ListView mResultView;
     private CCPClearEditText mEdittext;
     private ECProgressDialog mPostingdialog;
@@ -42,7 +42,8 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
     final private TextWatcher textWatcher = new TextWatcher() {
 
-        private int fliteCounts = 20;;
+        private int fliteCounts = 20;
+        ;
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -57,12 +58,12 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
         public void afterTextChanged(Editable s) {
             LogUtil.d(LogUtil.getLogUtilsTag(textWatcher.getClass()), "fliteCounts=" + fliteCounts);
             fliteCounts = fliteCounts(s);
-            if(fliteCounts < 0) {
+            if (fliteCounts < 0) {
                 fliteCounts = 0;
             }
-            if(checkNameEmpty()) {
+            if (checkNameEmpty()) {
                 getTopBarView().setRightBtnEnable(true);
-                return ;
+                return;
             }
             getTopBarView().setRightBtnEnable(false);
             mGroupAdapter.clear();
@@ -73,14 +74,14 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(mGroupAdapter != null) {
+            if (mGroupAdapter != null) {
                 ECGroup dGroup = mGroupAdapter.getItem(position);
-                if(GroupSqlManager.isNeedApply(dGroup.getGroupId())) {
-                    Intent intent = new Intent(SearchGroupActivity.this , ApplyWithGroupPermissionActivity.class);
+                if (GroupSqlManager.isNeedApply(dGroup.getGroupId())) {
+                    Intent intent = new Intent(SearchGroupActivity.this, ApplyWithGroupPermissionActivity.class);
                     intent.putExtra(GroupInfoActivity.GROUP_ID, dGroup.getGroupId());
                     startActivity(intent);
                 } else {
-                    CCPAppManager.startChattingAction(SearchGroupActivity.this , dGroup.getGroupId() , dGroup.getName());
+                    CCPAppManager.startChattingAction(SearchGroupActivity.this, dGroup.getGroupId(), dGroup.getName());
                 }
 
 
@@ -90,10 +91,10 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
     };
 
     private void clearSearch() {
-        if(mEdittext != null) {
+        if (mEdittext != null) {
             mEdittext.setText("");
         }
-        if(mGroupAdapter != null) {
+        if (mGroupAdapter != null) {
             mGroupAdapter.setData(null);
         }
     }
@@ -102,9 +103,9 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSearchType = getIntent().getIntExtra(BaseSearch.EXTRA_SEARCH_TYPE , BaseSearch.SEARCH_BY_ID);
+        mSearchType = getIntent().getIntExtra(BaseSearch.EXTRA_SEARCH_TYPE, BaseSearch.SEARCH_BY_ID);
         initView();
-        String title = getString(mSearchType == BaseSearch.SEARCH_BY_ID ? R.string.searcha_by_id_tip :R.string.searcha_by_indistinct_name_tip);
+        String title = getString(mSearchType == BaseSearch.SEARCH_BY_ID ? R.string.searcha_by_id_tip : R.string.searcha_by_indistinct_name_tip);
         getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt,
                 R.drawable.btn_style_green, null,
                 getString(R.string.dialog_ok_button),
@@ -151,29 +152,30 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
             case R.id.text_right:
                 hideSoftKeyboard();
                 ECGroupManager ecGroupManager = SDKCoreHelper.getECGroupManager();
-                if(!checkNameEmpty() || ecGroupManager == null) {
-                    return ;
+                if (!checkNameEmpty() || ecGroupManager == null) {
+                    return;
                 }
                 mPostingdialog = new ECProgressDialog(this, R.string.search_group_posting);
                 mPostingdialog.show();
                 String keywords = mEdittext.getText().toString().trim();
                 ECGroupMatch match = new ECGroupMatch(ECGroupMatch.SearchType.GROUPID);
-                if(mSearchType == BaseSearch.SEARCH_BY_INDISTINCT_NAME) {
+                if (mSearchType == BaseSearch.SEARCH_BY_INDISTINCT_NAME) {
                     match.setSearchType(ECGroupMatch.SearchType.GROUPNAME);
                 }
                 match.setkeywords(keywords);
                 // 调用API创建群组、处理创建群组接口回调
-                ecGroupManager.searchPublicGroups(match , new ECGroupManager.OnSearchPublicGroupsListener() {
+                ecGroupManager.searchPublicGroups(match, new ECGroupManager.OnSearchPublicGroupsListener() {
                     @Override
                     public void onSearchPublicGroupsComplete(ECError error, List<ECGroup> groups) {
-                        if(mPostingdialog != null && mPostingdialog.isShowing()) {
-                            mPostingdialog.dismiss();;
+                        if (mPostingdialog != null && mPostingdialog.isShowing()) {
+                            mPostingdialog.dismiss();
+                            ;
                             mPostingdialog = null;
                         }
-                        if(error.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
+                        if (error.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
                             GroupSqlManager.insertGroupInfos(groups, -1);
                             mGroupAdapter.setData(groups);
-                            return ;
+                            return;
                         }
                         ToastUtil.showMessage("查询失败[" + error.errorCode + "]");
                     }
@@ -187,6 +189,7 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
     public class GroupAdapter extends ArrayAdapter<ECGroup> {
         int padding;
+
         /**
          * @param ctx
          */
@@ -197,8 +200,8 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
         public void setData(List<ECGroup> data) {
             clear();
-            if(data != null) {
-                for(ECGroup group : data) {
+            if (data != null) {
+                for (ECGroup group : data) {
                     add(group);
                 }
             }
@@ -209,8 +212,8 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             ViewHolder mViewHolder;
-            if(convertView == null || convertView.getTag() == null) {
-                view = View.inflate(SearchGroupActivity.this , R.layout.search_group_result_item, null);
+            if (convertView == null || convertView.getTag() == null) {
+                view = View.inflate(SearchGroupActivity.this, R.layout.search_group_result_item, null);
 
                 mViewHolder = new ViewHolder();
                 mViewHolder.group_id = (TextView) view.findViewById(R.id.group_id);
@@ -223,7 +226,7 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
             }
 
             ECGroup group = getItem(position);
-            if(group != null) {
+            if (group != null) {
                 mViewHolder.group_id.setText(getString(R.string.str_group_id_fmt, DemoUtils.getGroupShortId(group.getGroupId())));
                 mViewHolder.group_name.setText(group.getName());
             }
@@ -239,9 +242,10 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
     }
 
-    final InputFilter filter = new InputFilter () {
+    final InputFilter filter = new InputFilter() {
 
         private int limit = 30;
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end,
                                    Spanned dest, int dstart, int dend) {
@@ -250,7 +254,7 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
                     + " dstart:" + dstart + " dend:" + dend);
             float count = calculateCounts(dest);
             int overplus = limit - Math.round(count) - (dend - dstart);
-            if(overplus <= 0) {
+            if (overplus <= 0) {
                 if ((Float.compare(count, (float) (limit - 0.5D)) == 0)
                         && (source.length() > 0)
                         && (!(DemoUtils.characterChinese(source.charAt(0))))) {
@@ -259,11 +263,11 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
                 return "";
             }
 
-            if( overplus >= (end - start)) {
+            if (overplus >= (end - start)) {
                 return null;
             }
             int tepmCont = overplus + start;
-            if((Character.isHighSurrogate(source.charAt(tepmCont - 1))) && (--tepmCont == start)) {
+            if ((Character.isHighSurrogate(source.charAt(tepmCont - 1))) && (--tepmCont == start)) {
                 return "";
             }
             return source.subSequence(start, tepmCont);
@@ -273,7 +277,6 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
 
 
     /**
-     *
      * @param text
      * @return
      */
@@ -284,15 +287,14 @@ public class SearchGroupActivity extends ECSuperActivity implements View.OnClick
     }
 
     /**
-     *
      * @param text
      * @return
      */
     public static float calculateCounts(CharSequence text) {
 
         float lengh = 0.0F;
-        for(int i = 0; i < text.length() ; i++) {
-            if(!DemoUtils.characterChinese(text.charAt(i))) {
+        for (int i = 0; i < text.length(); i++) {
+            if (!DemoUtils.characterChinese(text.charAt(i))) {
                 lengh += 1.0F;
             } else {
                 lengh += 0.5F;

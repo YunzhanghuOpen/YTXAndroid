@@ -1,7 +1,6 @@
 package com.yuntongxun.ecdemo.ui.settings;
 
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -21,23 +20,24 @@ import com.yuntongxun.ecdemo.ui.group.CreateGroupActivity;
 
 import java.io.InvalidClassException;
 
-public class EditConfigureActivity extends ECSuperActivity implements View.OnClickListener{
+public class EditConfigureActivity extends ECSuperActivity implements View.OnClickListener {
 
     public static final String EXTRA_EDIT_TITLE = "edit_title";
     public static final String EXTRA_EDIT_HINT = "edit_hint";
     private int mSettingType;
     private EmojiconEditText mEdittext;
     private ECPreferenceSettings mSettings;
-    
-    public static boolean isTop=false;
+
+    public static boolean isTop = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isTop=true;
-        mSettingType = getIntent().getIntExtra("setting_type" , -1);
+        isTop = true;
+        mSettingType = getIntent().getIntExtra("setting_type", -1);
         String title = "";
-        if(mSettingType == SettingsActivity.CONFIG_TYPE_APPKEY) {
+        if (mSettingType == SettingsActivity.CONFIG_TYPE_APPKEY) {
             title = getString(R.string.edit_appkey);
             mSettings = ECPreferenceSettings.SETTINGS_APPKEY;
         } else if (mSettingType == SettingsActivity.CONFIG_TYPE_TOKEN) {
@@ -63,14 +63,14 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
         InputFilter[] inputFilters = new InputFilter[1];
         inputFilters[0] = filter;
         mEdittext.setFilters(inputFilters);
-        if(mSettingType != -1) {
+        if (mSettingType != -1) {
             String config = getConfig(mSettings);
             mEdittext.setText(config);
             mEdittext.setSelection(mEdittext.getText().length());
-            return ;
+            return;
         }
         String defaultData = getIntent().getStringExtra("edit_default_data");
-        if(!TextUtils.isEmpty(defaultData)) {
+        if (!TextUtils.isEmpty(defaultData)) {
             mEdittext.setText(defaultData);
             mEdittext.setSelection(mEdittext.getText().length());
         } else if (getIntent().hasExtra(EXTRA_EDIT_HINT)) {
@@ -80,14 +80,14 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
 
     private String getConfig(ECPreferenceSettings settings) {
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
-        String value = sharedPreferences.getString(settings.getId() , (String)settings.getDefaultValue());
+        String value = sharedPreferences.getString(settings.getId(), (String) settings.getDefaultValue());
         return value;
     }
 
     private void saveSettings(ECPreferenceSettings settings) {
         String settingsValue = mEdittext.getText().toString().trim();
         try {
-            ECPreferences.savePreference(settings ,settingsValue,true);
+            ECPreferences.savePreference(settings, settingsValue, true);
         } catch (InvalidClassException e) {
             e.printStackTrace();
         }
@@ -97,12 +97,12 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
     protected int getLayoutId() {
         return R.layout.activity_edit_configure;
     }
-    
+
     @Override
     protected void onPause() {
-    	// TODO Auto-generated method stub
-    	super.onPause();
-    	isTop=false;
+        // TODO Auto-generated method stub
+        super.onPause();
+        isTop = false;
     }
 
     @Override
@@ -114,11 +114,11 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
                 break;
             case R.id.text_right:
                 hideSoftKeyboard();
-                if(mSettingType == -1) {
+                if (mSettingType == -1) {
                     Intent intent = new Intent();
-                    intent.putExtra("result_data" , mEdittext.getText().toString().toString());
-                    setResult(RESULT_OK ,intent);
-                }  else {
+                    intent.putExtra("result_data", mEdittext.getText().toString().toString());
+                    setResult(RESULT_OK, intent);
+                } else {
                     saveSettings(mSettings);
                     setResult(RESULT_OK);
                 }
@@ -129,9 +129,10 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
         }
     }
 
-    final InputFilter filter = new InputFilter () {
+    final InputFilter filter = new InputFilter() {
 
         private int limit = 128;
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end,
                                    Spanned dest, int dstart, int dend) {
@@ -140,7 +141,7 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
                     + " dstart:" + dstart + " dend:" + dend);
             float count = calculateCounts(dest);
             int overplus = limit - Math.round(count) - (dend - dstart);
-            if(overplus <= 0) {
+            if (overplus <= 0) {
                 if ((Float.compare(count, (float) (limit - 0.5D)) == 0)
                         && (source.length() > 0)
                         && (!(DemoUtils.characterChinese(source.charAt(0))))) {
@@ -150,27 +151,27 @@ public class EditConfigureActivity extends ECSuperActivity implements View.OnCli
                 return "";
             }
 
-            if( overplus >= (end - start)) {
+            if (overplus >= (end - start)) {
                 return null;
             }
             int tepmCont = overplus + start;
-            if((Character.isHighSurrogate(source.charAt(tepmCont - 1))) && (--tepmCont == start)) {
+            if ((Character.isHighSurrogate(source.charAt(tepmCont - 1))) && (--tepmCont == start)) {
                 return "";
             }
             return source.subSequence(start, tepmCont);
         }
 
     };
+
     /**
-     *
      * @param text
      * @return
      */
     public static float calculateCounts(CharSequence text) {
 
         float lengh = 0.0F;
-        for(int i = 0; i < text.length() ; i++) {
-            if(!DemoUtils.characterChinese(text.charAt(i))) {
+        for (int i = 0; i < text.length(); i++) {
+            if (!DemoUtils.characterChinese(text.charAt(i))) {
                 lengh += 1.0F;
             } else {
                 lengh += 0.5F;

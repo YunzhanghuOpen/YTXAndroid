@@ -10,7 +10,7 @@ public class CCPFragmentImpl extends CCPActivityBase {
     final private CCPFragment mFragment;
 
     public CCPFragmentImpl(CCPFragment fragment) {
-        mFragment  = fragment;
+        mFragment = fragment;
     }
 
     @Override

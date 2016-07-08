@@ -40,9 +40,13 @@ public abstract class CCPFragment extends Fragment {
 
     private static final String TAG = "ECSDK_Demo.CCPFragment";
 
-    /**广播拦截器*/
+    /**
+     * 广播拦截器
+     */
     private InternalReceiver internalReceiver;
-    /**当前页面是否可以销毁*/
+    /**
+     * 当前页面是否可以销毁
+     */
     private boolean isFinish = false;
     /**
      * 初始化应用ActionBar
@@ -96,15 +100,16 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 处理按钮按下事件
+     *
      * @param keyCode
      * @param event
      * @return
      */
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(mBaseActivity.onKeyDown(keyCode, event)) {
+        if (mBaseActivity.onKeyDown(keyCode, event)) {
             return true;
         }
-        if((event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+        if ((event.getKeyCode() == KeyEvent.KEYCODE_BACK)
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
             finish();
             return true;
@@ -115,6 +120,7 @@ public abstract class CCPFragment extends Fragment {
     /**
      * 注册广播Action，子类如果需要监听广播可以调用
      * 该方法传入相应事件的Action
+     *
      * @param actionArray
      */
     protected final void registerReceiver(String[] actionArray) {
@@ -135,6 +141,7 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 返回一个Handler 主线程
+     *
      * @return
      */
     public android.os.Handler getSupperHandler() {
@@ -153,10 +160,10 @@ public abstract class CCPFragment extends Fragment {
      * 重载页面关闭方法
      */
     public void finish() {
-        if(getActivity() == null) {
+        if (getActivity() == null) {
             return;
         }
-        if(isFinish) {
+        if (isFinish) {
             getActivity().finish();
             return;
         }
@@ -194,6 +201,7 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 查找	View
+     *
      * @param paramInt
      * @return
      */
@@ -204,6 +212,7 @@ public abstract class CCPFragment extends Fragment {
     /**
      * 如果子界面需要拦截处理注册的广播
      * 需要实现该方法
+     *
      * @param context
      * @param intent
      */
@@ -213,12 +222,14 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 每个页面需要实现该方法返回一个该页面所对应的资源ID
+     *
      * @return 页面资源ID
      */
     protected abstract int getLayoutId();
 
     /**
      * 如果需要自定义页面标题，则需要重载该方法
+     *
      * @return
      */
     public int getTitleLayoutId() {
@@ -236,16 +247,18 @@ public abstract class CCPFragment extends Fragment {
     public TopBarView getTopBarView() {
         return mBaseActivity.getTopBarView();
     }
+
     /**
-     *
      * @param mute
      */
     public SpannableString setNewMessageMute(boolean mute) {
         mBaseActivity.setMute(mute);
         return mBaseActivity.buildActionTitle();
     }
+
     /**
      * 设置ActionBar标题
+     *
      * @param resid
      */
     public void setActionBarTitle(int resid) {
@@ -254,6 +267,7 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 设置ActionBar标题
+     *
      * @param text
      */
     public void setActionBarTitle(CharSequence text) {
@@ -262,6 +276,7 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 返回ActionBar 标题
+     *
      * @return
      */
     public final CharSequence getActionBarTitle() {
@@ -279,16 +294,17 @@ public abstract class CCPFragment extends Fragment {
 
     /**
      * 自定义应用全局广播处理器，方便全局拦截广播并进行分发
+     *
      * @author 容联•云通讯
-     * @date 2014-12-4
      * @version 4.0
+     * @date 2014-12-4
      */
     private class InternalReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent == null || intent.getAction() == null) {
-                return ;
+            if (intent == null || intent.getAction() == null) {
+                return;
             }
             handleReceiver(context, intent);
         }

@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui.contact;
+ */
+package com.yuntongxun.ecdemo.ui.contact;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -61,17 +62,17 @@ public class ContactLogic {
     public static final String ALPHA_ACCOUNT = "izhangjy@163.com";
     public static final String CUSTOM_SERVICE = "KF10089";
     private static HashMap<String, Bitmap> photoCache = new HashMap<String, Bitmap>(20);
-    public static final String[] CONVER_NAME = {"张三","李四","王五","赵六","钱七"};
+    public static final String[] CONVER_NAME = {"张三", "李四", "王五", "赵六", "钱七"};
     public static final String[] CONVER_PHONTO = {"select_account_photo_one.png"
-            ,"select_account_photo_two.png"
-            ,"select_account_photo_three.png"
-            ,"select_account_photo_four.png"
-            ,"select_account_photo_five.png"
+            , "select_account_photo_two.png"
+            , "select_account_photo_three.png"
+            , "select_account_photo_four.png"
+            , "select_account_photo_five.png"
     };
 
     private static String[] projection_getSettingList = {
             ContactsContract.Settings.ACCOUNT_TYPE,
-            ContactsContract.Settings.ACCOUNT_NAME };
+            ContactsContract.Settings.ACCOUNT_NAME};
 
     private static String[] projection_getContractList = {
             ContactsContract.Data.RAW_CONTACT_ID,
@@ -86,7 +87,7 @@ public class ContactLogic {
 
     static {
         try {
-            if(mDefaultBitmap == null) {
+            if (mDefaultBitmap == null) {
                 mDefaultBitmap = DemoUtils.decodeStream(CCPAppManager.getContext().getAssets().open("avatar/personal_center_default_avatar.png"), ResourceHelper.getDensity(null));
             }
         } catch (IOException e) {
@@ -94,6 +95,7 @@ public class ContactLogic {
     }
 
     private static ContactLogic sInstance;
+
     public static ContactLogic getInstance() {
         if (sInstance == null) {
             sInstance = new ContactLogic();
@@ -103,24 +105,25 @@ public class ContactLogic {
 
     /**
      * 查找头像
+     *
      * @param username
      * @return
      */
     public static Bitmap getPhoto(String username) {
 
-        if(TextUtils.isEmpty(username)) {
+        if (TextUtils.isEmpty(username)) {
             return mDefaultBitmap;
         }
         try {
             if (photoCache.containsKey(username)) {
                 return photoCache.get(username);
             }
-            Bitmap bitmap ;
-            if(username.startsWith("mobilePhoto://")) {
-                bitmap = BitmapFactory.decodeFile(new File(FileAccessor.getAvatarPathName() , username.substring("mobilePhoto://".length())).getAbsolutePath());
+            Bitmap bitmap;
+            if (username.startsWith("mobilePhoto://")) {
+                bitmap = BitmapFactory.decodeFile(new File(FileAccessor.getAvatarPathName(), username.substring("mobilePhoto://".length())).getAbsolutePath());
             } else {
 
-                bitmap =  DemoUtils.decodeStream(CCPAppManager.getContext()
+                bitmap = DemoUtils.decodeStream(CCPAppManager.getContext()
                                 .getAssets().open("avatar/" + username),
                         ResourceHelper.getDensity(null));
             }
@@ -133,12 +136,13 @@ public class ContactLogic {
 
     /**
      * 随即设置用户昵称
+     *
      * @param beas
      * @return
      */
     public static ArrayList<ECContacts> converContacts(ArrayList<ECContacts> beas) {
 
-        if(beas == null || beas.isEmpty()) {
+        if (beas == null || beas.isEmpty()) {
             return null;
         }
         Collections.sort(beas, new Comparator<ECContacts>() {
@@ -151,7 +155,7 @@ public class ContactLogic {
 
         });
 
-        for(int i = 0 ; i < beas.size() ; i ++ ) {
+        for (int i = 0; i < beas.size(); i++) {
             ECContacts accountBean = beas.get(i);
             if (i < 5) {
                 //accountBean.setNickname(CONVER_NAME[i]);
@@ -175,6 +179,7 @@ public class ContactLogic {
 
     /**
      * 是否在线客服
+     *
      * @param contact
      * @return
      */
@@ -183,7 +188,7 @@ public class ContactLogic {
     }
 
     // These are the Contacts rows that we will retrieve.
-    static final String[] CONTACTS_SUMMARY_PROJECTION = new String[] {
+    static final String[] CONTACTS_SUMMARY_PROJECTION = new String[]{
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.PHOTO_ID,
@@ -191,6 +196,7 @@ public class ContactLogic {
 
     /**
      * 获取手机系统联系人信息
+     *
      * @return
      */
     public static ECArrayLists<ECContacts> getPhoneContacts(Context ctx) {
@@ -219,7 +225,7 @@ public class ContactLogic {
                 data.setRemark(ContactLogic.CONVER_PHONTO[ContactSqlManager.getIntRandom(4, 0)]);
                 while (phones.moveToNext()) {
                     String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    Phone phone = new Phone(0,phoneNumber);
+                    Phone phone = new Phone(0, phoneNumber);
                     data.addPhone(phone);
                     pyFormat(data);
                 }
@@ -228,8 +234,8 @@ public class ContactLogic {
             }
             cursor.close();
 
-            if(contacts != null) {
-                  Collections.sort(contacts, new PyComparator());
+            if (contacts != null) {
+                Collections.sort(contacts, new PyComparator());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,7 +279,7 @@ public class ContactLogic {
 
     public static ECArrayLists<ECContacts> getContractList(boolean showSim) throws Exception {
         // TODO 可能需要添加，是否显示无号码联系人选项，显示哪些账户联系人选项
-       getInstance().getSettingList();
+        getInstance().getSettingList();
         Cursor cursor = null;
         ECArrayLists<ECContacts> cl = null;
         String where = "(" + ContactsContract.Data.MIMETYPE + " = ? or "
@@ -314,7 +320,7 @@ public class ContactLogic {
                     long Id = cursor.getLong(6);
                     if (tmpid != rawContactId) {
                         if (cursor.getPosition() != 0 && !TextUtils.isEmpty(cli.getContactid())) {
-                            if(TextUtils.isEmpty(cli.getNickname())) {
+                            if (TextUtils.isEmpty(cli.getNickname())) {
                                 cli.setNickname(cli.getContactid());
                             }
                             cl.add(cli);
@@ -342,7 +348,7 @@ public class ContactLogic {
                     pyFormat(cli);
                     // 最后一条记录时添加最后一个
                     if (cursor.getPosition() == (cursor.getCount() - 1)) {
-                        if(TextUtils.isEmpty(cli.getNickname())) {
+                        if (TextUtils.isEmpty(cli.getNickname())) {
                             cli.setNickname(cli.getContactid());
                         }
                         cl.add(cli);
@@ -357,7 +363,7 @@ public class ContactLogic {
                 cursor.close();
                 cursor = null;
             }
-            if(format != null) {
+            if (format != null) {
                 format = null;
             }
         }
@@ -370,6 +376,7 @@ public class ContactLogic {
 
 
     private static HanyuPinyinOutputFormat format = null;
+
     public static void pyFormat(ECContacts contact) {
         try {
             String name = contact.getNickname();
@@ -378,7 +385,7 @@ public class ContactLogic {
             }
             name = name.trim();
             // 拼音转换设置
-            if(format == null) {
+            if (format == null) {
                 format = new HanyuPinyinOutputFormat();// 定义转换格式
                 format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);// 不要声调
                 format.setVCharType(HanyuPinyinVCharType.WITH_V);// 设置 女 nv
@@ -480,6 +487,7 @@ public class ContactLogic {
 
     /**
      * 返回讨论组的头像
+     *
      * @return
      */
     public static Bitmap getChatroomPhoto(final String groupid) {
@@ -498,8 +506,8 @@ public class ContactLogic {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(groupid.toUpperCase().startsWith("G")) {
-            return BitmapFactory.decodeResource(CCPAppManager.getContext().getResources() , R.drawable.group_head);
+        if (groupid.toUpperCase().startsWith("G")) {
+            return BitmapFactory.decodeResource(CCPAppManager.getContext().getResources(), R.drawable.group_head);
         }
         return mDefaultBitmap;
     }
@@ -509,21 +517,21 @@ public class ContactLogic {
      */
     private static void processChatroomPhoto(String groupid) {
         ArrayList<String> groupMembers = GroupMemberSqlManager.getGroupMemberID(groupid);
-        if(groupMembers != null) {
+        if (groupMembers != null) {
             ArrayList<String> contactName = ContactSqlManager.getContactRemark(groupMembers.toArray(new String[]{}));
-            if(contactName != null) {
+            if (contactName != null) {
                 Bitmap[] bitmaps = new Bitmap[contactName.size()];
-                if(bitmaps.length > 9) {
+                if (bitmaps.length > 9) {
                     bitmaps = new Bitmap[9];
                 }
                 List<BitmapUtil.InnerBitmapEntity> bitmapEntitys = getBitmapEntitys(bitmaps.length);
-                for(int i = 0; i < bitmaps.length; i ++ ) {
+                for (int i = 0; i < bitmaps.length; i++) {
                     Bitmap photo = getPhoto(contactName.get(i));
                     photo = ThumbnailUtils.extractThumbnail(photo, (int) bitmapEntitys.get(0).width, (int) bitmapEntitys.get(0).width);
                     bitmaps[i] = photo;
                 }
-                Bitmap combineBitmap = BitmapUtil.getCombineBitmaps(bitmapEntitys,bitmaps);
-                if(combineBitmap != null) {
+                Bitmap combineBitmap = BitmapUtil.getCombineBitmaps(bitmapEntitys, bitmaps);
+                if (combineBitmap != null) {
                     photoCache.put(groupid, combineBitmap);
                     BitmapUtil.saveBitmapToLocal(groupid, combineBitmap);
                 }
@@ -555,11 +563,11 @@ public class ContactLogic {
 
 
     public static void getMobileContactPhoto(List<ECContacts> list) {
-        if(list == null || list.isEmpty()) {
-            return ;
+        if (list == null || list.isEmpty()) {
+            return;
         }
-        for(ECContacts contact : list) {
-            if(contact.getPhotoId() > 0) {
+        for (ECContacts contact : list) {
+            if (contact.getPhotoId() > 0) {
                 getMobileContactPhoto(contact);
             }
         }
@@ -568,8 +576,8 @@ public class ContactLogic {
     public static void getMobileContactPhoto(ECContacts contact) {
         try {
             Bitmap bitmap = getContactPhoto(contact);
-            if(bitmap == null) {
-                return ;
+            if (bitmap == null) {
+                return;
             }
             contact.setRemark("mobilePhoto://" + contact.getContactid());
             DemoUtils.saveBitmapToLocal(new File(FileAccessor.getAvatarPathName(), contact.getContactid()), bitmap);
@@ -579,13 +587,13 @@ public class ContactLogic {
         }
     }
 
-    public static Bitmap getContactPhoto(ECContacts contact){
+    public static Bitmap getContactPhoto(ECContacts contact) {
         long photoId = contact.getPhotoId();
         if (photoId != 0) {
             Cursor cursor = null;
             ContentResolver contentResolver = ECApplication.getInstance().getApplicationContext().getContentResolver();
             try {
-                cursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, new String[] { ContactsContract.CommonDataKinds.Photo._ID, ContactsContract.CommonDataKinds.Photo.PHOTO }, ContactsContract.CommonDataKinds.Photo._ID + " = " + photoId, null, null);
+                cursor = contentResolver.query(ContactsContract.Data.CONTENT_URI, new String[]{ContactsContract.CommonDataKinds.Photo._ID, ContactsContract.CommonDataKinds.Photo.PHOTO}, ContactsContract.CommonDataKinds.Photo._ID + " = " + photoId, null, null);
                 if (cursor != null && cursor.moveToNext()) {
                     byte[] photo = cursor.getBlob(1);
                     if (photo != null) {
@@ -595,7 +603,7 @@ public class ContactLogic {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if(cursor != null){
+                if (cursor != null) {
                     cursor.close();
                     cursor = null;
                 }

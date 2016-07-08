@@ -20,9 +20,9 @@ import com.yuntongxun.ecdemo.R;
  */
 public class BladeView extends View {
     private OnItemClickListener mOnItemClickListener;
-    String[] b = {"↑" ,"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+    String[] b = {"↑", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
             "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-            "Y", "Z" ,"#"};
+            "Y", "Z", "#"};
     int choose = -1;
     Paint paint = new Paint();
     boolean showBkg = false;
@@ -58,7 +58,7 @@ public class BladeView extends View {
             paint.setFakeBoldText(true);
             paint.setAntiAlias(true);
             if (i == choose) {
-                 paint.setColor(Color.parseColor("#3399ff"));
+                paint.setColor(Color.parseColor("#3399ff"));
             }
             float xPos = width / 2 - paint.measureText(b[i]) / 2;
             float yPos = singleHeight * i + singleHeight;
@@ -141,9 +141,9 @@ public class BladeView extends View {
     private void dismissPopup() {
         handler.postDelayed(dismissRunnable, 1500);
     }
-    
+
     public void removeDis() {
-    	handler.removeCallbacks(dismissRunnable);
+        handler.removeCallbacks(dismissRunnable);
     }
 
     Runnable dismissRunnable = new Runnable() {

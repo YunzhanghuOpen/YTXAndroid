@@ -1,7 +1,5 @@
 package com.yuntongxun.ecdemo.ui.contact;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,184 +12,183 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.yuntongxun.ecdemo.R;
-import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECProgressDialog;
-import com.yuntongxun.ecdemo.core.ClientUser;
-import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.GroupMemberSqlManager;
 import com.yuntongxun.ecdemo.ui.CCPListAdapter;
 import com.yuntongxun.ecdemo.ui.ECSuperActivity;
 import com.yuntongxun.ecdemo.ui.chatting.base.EmojiconTextView;
-import com.yuntongxun.ecdemo.ui.group.GroupInfoActivity;
 import com.yuntongxun.ecdemo.ui.group.GroupMemberService;
 import com.yuntongxun.ecsdk.im.ECGroupMember;
+
+import java.util.ArrayList;
 
 /**
  * com.yuntongxun.ecdemo.ui.contact in ECDemo_Android Created by Jorstin on
  * 2015/6/15.
  */
 public class AtSomeoneUI extends ECSuperActivity implements
-		View.OnClickListener, GroupMemberService.OnSynsGroupMemberListener {
+        View.OnClickListener, GroupMemberService.OnSynsGroupMemberListener {
 
-	public static final String EXTRA_GROUP_ID = "at_group_id";
-	public static final String EXTRA_CHAT_USER = "at_chat_user";
-	public static final String EXTRA_SELECT_CONV_USER = "select_conv_user";
+    public static final String EXTRA_GROUP_ID = "at_group_id";
+    public static final String EXTRA_CHAT_USER = "at_chat_user";
+    public static final String EXTRA_SELECT_CONV_USER = "select_conv_user";
 
-	private String mGroupId;
-	private String mChatUser;
-	private ListView mListView;
-	private AtSomeAdapter mAdapter;
-	private ECProgressDialog mPostingdialog;
+    private String mGroupId;
+    private String mChatUser;
+    private ListView mListView;
+    private AtSomeAdapter mAdapter;
+    private ECProgressDialog mPostingdialog;
 
-	private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			ECGroupMember member = mAdapter.getItem(position);
-			if (!TextUtils.isEmpty(member.getVoipAccount())) {
-				Intent intent = new Intent();
-				intent.putExtra(EXTRA_SELECT_CONV_USER, member.getVoipAccount());
-				setResult(RESULT_OK, intent);
-			}
-			finish();
-		}
-	};
+    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            ECGroupMember member = mAdapter.getItem(position);
+            if (!TextUtils.isEmpty(member.getVoipAccount())) {
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_SELECT_CONV_USER, member.getVoipAccount());
+                setResult(RESULT_OK, intent);
+            }
+            finish();
+        }
+    };
 
-	@Override
-	protected int getLayoutId() {
-		return R.layout.at_someone_ui;
-	}
+    @Override
+    protected int getLayoutId() {
+        return R.layout.at_someone_ui;
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		mGroupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
-		mChatUser = getIntent().getStringExtra(EXTRA_CHAT_USER);
+        mGroupId = getIntent().getStringExtra(EXTRA_GROUP_ID);
+        mChatUser = getIntent().getStringExtra(EXTRA_CHAT_USER);
 
-		GroupMemberService.addListener(this);
-		GroupMemberService.synsGroupMember(mGroupId);
+        GroupMemberService.addListener(this);
+        GroupMemberService.synsGroupMember(mGroupId);
 
-		initView();
-		
-	    
-	}
+        initView();
 
-	private void initView() {
-		getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt, -1,
-				R.string.room_at_someone, this);
 
-		mListView = (ListView) findViewById(R.id.chatroom_member_lv);
-		mListView.setOnItemClickListener(onItemClickListener);
+    }
 
-	}
+    private void initView() {
+        getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt, -1,
+                R.string.room_at_someone, this);
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.btn_left:
-			hideSoftKeyboard();
-			finish();
-			break;
+        mListView = (ListView) findViewById(R.id.chatroom_member_lv);
+        mListView.setOnItemClickListener(onItemClickListener);
 
-		default:
-			break;
-		}
-	}
+    }
 
-	public static class AtSomeAdapter extends CCPListAdapter<ECGroupMember> {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_left:
+                hideSoftKeyboard();
+                finish();
+                break;
 
-		private String mGroupId;
+            default:
+                break;
+        }
+    }
 
-		/**
-		 * 构造方法
-		 * 
-		 * @param ctx
-		 * @param o
-		 */
-		public AtSomeAdapter(Context ctx, ECGroupMember o, String groupId) {
-			super(ctx, o);
-			mGroupId = groupId;
-		}
+    public static class AtSomeAdapter extends CCPListAdapter<ECGroupMember> {
 
-		@Override
-		protected void notifyChange() {
-			Cursor cursor = GroupMemberSqlManager
-					.getGroupMembersByCursorExceptSelf(mGroupId);
-			setCursor(cursor);
-			super.notifyDataSetChanged();
-		}
+        private String mGroupId;
 
-		@Override
-		protected void initCursor() {
-			notifyChange();
-		}
+        /**
+         * 构造方法
+         *
+         * @param ctx
+         * @param o
+         */
+        public AtSomeAdapter(Context ctx, ECGroupMember o, String groupId) {
+            super(ctx, o);
+            mGroupId = groupId;
+        }
 
-		@Override
-		protected ECGroupMember getItem(ECGroupMember member, Cursor cursor) {
-			ECGroupMember person = new ECGroupMember();
-			person.setBelong(mGroupId);
-			person.setVoipAccount(cursor.getString(0));
-			person.setDisplayName(cursor.getString(1));
-			person.setRemark(cursor.getString(2));
-			person.setRole(cursor.getInt(3));
-			person.setBan(cursor.getInt(4) == 2 ? true : false);
-			return person;
-		}
+        @Override
+        protected void notifyChange() {
+            Cursor cursor = GroupMemberSqlManager
+                    .getGroupMembersByCursorExceptSelf(mGroupId);
+            setCursor(cursor);
+            super.notifyDataSetChanged();
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view;
-			ViewHolder mViewHolder;
-			if (convertView == null || convertView.getTag() == null) {
-				view = View.inflate(mContext, R.layout.at_someone_item, null);
+        @Override
+        protected void initCursor() {
+            notifyChange();
+        }
 
-				mViewHolder = new ViewHolder();
-				mViewHolder.mAvatar = (ImageView) view
-						.findViewById(R.id.content);
-				mViewHolder.name_tv = (EmojiconTextView) view
-						.findViewById(R.id.at_someone_item_nick);
+        @Override
+        protected ECGroupMember getItem(ECGroupMember member, Cursor cursor) {
+            ECGroupMember person = new ECGroupMember();
+            person.setBelong(mGroupId);
+            person.setVoipAccount(cursor.getString(0));
+            person.setDisplayName(cursor.getString(1));
+            person.setRemark(cursor.getString(2));
+            person.setRole(cursor.getInt(3));
+            person.setBan(cursor.getInt(4) == 2 ? true : false);
+            return person;
+        }
 
-				view.setTag(mViewHolder);
-			} else {
-				view = convertView;
-				mViewHolder = (ViewHolder) view.getTag();
-			}
-			final ECGroupMember item = getItem(position);
-			if (item != null) {
-				item.setDisplayName(TextUtils.isEmpty(item.getDisplayName()) ? item
-						.getVoipAccount() : item.getDisplayName());
-				mViewHolder.name_tv.setText(item.getDisplayName());
-				mViewHolder.mAvatar.setImageBitmap(ContactLogic.getPhoto(item
-						.getRemark()));
-			}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+            ViewHolder mViewHolder;
+            if (convertView == null || convertView.getTag() == null) {
+                view = View.inflate(mContext, R.layout.at_someone_item, null);
 
-			return view;
-		}
+                mViewHolder = new ViewHolder();
+                mViewHolder.mAvatar = (ImageView) view
+                        .findViewById(R.id.content);
+                mViewHolder.name_tv = (EmojiconTextView) view
+                        .findViewById(R.id.at_someone_item_nick);
 
-		static class ViewHolder {
-			/** 头像 */
-			ImageView mAvatar;
-			/** 名称 */
-			EmojiconTextView name_tv;
-		}
-	}
+                view.setTag(mViewHolder);
+            } else {
+                view = convertView;
+                mViewHolder = (ViewHolder) view.getTag();
+            }
+            final ECGroupMember item = getItem(position);
+            if (item != null) {
+                item.setDisplayName(TextUtils.isEmpty(item.getDisplayName()) ? item
+                        .getVoipAccount() : item.getDisplayName());
+                mViewHolder.name_tv.setText(item.getDisplayName());
+                mViewHolder.mAvatar.setImageBitmap(ContactLogic.getPhoto(item
+                        .getRemark()));
+            }
 
-	@Override
-	public void onSynsGroupMember(String groupId) {
-		if (groupId == null || !mGroupId.equals(groupId)) {
-			return;
-		}
-		ArrayList<ECGroupMember> members = GroupMemberSqlManager
-				.getGroupMemberWithName(mGroupId);
+            return view;
+        }
 
-		mAdapter = new AtSomeAdapter(this, new ECGroupMember(), mGroupId);
+        static class ViewHolder {
+            /**
+             * 头像
+             */
+            ImageView mAvatar;
+            /**
+             * 名称
+             */
+            EmojiconTextView name_tv;
+        }
+    }
 
-		mListView.setAdapter(mAdapter);
-	}
-	
-	
-	
+    @Override
+    public void onSynsGroupMember(String groupId) {
+        if (groupId == null || !mGroupId.equals(groupId)) {
+            return;
+        }
+        ArrayList<ECGroupMember> members = GroupMemberSqlManager
+                .getGroupMemberWithName(mGroupId);
 
-	
+        mAdapter = new AtSomeAdapter(this, new ECGroupMember(), mGroupId);
+
+        mListView.setAdapter(mAdapter);
+    }
+
+
 }

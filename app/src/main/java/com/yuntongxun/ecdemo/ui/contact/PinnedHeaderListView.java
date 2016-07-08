@@ -46,9 +46,9 @@ public class PinnedHeaderListView extends ListView {
         /**
          * Configures the pinned header view to match the first visible list item.
          *
-         * @param header pinned header view.
+         * @param header   pinned header view.
          * @param position position of the first visible list item.
-         * @param alpha fading of the header view, between 0 and 255.
+         * @param alpha    fading of the header view, between 0 and 255.
          */
         void configurePinnedHeader(View header, int position, int alpha);
     }
@@ -90,7 +90,7 @@ public class PinnedHeaderListView extends ListView {
     @Override
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
-        mAdapter = (PinnedHeaderAdapter)adapter;
+        mAdapter = (PinnedHeaderAdapter) adapter;
     }
 
     @Override

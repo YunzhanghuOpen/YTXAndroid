@@ -1,9 +1,5 @@
 package com.yuntongxun.ecdemo.ui.contact;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,10 +29,14 @@ import com.yuntongxun.ecdemo.ui.TabFragment;
 import com.yuntongxun.ecdemo.ui.chatting.base.EmojiconTextView;
 import com.yuntongxun.ecdemo.ui.settings.EditConfigureActivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by Jorstin on 2015/3/20.
  */
-public class MobileContactActivity extends ECSuperActivity implements View.OnClickListener{
+public class MobileContactActivity extends ECSuperActivity implements View.OnClickListener {
 
 
     @Override
@@ -77,20 +77,26 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
     public static class MobileContactFragment extends TabFragment {
         private static final String TAG = "ECDemo.MobileContactFragment";
 
-        /**当前联系人列表类型（查看、联系人选择）*/
+        /**
+         * 当前联系人列表类型（查看、联系人选择）
+         */
         public static final int TYPE_NORMAL = 1;
         public static final int TYPE_SELECT = 2;
-        /**列表类型*/
+        /**
+         * 列表类型
+         */
         private int mType;
         private String[] sections = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-                "Y", "Z" ,"#"};
-        private static final String ALL_CHARACTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#" ;
+                "Y", "Z", "#"};
+        private static final String ALL_CHARACTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
         /**
          * 每个字母最开始的位置
          */
         private HashMap<String, Integer> mFirstLetters;
-        /**当前选择联系人位置*/
+        /**
+         * 当前选择联系人位置
+         */
         public static ArrayList<Integer> positions = new ArrayList<Integer>();
         /**
          * 每个首字母对应的position
@@ -106,7 +112,9 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
         private PinnedHeaderListView mListView;
         private CustomSectionIndexer mCustomSectionIndexer;
         private ContactsAdapter mAdapter;
-        /**选择联系人*/
+        /**
+         * 选择联系人
+         */
         private View mSelectCardItem;
 
         final private View.OnClickListener mSelectClickListener
@@ -114,10 +122,10 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MobileContactFragment.this.getActivity() , EditConfigureActivity.class);
-                intent.putExtra(EditConfigureActivity.EXTRA_EDIT_TITLE , getString(R.string.edit_add_contacts));
-                intent.putExtra(EditConfigureActivity.EXTRA_EDIT_HINT , getString(R.string.edit_add_contacts));
-                startActivityForResult(intent , 0xa);
+                Intent intent = new Intent(MobileContactFragment.this.getActivity(), EditConfigureActivity.class);
+                intent.putExtra(EditConfigureActivity.EXTRA_EDIT_TITLE, getString(R.string.edit_add_contacts));
+                intent.putExtra(EditConfigureActivity.EXTRA_EDIT_HINT, getString(R.string.edit_add_contacts));
+                startActivityForResult(intent, 0xa);
             }
         };
 
@@ -129,31 +137,31 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 int headerViewsCount = mListView.getHeaderViewsCount();
-                if(position < headerViewsCount) {
+                if (position < headerViewsCount) {
                     return;
                 }
                 int _position = position - headerViewsCount;
 
-                if(mAdapter == null || mAdapter.getItem(_position) == null) {
-                    return ;
+                if (mAdapter == null || mAdapter.getItem(_position) == null) {
+                    return;
                 }
-                if(mType != TYPE_NORMAL) {
+                if (mType != TYPE_NORMAL) {
                     // 如果是选择联系人模式
                     Integer object = Integer.valueOf(_position);
-                    if(positions.contains(object)) {
+                    if (positions.contains(object)) {
                         positions.remove(object);
                     } else {
                         positions.add(object);
                     }
                     notifyClick(positions.size());
                     mAdapter.notifyDataSetChanged();
-                    return ;
+                    return;
                 }
 
                 ECContacts contacts = mAdapter.getItem(_position);
-                if(contacts == null || contacts.getId() == -1) {
+                if (contacts == null || contacts.getId() == -1) {
                     ToastUtil.showMessage(R.string.contact_none);
-                    return ;
+                    return;
                 }
                 Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
                 intent.putExtra(ContactDetailActivity.MOBILE, contacts.getContactid());
@@ -162,7 +170,7 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             }
         };
 
-		private BladeView mLetterListView;
+        private BladeView mLetterListView;
 
         /**
          * Create a new instance of ContactListFragment, providing "type"
@@ -188,7 +196,7 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mType = getArguments() != null ? getArguments().getInt("type") : TYPE_NORMAL;
-            if(positions == null ) {
+            if (positions == null) {
                 positions = new ArrayList<Integer>();
             }
         }
@@ -208,7 +216,7 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
         }
 
         private void notifyClick(int count) {
-            if(mClickListener != null) {
+            if (mClickListener != null) {
                 mClickListener.onContactClick(count);
             }
         }
@@ -218,40 +226,41 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
          */
         public String getChatuser() {
             StringBuilder selectUser = new StringBuilder();
-            for(Integer position : positions) {
+            for (Integer position : positions) {
                 ECContacts item = mAdapter.getItem(position);
                 ContactSqlManager.insertContact(item);
-                if(item != null ) {
+                if (item != null) {
                     selectUser.append(item.getContactid()).append(",");
                 }
             }
 
-            if(selectUser.length() > 0) {
+            if (selectUser.length() > 0) {
                 selectUser.substring(0, selectUser.length() - 1);
             }
             return selectUser.toString();
         }
+
         public String getChatuserName() {
-        	StringBuilder selectUser = new StringBuilder();
-        	for(Integer position : positions) {
-        		ECContacts item = mAdapter.getItem(position);
-        		ContactSqlManager.insertContact(item);
-        		if(item != null ) {
-        			selectUser.append(item.getNickname()).append(",");
-        		}
-        	}
-        	
-        	if(selectUser.length() > 0) {
-        		selectUser.substring(0, selectUser.length() - 1);
-        	}
-        	return selectUser.toString();
+            StringBuilder selectUser = new StringBuilder();
+            for (Integer position : positions) {
+                ECContacts item = mAdapter.getItem(position);
+                ContactSqlManager.insertContact(item);
+                if (item != null) {
+                    selectUser.append(item.getNickname()).append(",");
+                }
+            }
+
+            if (selectUser.length() > 0) {
+                selectUser.substring(0, selectUser.length() - 1);
+            }
+            return selectUser.toString();
         }
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             registerReceiver(new String[]{ContactsCache.ACTION_ACCOUT_INIT_CONTACTS});
-            if(mListView != null) {
+            if (mListView != null) {
                 mListView.setAdapter(null);
             }
             mListView = (PinnedHeaderListView) findViewById(R.id.address_contactlist);
@@ -264,26 +273,26 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
          * 初始化联系人列表
          */
         private void initContactListView() {
-            if(mListView != null && mSelectCardItem != null) {
+            if (mListView != null && mSelectCardItem != null) {
                 mListView.removeHeaderView(mSelectCardItem);
                 mListView.setAdapter(null);
             }
             contacts = ContactsCache.getInstance().getContacts();
-            if(contacts == null) {
-                return ;
+            if (contacts == null) {
+                return;
             }
             counts = new int[sections.length];
-            for(ECContacts c : contacts){
+            for (ECContacts c : contacts) {
 
                 String firstCharacter = c.getSortKey();
                 int index = ALL_CHARACTER.indexOf(firstCharacter);
                 counts[index]++;
             }
-            if(contacts != null && !contacts.isEmpty()) {
-                mSortKey =  contacts.get(0).getSortKey();
+            if (contacts != null && !contacts.isEmpty()) {
+                mSortKey = contacts.get(0).getSortKey();
             }
-            mCustomSectionIndexer = new CustomSectionIndexer(sections , counts);
-            if(mType == TYPE_NORMAL) {
+            mCustomSectionIndexer = new CustomSectionIndexer(sections, counts);
+            if (mType == TYPE_NORMAL) {
                 mSelectCardItem = View.inflate(getActivity(), R.layout.group_card_item, null);
                 TextView startCard = (TextView) mSelectCardItem.findViewById(R.id.card_item_tv);
                 startCard.setGravity(Gravity.CENTER);
@@ -326,13 +335,13 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
                 LogUtil.d("onActivityResult: bail due to resultCode=" + resultCode);
                 return;
             }
-            if(requestCode == 0xa) {
+            if (requestCode == 0xa) {
                 String result_data = data.getStringExtra("result_data");
-                if(TextUtils.isEmpty(result_data) || result_data.trim().length() == 0) {
+                if (TextUtils.isEmpty(result_data) || result_data.trim().length() == 0) {
                     ToastUtil.showMessage(R.string.mobile_list_empty);
-                    return ;
+                    return;
                 }
-                CCPAppManager.startChattingAction(MobileContactFragment.this.getActivity() , result_data , result_data , true);
+                CCPAppManager.startChattingAction(MobileContactFragment.this.getActivity(), result_data, result_data, true);
             }
         }
 
@@ -344,11 +353,11 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
 
                 @Override
                 public void onItemClick(String s) {
-                    if(s!=null && ALL_CHARACTER != null && mCustomSectionIndexer != null){
+                    if (s != null && ALL_CHARACTER != null && mCustomSectionIndexer != null) {
                         int section = ALL_CHARACTER.indexOf(s);
                         int position = mCustomSectionIndexer.getPositionForSection(section);
-                        if(position!=-1){
-                            if(position != 0) {
+                        if (position != -1) {
+                            if (position != 0) {
                                 position = position + 1;
                             }
                             mListView.setSelection(position);
@@ -361,8 +370,8 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
         }
 
         private void showLetter(BladeView mLetterListView) {
-            if(mLetterListView == null) {
-                return ;
+            if (mLetterListView == null) {
+                return;
             }
             boolean showBanView = (contacts != null && !contacts.isEmpty());
             mLetterListView.setVisibility(showBanView ? View.VISIBLE : View.GONE);
@@ -381,19 +390,19 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
         @Override
         public void onDetach() {
             super.onDetach();
-            if(positions != null) {
+            if (positions != null) {
                 positions.clear();
                 positions = null;
             }
-            if(mLetterListView!=null){
-            	mLetterListView.removeDis();
+            if (mLetterListView != null) {
+                mLetterListView.removeDis();
             }
         }
 
         @Override
         protected void handleReceiver(Context context, Intent intent) {
             super.handleReceiver(context, intent);
-            if(ContactsCache.ACTION_ACCOUT_INIT_CONTACTS.equals(intent.getAction())) {
+            if (ContactsCache.ACTION_ACCOUT_INIT_CONTACTS.equals(intent.getAction())) {
                 LogUtil.d("handleReceiver ACTION_ACCOUT_INIT_CONTACTS");
                 initContactListView();
             }
@@ -403,13 +412,14 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             CustomSectionIndexer mIndexer;
             Context mContext;
             private int mLocationPosition = -1;
+
             public ContactsAdapter(Context context) {
                 super(context, 0);
                 mContext = context;
             }
 
 
-            public void setData(List<ECContacts> data , CustomSectionIndexer indexer) {
+            public void setData(List<ECContacts> data, CustomSectionIndexer indexer) {
                 mIndexer = indexer;
                 setNotifyOnChange(false);
                 clear();
@@ -424,9 +434,9 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
 
-                View view ;
+                View view;
                 ViewHolder mViewHolder;
-                if(convertView == null || convertView.getTag() == null) {
+                if (convertView == null || convertView.getTag() == null) {
                     view = View.inflate(mContext, R.layout.mobile_contact_list_item, null);
 
                     mViewHolder = new ViewHolder();
@@ -442,7 +452,7 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
                 }
 
                 ECContacts contacts = getItem(position);
-                if(contacts != null) {
+                if (contacts != null) {
                     int section = mIndexer.getSectionForPosition(position);
                     if (mIndexer.getPositionForSection(section) == position) {
                         mViewHolder.tvCatalog.setVisibility(View.VISIBLE);
@@ -457,10 +467,9 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
                     mViewHolder.account.setText(contacts.getContactid());
 
 
-
-                    if(mType != TYPE_NORMAL) {
+                    if (mType != TYPE_NORMAL) {
                         mViewHolder.checkBox.setVisibility(View.VISIBLE);
-                        if(mViewHolder.checkBox.isEnabled() && positions != null ) {
+                        if (mViewHolder.checkBox.isEnabled() && positions != null) {
                             mViewHolder.checkBox.setChecked(positions.contains(position));
                         } else {
                             mViewHolder.checkBox.setChecked(false);
@@ -507,14 +516,14 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             public void configurePinnedHeader(View header, int position, int alpha) {
                 int realPosition = position;
                 int _position = position - 1;
-                if(_position < 0) return ;
-                TextView headView =   ((TextView) header.findViewById(R.id.contactitem_catalog));
-                if(_position == 0) {
+                if (_position < 0) return;
+                TextView headView = ((TextView) header.findViewById(R.id.contactitem_catalog));
+                if (_position == 0) {
                     headView.setText(mSortKey);
-                    return ;
+                    return;
                 }
                 ECContacts item = getItem(_position);
-                if(item != null) {
+                if (item != null) {
                     headView.setText(item.getSortKey());
                 }
                /* int section = mIndexer.getSectionForPosition(realPosition);
@@ -522,13 +531,21 @@ public class MobileContactActivity extends ECSuperActivity implements View.OnCli
             }
 
             class ViewHolder {
-                /**头像*/
+                /**
+                 * 头像
+                 */
                 ImageView mAvatar;
-                /**名称*/
+                /**
+                 * 名称
+                 */
                 EmojiconTextView name_tv;
-                /**账号*/
+                /**
+                 * 账号
+                 */
                 TextView account;
-                /**选择状态*/
+                /**
+                 * 选择状态
+                 */
                 CheckBox checkBox;
                 TextView tvCatalog;
 

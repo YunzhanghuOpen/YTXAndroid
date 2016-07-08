@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.photopicker.widgets;
+ */
+package com.yuntongxun.ecdemo.photopicker.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -19,15 +20,17 @@ import com.yuntongxun.ecdemo.photopicker.utils.PhotoUtils;
 
 /**
  * 图片显示
+ *
  * @author 容联•云通讯
- * @since 2016-4-6
  * @version 5.0
+ * @since 2016-4-6
  */
 public class SquareImageView extends ImageView {
 
     Context mContext;
     public String key;
     int mWidth;
+
     public SquareImageView(Context context) {
         this(context, null);
     }
@@ -40,7 +43,7 @@ public class SquareImageView extends ImageView {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
         int screenWidth = PhotoUtils.getWidthInPx(mContext);
-        mWidth = (screenWidth - PhotoUtils.dip2px(mContext, 4))/3;
+        mWidth = (screenWidth - PhotoUtils.dip2px(mContext, 4)) / 3;
     }
 
     @Override

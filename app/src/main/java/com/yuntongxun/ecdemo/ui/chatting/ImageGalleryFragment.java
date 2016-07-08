@@ -1,7 +1,6 @@
 package com.yuntongxun.ecdemo.ui.chatting;
 
 import android.app.Dialog;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,7 +34,6 @@ import com.yuntongxun.ecdemo.ui.CCPFragment;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImgInfo;
 import com.yuntongxun.ecsdk.ECChatManager.OnDeleteMessageListener;
-import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.ECMessage.Direction;
@@ -50,8 +48,7 @@ import java.io.File;
 public class ImageGalleryFragment extends CCPFragment {
 
     private static final String TAG = "ImageGalleryFragment";
-    
-    
+
 
     @Override
     protected int getLayoutId() {
@@ -91,15 +88,15 @@ public class ImageGalleryFragment extends CCPFragment {
 
         return f;
     }
-    public static int i=0;
-    
-    
+
+    public static int i = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEntry  = getArguments() != null ? getArguments().<ViewImageInfo>getParcelable("entry") : null;
-       
+        mEntry = getArguments() != null ? getArguments().<ViewImageInfo>getParcelable("entry") : null;
+
     }
 
 
@@ -117,19 +114,19 @@ public class ImageGalleryFragment extends CCPFragment {
         mFailLayout = (LinearLayout) findViewById(R.id.image_gallery_download_fail);
         mImageView = (PhotoView) findViewById(R.id.image);
         i++;
-        
+
         if (mEntry == null) {
             finish();
-            return ;
+            return;
         }
-        
-        
-        if(!IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId())){
-        	
-        	mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        if (!IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId())) {
+
+            mImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    ECListDialog dialog = new ECListDialog(getActivity() , new String[]{getString(R.string.save_to_local)});
+                    ECListDialog dialog = new ECListDialog(getActivity(), new String[]{getString(R.string.save_to_local)});
                     dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
                         @Override
                         public void onDialogItemClick(Dialog d, int position) {
@@ -141,8 +138,8 @@ public class ImageGalleryFragment extends CCPFragment {
                 }
             });
         }
-        
-        
+
+
         mImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 
             @Override
@@ -153,8 +150,8 @@ public class ImageGalleryFragment extends CCPFragment {
         initWebView();
         progressBar = (LinearLayout) findViewById(R.id.loading);
         mProgress = (TextView) findViewById(R.id.uploading_tv);
-        
-        if(mThumbnailBitmap == null){
+
+        if (mThumbnailBitmap == null) {
             mThumbnailBitmap = BitmapFactory.decodeFile(FileAccessor.getImagePathName() + "/" + mEntry.getThumbnailurl());
             isGif = mEntry.getThumbnailurl().endsWith(".gif");
         }
@@ -163,51 +160,49 @@ public class ImageGalleryFragment extends CCPFragment {
         mImageUrl = mEntry.getPicurl();
         if (null != mImageUrl && !TextUtils.isEmpty(mImageUrl) && !mImageUrl.startsWith("http")) {
             // load 本地
-            mImageUrl = "file://" + FileAccessor.getImagePathName() + "/"+  mImageUrl;
+            mImageUrl = "file://" + FileAccessor.getImagePathName() + "/" + mImageUrl;
         } else {
             // 下载
             mImageUrl = mEntry.getPicurl();
         }
-        if(!isGif) {
+        if (!isGif) {
             isGif = mImageUrl.endsWith(".gif");
         }
         mEntry.setIsGif(isGif);
-        
-        
-        if(IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId())&&("1".equals(IMessageSqlManager.getMsgReadStatus(mEntry.getMsgLocalId())))){
-        	mImageView.setImageResource(R.drawable.fire_msg_big);
-        	return;
+
+
+        if (IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId()) && ("1".equals(IMessageSqlManager.getMsgReadStatus(mEntry.getMsgLocalId())))) {
+            mImageView.setImageResource(R.drawable.fire_msg_big);
+            return;
         }
-        
+
         DisplayImageOptions.Builder imageOptionsBuilder = DemoUtils.getChatDisplayImageOptionsBuilder();
         imageOptionsBuilder.showImageOnLoading(new BitmapDrawable(mThumbnailBitmap));
-        
-        boolean isFireMsg= IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId());
-        
-        ECMessage msg=IMessageSqlManager.getMsg(mEntry.getMsgLocalId());
-        
-		if(i==1&&msg!=null&&msg.getDirection()==Direction.RECEIVE&&ImageGralleryPagerActivity.isFireMsg&&isFireMsg&&!CCPAppManager.getUserId().equalsIgnoreCase(msg.getForm())){
-		   IMessageSqlManager.updateMsgReadStatus(mEntry.getMsgLocalId(), true);
-		   ECAsyncTask.execute(new Runnable() {
-			@Override
-			public void run() {
-				SDKCoreHelper.getECChatManager().deleteMessage(IMessageSqlManager.getMsg(mEntry.getMsgLocalId()), new OnDeleteMessageListener() {
-					@Override
-					public void onDeleteMessage(ECError error, ECMessage arg1) {
-						if(error.errorCode==SdkErrorCode.REQUEST_SUCCESS){
-						   IMessageSqlManager.deleteLocalFileAfterFire(mEntry.getMsgLocalId());
-						}
-					
-					}
-				});
-				
-			}
-		});
-		   
-		
-		   
-		    
-		}
+
+        boolean isFireMsg = IMessageSqlManager.isFireMsg(mEntry.getMsgLocalId());
+
+        ECMessage msg = IMessageSqlManager.getMsg(mEntry.getMsgLocalId());
+
+        if (i == 1 && msg != null && msg.getDirection() == Direction.RECEIVE && ImageGralleryPagerActivity.isFireMsg && isFireMsg && !CCPAppManager.getUserId().equalsIgnoreCase(msg.getForm())) {
+            IMessageSqlManager.updateMsgReadStatus(mEntry.getMsgLocalId(), true);
+            ECAsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    SDKCoreHelper.getECChatManager().deleteMessage(IMessageSqlManager.getMsg(mEntry.getMsgLocalId()), new OnDeleteMessageListener() {
+                        @Override
+                        public void onDeleteMessage(ECError error, ECMessage arg1) {
+                            if (error.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
+                                IMessageSqlManager.deleteLocalFileAfterFire(mEntry.getMsgLocalId());
+                            }
+
+                        }
+                    });
+
+                }
+            });
+
+
+        }
         ImageLoader.getInstance().displayImage(mImageUrl, mImageView, imageOptionsBuilder.build(), new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -224,7 +219,7 @@ public class ImageGalleryFragment extends CCPFragment {
                     case IO_ERROR:
                     case UNKNOWN:
                     case DECODING_ERROR:
-                        break ;
+                        break;
                     case NETWORK_DENIED:
                         message = "网络有问题，无法下载";
                         break;
@@ -259,7 +254,7 @@ public class ImageGalleryFragment extends CCPFragment {
 
                     if (imageUri.startsWith("http:")) {
                         ImgInfo thumbimginfo = ImgInfoSqlManager.getInstance().getImgInfo(mEntry.getIndex());
-                        if(thumbimginfo != null && mCacheImageUrl != null) {
+                        if (thumbimginfo != null && mCacheImageUrl != null) {
                             thumbimginfo.setBigImgPath(mCacheImageUrl.substring(mCacheImageUrl.lastIndexOf("/")));
                             ImgInfoSqlManager.getInstance().updateImageInfo(thumbimginfo);
                         }
@@ -269,7 +264,7 @@ public class ImageGalleryFragment extends CCPFragment {
         }, new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String s, View view, int current, int total) {
-                mProgress.setText((int)(current * 100f / total) + " %");
+                mProgress.setText((int) (current * 100f / total) + " %");
             }
         });
     }
@@ -283,8 +278,8 @@ public class ImageGalleryFragment extends CCPFragment {
         switch (position) {
             case 0:
                 try {
-                    if(mEntry != null && mEntry.isGif()) {
-                        DemoUtils.saveImage(imgCacheFile.getAbsolutePath(),".gif");
+                    if (mEntry != null && mEntry.isGif()) {
+                        DemoUtils.saveImage(imgCacheFile.getAbsolutePath(), ".gif");
                         return;
                     }
                     DemoUtils.saveImage(imgCacheFile.getAbsolutePath());
@@ -300,15 +295,15 @@ public class ImageGalleryFragment extends CCPFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(mImageView != null) {
+        if (mImageView != null) {
             mImageView.setImageDrawable(null);
             ImageLoader.getInstance().cancelDisplayTask(mImageView);
         }
         mImageView = null;
-        if(mViewContainer != null) {
+        if (mViewContainer != null) {
             mViewContainer.removeView(webView);
         }
-        if(webView != null) {
+        if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
             webView = null;

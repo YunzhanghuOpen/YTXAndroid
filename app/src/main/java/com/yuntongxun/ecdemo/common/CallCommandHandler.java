@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common;
+ */
+package com.yuntongxun.ecdemo.common;
 
 import android.os.Handler;
 
@@ -18,7 +19,9 @@ import android.os.Handler;
  */
 public abstract interface CallCommandHandler {
     public abstract void postCommand(Runnable paramRunnable);
+
     public abstract void destroy();
+
     public abstract Handler getCommandHandler();
 }
 

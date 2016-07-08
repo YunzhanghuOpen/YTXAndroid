@@ -9,14 +9,9 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common;
+ */
+package com.yuntongxun.ecdemo.common;
 
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -56,6 +51,11 @@ import com.yuntongxun.ecsdk.ECVoIPCallManager;
 import com.yuntongxun.ecsdk.ECVoIPSetupManager;
 import com.yuntongxun.ecsdk.im.ECLocationMessageBody;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * 存储SDK一些全局性的常量
  * Created by Jorstin on 2015/3/17.
@@ -63,26 +63,40 @@ import com.yuntongxun.ecsdk.im.ECLocationMessageBody;
 public class CCPAppManager {
 
     public static Md5FileNameGenerator md5FileNameGenerator = new Md5FileNameGenerator();
-    /**Android 应用上下文*/
+    /**
+     * Android 应用上下文
+     */
     private static Context mContext = null;
-    /**包名*/
+    /**
+     * 包名
+     */
     public static String pkgName = "com.yuntongxun.ecdemo";
-    /**SharedPreferences 存储名字前缀*/
+    /**
+     * SharedPreferences 存储名字前缀
+     */
     public static final String PREFIX = "com.yuntongxun.ecdemo_";
     public static final int FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT = 0x10000000;
-    /**IM功能UserData字段默认文字*/
+    /**
+     * IM功能UserData字段默认文字
+     */
     public static final String USER_DATA = "yuntongxun.ecdemo";
     public static HashMap<String, Integer> mPhotoCache = new HashMap<String, Integer>();
     public static ArrayList<ECSuperActivity> activities = new ArrayList<ECSuperActivity>();
-    
-    /**IM聊天更多功能面板*/
+
+    /**
+     * IM聊天更多功能面板
+     */
     private static ChatFooterPanel mChatFooterPanel;
+
     public static String getPackageName() {
         return pkgName;
     }
+
     private static ClientUser mClientUser;
+
     /**
      * 返回SharePreference配置文件名称
+     *
      * @return
      */
     public static String getSharePreferenceName() {
@@ -98,19 +112,21 @@ public class CCPAppManager {
 
     /**
      * 返回上下文对象
+     *
      * @return
      */
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
-    
-    public static void sendRemoveMemberBR(){
-    	
-    	getContext().sendBroadcast(new Intent("com.yuntongxun.ecdemo.removemember"));
+
+    public static void sendRemoveMemberBR() {
+
+        getContext().sendBroadcast(new Intent("com.yuntongxun.ecdemo.removemember"));
     }
 
     /**
      * 设置上下文对象
+     *
      * @param context
      */
     public static void setContext(Context context) {
@@ -126,6 +142,7 @@ public class CCPAppManager {
 
     /**
      * 缓存账号注册信息
+     *
      * @param user
      */
     public static void setClientUser(ClientUser user) {
@@ -133,21 +150,22 @@ public class CCPAppManager {
     }
 
     public static void setPversion(int version) {
-        if(mClientUser != null) {
+        if (mClientUser != null) {
             mClientUser.setpVersion(version);
         }
     }
 
     /**
      * 保存注册账号信息
+     *
      * @return 客户登录信息
      */
     public static ClientUser getClientUser() {
-        if(mClientUser != null) {
+        if (mClientUser != null) {
             return mClientUser;
         }
         String registerAccount = getAutoRegisterAccount();
-        if(!TextUtils.isEmpty(registerAccount)) {
+        if (!TextUtils.isEmpty(registerAccount)) {
             mClientUser = new ClientUser("");
             return mClientUser.from(registerAccount);
         }
@@ -169,7 +187,7 @@ public class CCPAppManager {
      * @param context
      * @param path
      */
-    public static void doViewFilePrevieIntent(Context context ,String path) {
+    public static void doViewFilePrevieIntent(Context context, String path) {
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -185,7 +203,6 @@ public class CCPAppManager {
     }
 
     /**
-     *
      * @param cotnext
      * @param value
      */
@@ -197,11 +214,12 @@ public class CCPAppManager {
 
     /**
      * 批量查看图片
+     *
      * @param ctx
      * @param position
      * @param session
      */
-    public static void startChattingImageViewAction(Context ctx , int position , ArrayList<ViewImageInfo> session) {
+    public static void startChattingImageViewAction(Context ctx, int position, ArrayList<ViewImageInfo> session) {
         Intent intent = new Intent(ctx, ImageGralleryPagerActivity.class);
         intent.putExtra(ImageGralleryPagerActivity.EXTRA_IMAGE_INDEX, position);
         intent.putParcelableArrayListExtra(ImageGralleryPagerActivity.EXTRA_IMAGE_URLS, session);
@@ -210,11 +228,12 @@ public class CCPAppManager {
 
     /**
      * 获取应用程序版本名称
+     *
      * @return
      */
     public static String getVersion() {
         String version = "0.0.0";
-        if(mContext == null) {
+        if (mContext == null) {
             return version;
         }
         try {
@@ -230,11 +249,12 @@ public class CCPAppManager {
 
     /**
      * 获取应用版本号
+     *
      * @return 版本号
      */
     public static int getVersionCode() {
         int code = 1;
-        if(mContext == null) {
+        if (mContext == null) {
             return code;
         }
         try {
@@ -254,18 +274,19 @@ public class CCPAppManager {
     }
 
     public static void clearActivity() {
-        for(ECSuperActivity activity : activities) {
-            if(activity != null) {
+        for (ECSuperActivity activity : activities) {
+            if (activity != null) {
                 activity.finish();
                 activity = null;
             }
             activities.clear();
         }
     }
-    
+
 
     /**
      * 打开浏览器下载新版本
+     *
      * @param context
      */
     public static void startUpdater(Context context) {
@@ -277,11 +298,10 @@ public class CCPAppManager {
     public static HashMap<String, Object> prefValues = new HashMap<String, Object>();
 
     /**
-     *
      * @param key
      * @param value
      */
-    public static void putPref(String key , Object value) {
+    public static void putPref(String key, Object value) {
         prefValues.put(key, value);
     }
 
@@ -295,10 +315,11 @@ public class CCPAppManager {
 
     /**
      * 开启在线客服
+     *
      * @param context
      * @param contactid
      */
-    public static void startCustomerServiceAction(Context context , String contactid) {
+    public static void startCustomerServiceAction(Context context, String contactid) {
         Intent intent = new Intent(context, ChattingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(ChattingFragment.RECIPIENTS, contactid);
@@ -309,24 +330,24 @@ public class CCPAppManager {
 
     /**
      * 聊天界面
+     *
      * @param context
      * @param contactid
      * @param username
      */
-    public static void startChattingAction(Context context , String contactid , String username) {
+    public static void startChattingAction(Context context, String contactid, String username) {
         startChattingAction(context, contactid, username, false);
     }
 
     /**
-     *
      * @param context
      * @param contactid
      * @param username
      * @param clearTop
      */
-    public static void startChattingAction(Context context , String contactid , String username , boolean clearTop) {
+    public static void startChattingAction(Context context, String contactid, String username, boolean clearTop) {
         Intent intent = new Intent(context, ChattingActivity.class);
-        if(clearTop) {
+        if (clearTop) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         intent.putExtra(ChattingFragment.RECIPIENTS, contactid);
@@ -337,60 +358,63 @@ public class CCPAppManager {
 
     /**
      * VoIP呼叫
-     * @param nickname 昵称
+     *
+     * @param nickname  昵称
      * @param contactId 呼出号码
      */
-    public static void callVoIPAction(Context ctx , String nickname, String contactId) {
+    public static void callVoIPAction(Context ctx, String nickname, String contactId) {
         // VoIP呼叫
         callVoIPAction(ctx, ECVoIPCallManager.CallType.VOICE, nickname, contactId, false);
     }
 
     /**
      * 根据呼叫类型通话
-     * @param ctx 上下文
-     * @param callType 呼叫类型
-     * @param nickname 昵称
+     *
+     * @param ctx       上下文
+     * @param callType  呼叫类型
+     * @param nickname  昵称
      * @param contactId 号码
      */
-    public static void callVoIPAction(Context ctx , ECVoIPCallManager.CallType callType ,String nickname, String contactId,boolean flag) {
+    public static void callVoIPAction(Context ctx, ECVoIPCallManager.CallType callType, String nickname, String contactId, boolean flag) {
         // VoIP呼叫
-        Intent callAction = new Intent(ctx , VoIPCallActivity.class);
-        if(callType == ECVoIPCallManager.CallType.VIDEO) {
-            callAction = new Intent(ctx , VideoActivity.class);
+        Intent callAction = new Intent(ctx, VoIPCallActivity.class);
+        if (callType == ECVoIPCallManager.CallType.VIDEO) {
+            callAction = new Intent(ctx, VideoActivity.class);
             VoIPCallHelper.mHandlerVideoCall = true;
         } else {
             VoIPCallHelper.mHandlerVideoCall = false;
         }
-        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NAME , nickname);
-        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NUMBER , contactId);
-        callAction.putExtra(ECDevice.CALLTYPE , callType);
-        callAction.putExtra(VoIPCallActivity.EXTRA_OUTGOING_CALL , true);
-        
-        if(flag){
-        callAction.putExtra(VoIPCallActivity.ACTION_CALLBACK_CALL, true);	
+        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NAME, nickname);
+        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NUMBER, contactId);
+        callAction.putExtra(ECDevice.CALLTYPE, callType);
+        callAction.putExtra(VoIPCallActivity.EXTRA_OUTGOING_CALL, true);
+
+        if (flag) {
+            callAction.putExtra(VoIPCallActivity.ACTION_CALLBACK_CALL, true);
         }
         ctx.startActivity(callAction);
     }
 
     /**
      * 根据呼叫类型通话
-     * @param ctx 上下文
-     * @param callType 呼叫类型
-     * @param nickname 昵称
+     *
+     * @param ctx       上下文
+     * @param callType  呼叫类型
+     * @param nickname  昵称
      * @param contactId 号码
      */
-    public static void callVideoAction(Context ctx , ECVoIPCallManager.CallType callType ,String nickname, String contactId , String callid) {
+    public static void callVideoAction(Context ctx, ECVoIPCallManager.CallType callType, String nickname, String contactId, String callid) {
         // VoIP呼叫
-        Intent callAction = new Intent(ctx , VoIPCallActivity.class);
-        if(callType == ECVoIPCallManager.CallType.VIDEO) {
-            callAction = new Intent(ctx , VideoActivity.class);
+        Intent callAction = new Intent(ctx, VoIPCallActivity.class);
+        if (callType == ECVoIPCallManager.CallType.VIDEO) {
+            callAction = new Intent(ctx, VideoActivity.class);
             VoIPCallHelper.mHandlerVideoCall = true;
         } else {
             VoIPCallHelper.mHandlerVideoCall = false;
         }
-        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NAME , nickname);
-        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NUMBER , contactId);
-        callAction.putExtra(ECDevice.CALLTYPE , callType);
+        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NAME, nickname);
+        callAction.putExtra(VoIPCallActivity.EXTRA_CALL_NUMBER, contactId);
+        callAction.putExtra(ECDevice.CALLTYPE, callType);
         callAction.putExtra(ECDevice.CALLID, callid);
         callAction.putExtra(VoIPCallActivity.EXTRA_OUTGOING_CALL, true);
         ctx.startActivity(callAction);
@@ -398,12 +422,14 @@ public class CCPAppManager {
 
     /**
      * 多选呼叫菜单
-     * @param ctx 上下文
+     *
+     * @param ctx       上下文
      * @param nickname  昵称
      * @param contactId 号码
      */
-    public static void showCallMenu(final Context ctx , final String nickname, final String contactId) {
-        ECListDialog dialog = new ECListDialog(ctx , R.array.chat_call);;
+    public static void showCallMenu(final Context ctx, final String nickname, final String contactId) {
+        ECListDialog dialog = new ECListDialog(ctx, R.array.chat_call);
+        ;
         dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
             @Override
             public void onDialogItemClick(Dialog d, int position) {
@@ -425,17 +451,18 @@ public class CCPAppManager {
 
     /**
      * 提示选择呼叫编码设置
+     *
      * @param ctx 上下文
      */
     public static void showCodecConfigMenu(final Context ctx) {
-        final ECListDialog multiDialog = new ECListDialog(ctx , R.array.Codec_call);
+        final ECListDialog multiDialog = new ECListDialog(ctx, R.array.Codec_call);
         multiDialog.setOnDialogItemClickListener(false, new ECListDialog.OnDialogItemClickListener() {
             @Override
             public void onDialogItemClick(Dialog d, int position) {
                 LogUtil.d("onDialogItemClick", "position " + position);
             }
         });
-        if(mChecks == null) {
+        if (mChecks == null) {
             mChecks = new ArrayList<Integer>();
             mChecks.add(ECVoIPSetupManager.Codec.Codec_iLBC.ordinal());
             mChecks.add(ECVoIPSetupManager.Codec.Codec_G729.ordinal());
@@ -458,13 +485,13 @@ public class CCPAppManager {
                     return;
                 }
                 ECVoIPSetupManager setupManager = ECDevice.getECVoIPSetupManager();
-                if(setupManager == null) {
+                if (setupManager == null) {
                     ToastUtil.showMessage("设置失败，请先初始化SDK");
-                    return ;
+                    return;
                 }
-                for(ECVoIPSetupManager.Codec  code : ECVoIPSetupManager.Codec.values()) {
+                for (ECVoIPSetupManager.Codec code : ECVoIPSetupManager.Codec.values()) {
                     boolean enable = mChecks.contains(code.ordinal());
-                    setupManager.setCodecEnabled(code , enable);
+                    setupManager.setCodecEnabled(code, enable);
                 }
                 ToastUtil.showMessage("设置成功");
             }
@@ -473,23 +500,23 @@ public class CCPAppManager {
     }
 
 
-	public static void startShowBaiDuMapAction(ChattingActivity mContext2,
-			ECMessage iMessage) {
+    public static void startShowBaiDuMapAction(ChattingActivity mContext2,
+                                               ECMessage iMessage) {
 
-			if(iMessage==null||mContext2==null){
-				return;
-			}
-			
-		 Intent intent=new Intent(mContext2,ShowBaiDuMapActivity.class);
-       	 
-		 ECLocationMessageBody body=(ECLocationMessageBody) iMessage.getBody();
-       	 LocationInfo locationInfo =new LocationInfo();
-       	 locationInfo.setLat(body.getLatitude());
-       	 locationInfo.setLon(body.getLongitude());
-       	 locationInfo.setAddress(body.getTitle());
-       	 intent.putExtra("location", locationInfo);
-			
-		mContext2.startActivity(intent);
-			
-	}
+        if (iMessage == null || mContext2 == null) {
+            return;
+        }
+
+        Intent intent = new Intent(mContext2, ShowBaiDuMapActivity.class);
+
+        ECLocationMessageBody body = (ECLocationMessageBody) iMessage.getBody();
+        LocationInfo locationInfo = new LocationInfo();
+        locationInfo.setLat(body.getLatitude());
+        locationInfo.setLon(body.getLongitude());
+        locationInfo.setAddress(body.getTitle());
+        intent.putExtra("location", locationInfo);
+
+        mContext2.startActivity(intent);
+
+    }
 }

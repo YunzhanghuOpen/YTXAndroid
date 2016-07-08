@@ -6,7 +6,7 @@ package com.yuntongxun.ecdemo.pojo;
 public class ForwardObjectBean {
 
     private String userId;
-    private  String  userName;
+    private String userName;
 
     public String getUserId() {
         return userId;

@@ -33,9 +33,10 @@ import java.io.File;
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2014</p>
  * <p>Company: Beijing Speedtong Information Technology Co.,Ltd</p>
+ *
  * @author Jorstin Chan
- * @date 2014-4-17
  * @version 1.0
+ * @date 2014-4-17
  */
 public class VoiceTxRow extends BaseChattingRow {
 
@@ -65,17 +66,17 @@ public class VoiceTxRow extends BaseChattingRow {
 
         final VoiceRowViewHolder holder = (VoiceRowViewHolder) baseHolder;
         holder.voiceAnim.setVoiceFrom(false);
-        if(detail != null) {
-            if(detail.getMsgStatus() == ECMessage.MessageStatus.SENDING) {
+        if (detail != null) {
+            if (detail.getMsgStatus() == ECMessage.MessageStatus.SENDING) {
                 holder.voiceSending.setVisibility(View.VISIBLE);
             } else {
                 holder.voiceSending.setVisibility(View.GONE);
             }
 
-            File file = new File(((ECFileMessageBody)detail.getBody()).getLocalUrl());
+            File file = new File(((ECFileMessageBody) detail.getBody()).getLocalUrl());
             long length = file.length();
 
-            VoiceRowViewHolder.initVoiceRow(holder, detail, position, (ChattingActivity)context, false);
+            VoiceRowViewHolder.initVoiceRow(holder, detail, position, (ChattingActivity) context, false);
             OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
             getMsgStateResId(position, holder, detail, onClickListener);
         }

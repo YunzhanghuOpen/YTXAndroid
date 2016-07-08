@@ -12,8 +12,6 @@
  */
 package com.yuntongxun.ecdemo.ui.chatting.model;
 
-import java.io.File;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -27,7 +25,6 @@ import com.yuntongxun.ecdemo.common.utils.DemoUtils;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.FileUtils;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
-import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.FileRowViewHolder;
@@ -37,7 +34,10 @@ import com.yuntongxun.ecsdk.ECMessage.Type;
 import com.yuntongxun.ecsdk.im.ECFileMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 
-/**接收
+import java.io.File;
+
+/**
+ * 接收
  * <p>
  * Title: FileRxRow.java
  * </p>
@@ -50,107 +50,107 @@ import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
  * <p>
  * Company: Beijing Speedtong Information Technology Co.,Ltd
  * </p>
- * 
+ *
  * @author Jorstin Chan
- * @date 2014-4-17
  * @version 1.0
+ * @date 2014-4-17
  */
 public class FileRxRow extends BaseChattingRow {
 
-	public FileRxRow(int type) {
-		super(type);
-	}
+    public FileRxRow(int type) {
+        super(type);
+    }
 
-	@Override
-	public View buildChatView(LayoutInflater inflater, View convertView) {
-		// we have a don't have a converView so we'll have to create a new one
-		if (convertView == null || convertView.getTag() == null) {
-			convertView = new ChattingItemContainer(inflater,
-					R.layout.chatting_item_file_from);
+    @Override
+    public View buildChatView(LayoutInflater inflater, View convertView) {
+        // we have a don't have a converView so we'll have to create a new one
+        if (convertView == null || convertView.getTag() == null) {
+            convertView = new ChattingItemContainer(inflater,
+                    R.layout.chatting_item_file_from);
 
-			// use the view holder pattern to save of already looked up subviews
-			FileRowViewHolder holder = new FileRowViewHolder(mRowType);
-			convertView.setTag(holder.initBaseHolder(convertView, true));
-		}
-		return convertView;
-	}
+            // use the view holder pattern to save of already looked up subviews
+            FileRowViewHolder holder = new FileRowViewHolder(mRowType);
+            convertView.setTag(holder.initBaseHolder(convertView, true));
+        }
+        return convertView;
+    }
 
-	@Override
-	public void buildChattingData(final Context context, BaseHolder baseHolder,
-			ECMessage detail, int position) {
-		FileRowViewHolder holder = (FileRowViewHolder) baseHolder;
-		OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment
-				.getChattingAdapter().getOnClickListener();
-		ViewHolderTag holderTag = ViewHolderTag.createTag(detail,
-				ViewHolderTag.TagType.TAG_VIEW_FILE, position);
-		if (detail != null) {
-			ECMessage msg = detail;
-			ECFileMessageBody body = (ECFileMessageBody) msg.getBody();
-			holder.contentTv.setText(body.getFileName());
-			String fileName = "";
-			String userData = msg.getUserData();
+    @Override
+    public void buildChattingData(final Context context, BaseHolder baseHolder,
+                                  ECMessage detail, int position) {
+        FileRowViewHolder holder = (FileRowViewHolder) baseHolder;
+        OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment
+                .getChattingAdapter().getOnClickListener();
+        ViewHolderTag holderTag = ViewHolderTag.createTag(detail,
+                ViewHolderTag.TagType.TAG_VIEW_FILE, position);
+        if (detail != null) {
+            ECMessage msg = detail;
+            ECFileMessageBody body = (ECFileMessageBody) msg.getBody();
+            holder.contentTv.setText(body.getFileName());
+            String fileName = "";
+            String userData = msg.getUserData();
 
-			if (TextUtils.isEmpty(userData)) {
-			} else {
-				fileName = userData.substring(userData.indexOf("fileName=")
-						+ "fileName=".length(), userData.length());
+            if (TextUtils.isEmpty(userData)) {
+            } else {
+                fileName = userData.substring(userData.indexOf("fileName=")
+                        + "fileName=".length(), userData.length());
 
-			}
-			if ("mp4".equals(FileUtils.getFileExt(fileName))&&detail.getType()==Type.VIDEO) {
+            }
+            if ("mp4".equals(FileUtils.getFileExt(fileName)) && detail.getType() == Type.VIDEO) {
 
-				ECVideoMessageBody videoBody = (ECVideoMessageBody) msg
-						.getBody();
-				holder.contentTv.setVisibility(View.GONE);
-				holder.contentTv.setTag(null);
-				holder.contentTv.setOnClickListener(null);
-				holder.fl.setVisibility(View.VISIBLE);
+                ECVideoMessageBody videoBody = (ECVideoMessageBody) msg
+                        .getBody();
+                holder.contentTv.setVisibility(View.GONE);
+                holder.contentTv.setTag(null);
+                holder.contentTv.setOnClickListener(null);
+                holder.fl.setVisibility(View.VISIBLE);
 
-				holder.ivVideoMp4.setVisibility(View.VISIBLE);
-				holder.buPlayVideo.setOnClickListener(onClickListener);
-				holder.buPlayVideo.setTag(holderTag);
+                holder.ivVideoMp4.setVisibility(View.VISIBLE);
+                holder.buPlayVideo.setOnClickListener(onClickListener);
+                holder.buPlayVideo.setTag(holderTag);
 
-				holder.tvFile.setVisibility(View.VISIBLE);
+                holder.tvFile.setVisibility(View.VISIBLE);
 
-				String text = IMessageSqlManager.qureyVideoMsgLength(msg
-						.getMsgId());
+                String text = IMessageSqlManager.qureyVideoMsgLength(msg
+                        .getMsgId());
 
-				if (!TextUtils.isEmpty(text)) {
-					holder.tvFile.setText(DemoUtils.bytes2kb(Long.parseLong(text)));
-				}
-				File file = new File(FileAccessor.getFilePathName(),
-						body.getFileName() + "_thum.png");
+                if (!TextUtils.isEmpty(text)) {
+                    holder.tvFile.setText(DemoUtils.bytes2kb(Long.parseLong(text)));
+                }
+                File file = new File(FileAccessor.getFilePathName(),
+                        body.getFileName() + "_thum.png");
 
-				if (file.exists()) {
-					Bitmap thumbBitmap = DemoUtils.getSuitableBitmap(file.getAbsolutePath());
-					holder.ivVideoMp4.setImageBitmap(thumbBitmap);
-				}
+                if (file.exists()) {
+                    Bitmap thumbBitmap = DemoUtils.getSuitableBitmap(file.getAbsolutePath());
+                    holder.ivVideoMp4.setImageBitmap(thumbBitmap);
+                }
 
-			} else {
-				holder.contentTv.setVisibility(View.VISIBLE);
-				holder.ivVideoMp4.setVisibility(View.GONE);
-				holder.fl.setVisibility(View.GONE);
-				holder.buPlayVideo.setTag(null);
-				holder.buPlayVideo.setOnClickListener(null);
-				holder.contentTv.setTag(holderTag);
-				holder.contentTv.setOnClickListener(onClickListener);
-				holder.tvFile.setVisibility(View.GONE);
-			}
+            } else {
+                holder.contentTv.setVisibility(View.VISIBLE);
+                holder.ivVideoMp4.setVisibility(View.GONE);
+                holder.fl.setVisibility(View.GONE);
+                holder.buPlayVideo.setTag(null);
+                holder.buPlayVideo.setOnClickListener(null);
+                holder.contentTv.setTag(holderTag);
+                holder.contentTv.setOnClickListener(onClickListener);
+                holder.tvFile.setVisibility(View.GONE);
+            }
 
-			getMsgStateResId(position, holder, detail, onClickListener);
+            getMsgStateResId(position, holder, detail, onClickListener);
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public int getChatViewType() {
-		return ChattingRowType.FILE_ROW_RECEIVED.ordinal();
-	}
+    @Override
+    public int getChatViewType() {
+        return ChattingRowType.FILE_ROW_RECEIVED.ordinal();
+    }
 
-	@Override
-	public boolean onCreateRowContextMenu(ContextMenu contextMenu,
-			View targetView, ECMessage detail) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean onCreateRowContextMenu(ContextMenu contextMenu,
+                                          View targetView, ECMessage detail) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

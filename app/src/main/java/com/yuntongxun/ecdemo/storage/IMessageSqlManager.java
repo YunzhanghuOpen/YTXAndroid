@@ -193,12 +193,12 @@ public class IMessageSqlManager extends AbstractSQLManager {
                                 values.put(IMessageColumn.BODY, videoBody.getLength() + "");
                             }
 
-							if(message.getType()==Type.RICH_TEXT){
-								ECPreviewMessageBody body=(ECPreviewMessageBody) message.getBody();
-								values.put(IMessageColumn.FILE_URL,body.getUrl());
-								values.put(IMessageColumn.BODY,body.getTitle());
-								values.put(IMessageColumn.FILE_PATH,body.getLocalUrl());
-							}
+                            if (message.getType() == Type.RICH_TEXT) {
+                                ECPreviewMessageBody body = (ECPreviewMessageBody) message.getBody();
+                                values.put(IMessageColumn.FILE_URL, body.getUrl());
+                                values.put(IMessageColumn.BODY, body.getTitle());
+                                values.put(IMessageColumn.FILE_PATH, body.getLocalUrl());
+                            }
                             if (message.getType() == Type.IMAGE && message.getDirection() == Direction.RECEIVE) {
                                 values.put(IMessageColumn.BODY, message.getUserData());
                             }
@@ -351,7 +351,6 @@ public class IMessageSqlManager extends AbstractSQLManager {
     }
 
 
-
     /**
      * 根据不同的消息类型将数据保存到数据库
      *
@@ -381,7 +380,7 @@ public class IMessageSqlManager extends AbstractSQLManager {
                 values.put(IMessageColumn.FILE_PATH, body.getLocalUrl());
                 values.put(IMessageColumn.FILE_URL, body.getRemoteUrl());
                 if (message.getType() == ECMessage.Type.VOICE) {
-                    ECVoiceMessageBody VoiceBody = (ECVoiceMessageBody) message .getBody();
+                    ECVoiceMessageBody VoiceBody = (ECVoiceMessageBody) message.getBody();
                     values.put(IMessageColumn.DURATION, VoiceBody.getDuration());
                 }
 
@@ -456,7 +455,7 @@ public class IMessageSqlManager extends AbstractSQLManager {
                         ecMessage.setBody(textBody);
                     } else {
                         /*
-						 * String fileUrl =
+                         * String fileUrl =
 						 * cursor.getString(cursor.getColumnIndexOrThrow
 						 * (IMessageColumn.FILE_URL)); String fileLocalPath =
 						 * cursor
@@ -812,14 +811,13 @@ public class IMessageSqlManager extends AbstractSQLManager {
             ecMessage.setType(ECMessage.Type.TXT);
             ECTextMessageBody textBody = new ECTextMessageBody(content);
             ecMessage.setBody(textBody);
-        }else if(msgType ==Type.CALL.ordinal()){
+        } else if (msgType == Type.CALL.ordinal()) {
             String content = cursor.getString(cursor
                     .getColumnIndexOrThrow(IMessageColumn.BODY));
-            ECCallMessageBody body=new ECCallMessageBody(content);
+            ECCallMessageBody body = new ECCallMessageBody(content);
             ecMessage.setType(Type.CALL);
             ecMessage.setBody(body);
-        }
-        else if(msgType==ECMessage.Type.LOCATION.ordinal()){
+        } else if (msgType == ECMessage.Type.LOCATION.ordinal()) {
             String content = cursor.getString(cursor
                     .getColumnIndexOrThrow(IMessageColumn.BODY));
             ecMessage.setType(ECMessage.Type.LOCATION);
@@ -827,10 +825,10 @@ public class IMessageSqlManager extends AbstractSQLManager {
             String lon;
             String lat;
             try {
-                JSONObject jsonObject =new JSONObject(content);
+                JSONObject jsonObject = new JSONObject(content);
                 lon = jsonObject.getString("lon");
                 lat = jsonObject.getString("lat");
-                ECLocationMessageBody textBody = new ECLocationMessageBody(Double.parseDouble(lat),Double.parseDouble(lon));
+                ECLocationMessageBody textBody = new ECLocationMessageBody(Double.parseDouble(lat), Double.parseDouble(lon));
                 textBody.setTitle(jsonObject.getString("title"));
                 ecMessage.setBody(textBody);
             } catch (JSONException e) {
@@ -839,10 +837,7 @@ public class IMessageSqlManager extends AbstractSQLManager {
             }
 
 
-        }
-
-
-        else {
+        } else {
             String fileUrl = cursor.getString(cursor
                     .getColumnIndexOrThrow(IMessageColumn.FILE_URL));
             String fileLocalPath = cursor.getString(cursor
@@ -875,16 +870,17 @@ public class IMessageSqlManager extends AbstractSQLManager {
                 fileBody.setFileName(DemoUtils
                         .getFileNameFormUserdata(userData));
                 ecMessage.setBody(fileBody);
-            } else if(msgType== Type.RICH_TEXT.ordinal()){{
-                ECPreviewMessageBody body=new ECPreviewMessageBody();
-                ecMessage.setType(Type.RICH_TEXT);
-                String content = cursor.getString(cursor
-                        .getColumnIndexOrThrow(IMessageColumn.BODY));
-                body.setTitle(content);
-                body.setLocalUrl(cursor.getString(cursor.getColumnIndexOrThrow(IMessageColumn.FILE_PATH)));
-                body.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(IMessageColumn.FILE_URL)));
-                ecMessage.setBody(body);
-            }
+            } else if (msgType == Type.RICH_TEXT.ordinal()) {
+                {
+                    ECPreviewMessageBody body = new ECPreviewMessageBody();
+                    ecMessage.setType(Type.RICH_TEXT);
+                    String content = cursor.getString(cursor
+                            .getColumnIndexOrThrow(IMessageColumn.BODY));
+                    body.setTitle(content);
+                    body.setLocalUrl(cursor.getString(cursor.getColumnIndexOrThrow(IMessageColumn.FILE_PATH)));
+                    body.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(IMessageColumn.FILE_URL)));
+                    ecMessage.setBody(body);
+                }
 //				return null;
             }
         }

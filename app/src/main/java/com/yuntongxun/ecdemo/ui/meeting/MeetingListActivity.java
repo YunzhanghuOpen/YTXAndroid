@@ -28,34 +28,46 @@ import java.util.List;
  * com.yuntongxun.ecdemo.ui.meeting in ECDemo_Android
  * Created by Jorstin on 2015/7/15.
  */
-public class MeetingListActivity extends MeetingBaseActivity{
+public class MeetingListActivity extends MeetingBaseActivity {
 
     private static final String TAG = "ECSDK_Demo.MeetingListActivity";
-    /**选择联系人*/
+    /**
+     * 选择联系人
+     */
     public static final int SELECT_USER_FOR_CHATROOM = 0x002;
-    /**创建群聊房间*/
+    /**
+     * 创建群聊房间
+     */
     public static final int REQUEST_CODE_CREATE = 0x003;
-    /**会议房间列表*/
+    /**
+     * 会议房间列表
+     */
     private ListView mMeetingListView;
-    /**会议列表适配器*/
+    /**
+     * 会议列表适配器
+     */
     private MeetingAdapter meetingAdapter;
-    /**创建的会议是否自动加入*/
+    /**
+     * 创建的会议是否自动加入
+     */
     private boolean mMeetingAutoJoin = false;
-    /**创建会议参数*/
+    /**
+     * 创建会议参数
+     */
     private ECMeetingManager.ECCreateMeetingParams mMeetingParams;
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(meetingAdapter != null) {
+            if (meetingAdapter != null) {
                 final ECMeeting meeting = meetingAdapter.getItem(position);
-                if(meeting == null) {
+                if (meeting == null) {
                     ToastUtil.showMessage(R.string.meeting_voice_room_error);
-                    return ;
+                    return;
                 }
                 // 如果自己是会议的创建者
-                if(CCPAppManager.getClientUser().getUserId().equals(meeting.getCreator())) {
-                    ECListDialog dialog = new ECListDialog(MeetingListActivity.this , R.array.meeting_control);
+                if (CCPAppManager.getClientUser().getUserId().equals(meeting.getCreator())) {
+                    ECListDialog dialog = new ECListDialog(MeetingListActivity.this, R.array.meeting_control);
                     dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
                         @Override
                         public void onDialogItemClick(Dialog d, int position) {
@@ -64,7 +76,7 @@ public class MeetingListActivity extends MeetingBaseActivity{
                     });
                     dialog.setTitle(meeting.getMeetingName());
                     dialog.show();
-                    return ;
+                    return;
                 }
                 // 验证是否有加入权限
                 startMeeting(meeting);
@@ -74,30 +86,32 @@ public class MeetingListActivity extends MeetingBaseActivity{
 
     /**
      * 根据权限加入会议
+     *
      * @param meeting
      */
     private void startMeeting(ECMeeting meeting) {
-        if(meeting.isValidate()) {
+        if (meeting.isValidate()) {
             // 会议加入需要验证
-            showInputCodeDialog(meeting , null, getString(R.string.dialog_message_chatroom_auth_reason));
-            return ;
+            showInputCodeDialog(meeting, null, getString(R.string.dialog_message_chatroom_auth_reason));
+            return;
         }
 
-        doStartMeetingActivity(meeting , null);
+        doStartMeetingActivity(meeting, null);
     }
 
     @Override
     protected void handleInput(ECMeeting meeting, EditText editText) {
         super.handleInput(meeting, editText);
-        if(editText != null) {
+        if (editText != null) {
             String password = editText.getText().toString().trim();
-            doStartMeetingActivity(meeting , password);
+            doStartMeetingActivity(meeting, password);
         }
     }
 
     /**
      * 处理点击会议加入操作
-     * @param meeting 会议
+     *
+     * @param meeting  会议
      * @param position
      */
     private void handleMeetingClick(ECMeeting meeting, int position) {
@@ -107,10 +121,10 @@ public class MeetingListActivity extends MeetingBaseActivity{
                 startMeeting(meeting);
                 break;
             case 1:
-                if(meeting != null) {
+                if (meeting != null) {
                     // 解散会议
                     MeetingHelper.disMeeting(meeting.getMeetingNo());
-                    
+
                 }
                 break;
             case 2:
@@ -153,15 +167,15 @@ public class MeetingListActivity extends MeetingBaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        
+
         boolean handle = MeetingHelper.queryMeetings(ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE);
-        if(handle) showCustomProcessDialog(getString(R.string.common_progressdialog_title));
+        if (handle) showCustomProcessDialog(getString(R.string.common_progressdialog_title));
     }
-    
+
     @Override
     protected void onPause() {
-    	// TODO Auto-generated method stub
-    	super.onPause();
+        // TODO Auto-generated method stub
+        super.onPause();
     }
 
     @Override
@@ -169,9 +183,9 @@ public class MeetingListActivity extends MeetingBaseActivity{
         super.onClick(v);
         switch (v.getId()) {
             case R.id.text_right:
-                
-                Intent intent = new Intent(MeetingListActivity.this , CreateVoiceMeetingActivity.class);
-                startActivityForResult(intent , REQUEST_CODE_CREATE);
+
+                Intent intent = new Intent(MeetingListActivity.this, CreateVoiceMeetingActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_CREATE);
                 break;
         }
     }
@@ -183,7 +197,7 @@ public class MeetingListActivity extends MeetingBaseActivity{
         LogUtil.d(TAG, "onActivityResult: requestCode=" + requestCode
                 + ", resultCode=" + resultCode + ", data=" + data);
 
-       
+
         // If there's no data (because the user didn't select a picture and
         // just hit BACK, for example), there's nothing to do.
         if (requestCode == REQUEST_CODE_CREATE) {
@@ -196,13 +210,13 @@ public class MeetingListActivity extends MeetingBaseActivity{
             finish();
             return;
         }
-        if(REQUEST_CODE_CREATE == requestCode) {
-            if(!data.hasExtra(CreateVoiceMeetingActivity.EXTRA_MEETING_PARAMS)) {
-                LogUtil.e(TAG , "create meeting error params null");
-                return ;
+        if (REQUEST_CODE_CREATE == requestCode) {
+            if (!data.hasExtra(CreateVoiceMeetingActivity.EXTRA_MEETING_PARAMS)) {
+                LogUtil.e(TAG, "create meeting error params null");
+                return;
             }
             mMeetingParams = data.getParcelableExtra(CreateVoiceMeetingActivity.EXTRA_MEETING_PARAMS);
-            if(mMeetingParams != null) {
+            if (mMeetingParams != null) {
                 showProcessDialog();
                 mMeetingAutoJoin = mMeetingParams.isAutoJoin();
                 // 处理创建群聊房间
@@ -216,7 +230,7 @@ public class MeetingListActivity extends MeetingBaseActivity{
         super.onMeetingStart(meetingNo);
         dismissPostingDialog();
         MeetingHelper.queryMeetings(ECMeetingManager.ECMeetingType.MEETING_MULTI_VOICE);
-        if(mMeetingParams != null && mMeetingParams.isAutoJoin()) {
+        if (mMeetingParams != null && mMeetingParams.isAutoJoin()) {
             // 自动加入会议的
             ECMeeting meeting = new ECMeeting();
             meeting.setMeetingNo(meetingNo);
@@ -231,13 +245,13 @@ public class MeetingListActivity extends MeetingBaseActivity{
     public void onMeetingDismiss(String meetingNo) {
         super.onMeetingDismiss(meetingNo);
         dismissPostingDialog();
-        if(meetingAdapter != null) {
-            for(int i = 0 ; i < meetingAdapter.getCount() ; i++) {
+        if (meetingAdapter != null) {
+            for (int i = 0; i < meetingAdapter.getCount(); i++) {
                 ECMeeting meeting = meetingAdapter.getItem(i);
-                if(meeting != null && meeting.getMeetingNo() != null
+                if (meeting != null && meeting.getMeetingNo() != null
                         && meeting.getMeetingNo().equals(meetingNo)) {
                     meetingAdapter.remove(meeting);
-                    return ;
+                    return;
                 }
             }
         }
@@ -253,11 +267,11 @@ public class MeetingListActivity extends MeetingBaseActivity{
     public void onMeetings(List<ECMeeting> list) {
         super.onMeetings(list);
         dismissPostingDialog();
-        if(list == null) {
+        if (list == null) {
             mMeetingListView.setAdapter(null);
-            return ;
+            return;
         }
-        meetingAdapter = new MeetingAdapter(this , list);
+        meetingAdapter = new MeetingAdapter(this, list);
         mMeetingListView.setAdapter(meetingAdapter);
     }
 
@@ -272,7 +286,7 @@ public class MeetingListActivity extends MeetingBaseActivity{
 
             View view;
             MeetingHolder holder;
-            if (convertView == null|| convertView.getTag() == null) {
+            if (convertView == null || convertView.getTag() == null) {
                 view = getLayoutInflater().inflate(R.layout.voice_meeting_item, null);
                 holder = new MeetingHolder();
                 view.setTag(holder);
@@ -286,12 +300,12 @@ public class MeetingListActivity extends MeetingBaseActivity{
             }
 
             ECMeeting meeting = getItem(position);
-            if(meeting != null) {
+            if (meeting != null) {
                 holder.name.setText(meeting.getMeetingName());
                 boolean meetingFill = (meeting.getJoined() == meeting.getSquare());
                 // 当前会议是否满人
-                int resId = meetingFill ? R.string.str_chatroom_list_join_full :R.string.str_chatroom_list_join_unfull;
-                holder.tips.setText(getString(resId, meeting.getJoined() , meeting.getCreator()));
+                int resId = meetingFill ? R.string.str_chatroom_list_join_full : R.string.str_chatroom_list_join_unfull;
+                holder.tips.setText(getString(resId, meeting.getJoined(), meeting.getCreator()));
                 // 会议是否需要验证加入
                 holder.lock.setVisibility(meeting.isValidate() ? View.VISIBLE : View.GONE);
             }

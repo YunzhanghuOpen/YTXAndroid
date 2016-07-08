@@ -12,8 +12,6 @@ import android.widget.Chronometer;
 import android.widget.FrameLayout;
 
 import com.yuntongxun.ecdemo.R;
-import com.yuntongxun.ecsdk.ECDevice;
-import com.yuntongxun.ecsdk.ECMeetingManager;
 
 
 /**
@@ -31,23 +29,33 @@ public class InterPhoneMicController extends FrameLayout implements View.OnTouch
 
     private static final long INTER_PHONE_TIME_INTERVAL = 500;
 
-    /**实时对讲抢麦按钮*/
+    /**
+     * 实时对讲抢麦按钮
+     */
     private Button mInterSpeak;
-    /**实时对讲控麦计时*/
+    /**
+     * 实时对讲控麦计时
+     */
     private Chronometer mChronometer;
-    /**是否按下抢麦按钮*/
+    /**
+     * 是否按下抢麦按钮
+     */
     private boolean isDownEvent;
-    /**判断按钮事件是否有效*/
+    /**
+     * 判断按钮事件是否有效
+     */
     private long downTime = 0;
-    /**实时对讲Mic按钮事件*/
+    /**
+     * 实时对讲Mic按钮事件
+     */
     private OnInterPhoneMicListener mOnInterPhoneMicListener;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case WHAT_ON_REQUEST_MIC_CONTROL:
-                    if(isDownEvent && mOnInterPhoneMicListener != null) {
+                    if (isDownEvent && mOnInterPhoneMicListener != null) {
                         mOnInterPhoneMicListener.onControlMic();
                     }
                     break;
@@ -73,49 +81,52 @@ public class InterPhoneMicController extends FrameLayout implements View.OnTouch
         mInterSpeak = (Button) findViewById(R.id.inter_phone_speak);
         mChronometer = (Chronometer) findViewById(R.id.chronometer);
 
-        if(mInterSpeak != null) {
+        if (mInterSpeak != null) {
             mInterSpeak.setEnabled(false);
-            mInterSpeak.setOnTouchListener(this) ;
+            mInterSpeak.setOnTouchListener(this);
         }
     }
 
     /**
      * 控麦按钮是否可用
+     *
      * @param enable
      */
     public void setInterSpeakEnabled(boolean enable) {
-        if(mInterSpeak != null) {
+        if (mInterSpeak != null) {
             mInterSpeak.setEnabled(enable);
-            mInterSpeak.setOnTouchListener(this) ;
+            mInterSpeak.setOnTouchListener(this);
         }
     }
+
     /**
      * 是否显示控麦时间
+     *
      * @param type
      */
     public void setControlMicType(MicType type) {
-        if(mChronometer == null) {
-            return ;
+        if (mChronometer == null) {
+            return;
         }
-        if(type == MicType.CONTROL) {
+        if (type == MicType.CONTROL) {
             mChronometer.setBase(SystemClock.elapsedRealtime());
             mChronometer.setVisibility(View.VISIBLE);
             mChronometer.start();
             mChronometer.setVisibility(View.VISIBLE);
-            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_connect) ;
-            return ;
+            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_connect);
+            return;
         }
 
-        if(type == MicType.IDLE) {
+        if (type == MicType.IDLE) {
             mChronometer.stop();
             mChronometer.setVisibility(View.GONE);
-            return ;
+            return;
         }
 
-        if(isDownEvent) {
-            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_failed) ;
+        if (isDownEvent) {
+            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_failed);
         } else {
-            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_normal) ;
+            mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_normal);
         }
     }
 
@@ -130,29 +141,29 @@ public class InterPhoneMicController extends FrameLayout implements View.OnTouch
         Message obtainMessage;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(mOnInterPhoneMicListener != null) {
+                if (mOnInterPhoneMicListener != null) {
                     mOnInterPhoneMicListener.onPrepareControlMic();
                 }
-                if (mHandler != null ) {
+                if (mHandler != null) {
                     obtainMessage = mHandler.obtainMessage(WHAT_ON_PLAY_MUSIC);
                     mHandler.sendMessage(obtainMessage);
                 }
                 isDownEvent = true;
                 downTime = event.getDownTime();
                 mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_pressed);
-                if (mHandler != null ) {
+                if (mHandler != null) {
                     obtainMessage = mHandler.obtainMessage(WHAT_ON_REQUEST_MIC_CONTROL);
                     mHandler.sendMessageDelayed(obtainMessage, INTER_PHONE_TIME_INTERVAL);
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 isDownEvent = false;
-                if (mHandler != null ) {
+                if (mHandler != null) {
                     mHandler.removeMessages(WHAT_ON_REQUEST_MIC_CONTROL);
                 }
                 mInterSpeak.setBackgroundResource(R.drawable.voice_intephone_normal);
-                if((event.getEventTime() - downTime) >= INTER_PHONE_TIME_INTERVAL) {
-                    if(mOnInterPhoneMicListener != null) {
+                if ((event.getEventTime() - downTime) >= INTER_PHONE_TIME_INTERVAL) {
+                    if (mOnInterPhoneMicListener != null) {
                         mOnInterPhoneMicListener.onReleaseMic();
                         downTime = 0;
                     }
@@ -164,6 +175,7 @@ public class InterPhoneMicController extends FrameLayout implements View.OnTouch
 
     /**
      * 设置实时对讲按钮通知
+     *
      * @param listener
      */
     public void setOnInterPhoneMicListener(OnInterPhoneMicListener listener) {
@@ -171,13 +183,15 @@ public class InterPhoneMicController extends FrameLayout implements View.OnTouch
     }
 
     public enum MicType {
-        CONTROL , IDLE , ERROR;
+        CONTROL, IDLE, ERROR;
     }
 
 
     public interface OnInterPhoneMicListener {
         void onPrepareControlMic();
+
         void onControlMic();
+
         void onReleaseMic();
     }
 }

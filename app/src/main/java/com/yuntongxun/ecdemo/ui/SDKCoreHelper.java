@@ -3,7 +3,6 @@ package com.yuntongxun.ecdemo.ui;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,7 +45,7 @@ import java.io.InvalidClassException;
 /**
  * Created by Jorstin on 2015/3/17.
  */
-public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDeviceConnectListener,ECDevice.OnLogoutListener {
+public class SDKCoreHelper implements ECDevice.InitListener, ECDevice.OnECDeviceConnectListener, ECDevice.OnLogoutListener {
 
     public static final String TAG = "SDKCoreHelper";
     public static final String ACTION_LOGOUT = "com.yuntongxun.ECDemo_logout";
@@ -57,18 +56,21 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
     private ECDevice.ECConnectState mConnect = ECDevice.ECConnectState.CONNECT_FAILED;
     private ECInitParams mInitParams;
     private ECInitParams.LoginMode mMode = ECInitParams.LoginMode.FORCE_LOGIN;
-    /**初始化错误*/
+    /**
+     * 初始化错误
+     */
     public static final int ERROR_CODE_INIT = -3;
-    
+
     public static final int WHAT_SHOW_PROGRESS = 0x101A;
-	public static final int WHAT_CLOSE_PROGRESS = 0x101B;
+    public static final int WHAT_CLOSE_PROGRESS = 0x101B;
     private boolean mKickOff = false;
     private ECNotifyOptions mOptions;
     public static SoftUpdate mSoftUpdate;
-    
+
     private Handler handler;
+
     private SDKCoreHelper() {
-    	initNotifyOptions();
+        initNotifyOptions();
     }
 
     public static SDKCoreHelper getInstance() {
@@ -77,10 +79,10 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
         }
         return sInstance;
     }
-    
+
     public synchronized void setHandler(final Handler handler) {
-		this.handler = handler;
-	}
+        this.handler = handler;
+    }
 
     public static boolean isKickOff() {
         return getInstance().mKickOff;
@@ -90,32 +92,32 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
         init(ctx, ECInitParams.LoginMode.AUTO);
     }
 
-    public static void init(Context ctx , ECInitParams.LoginMode mode) {
+    public static void init(Context ctx, ECInitParams.LoginMode mode) {
         getInstance().mKickOff = false;
-        LogUtil.d(TAG , "[init] start regist..");
+        LogUtil.d(TAG, "[init] start regist..");
         ctx = ECApplication.getInstance().getApplicationContext();
         getInstance().mMode = mode;
         getInstance().mContext = ctx;
         // 判断SDK是否已经初始化，没有初始化则先初始化SDK
-        if(!ECDevice.isInitialized()) {
+        if (!ECDevice.isInitialized()) {
             getInstance().mConnect = ECDevice.ECConnectState.CONNECTING;
             // ECSDK.setNotifyOptions(getInstance().mOptions);
             ECDevice.initial(ctx, getInstance());
 
             postConnectNotify();
-            return ;
+            return;
         }
         LogUtil.d(TAG, " SDK has inited , then regist..");
         // 已经初始化成功，直接进行注册
         getInstance().onInitialized();
     }
 
-    public static void setSoftUpdate(String version , String desc , boolean mode) {
-        mSoftUpdate = new SoftUpdate(version ,desc ,mode);
+    public static void setSoftUpdate(String version, String desc, boolean mode) {
+        mSoftUpdate = new SoftUpdate(version, desc, mode);
     }
-    
+
     private void initNotifyOptions() {
-        if(mOptions == null) {
+        if (mOptions == null) {
             mOptions = new ECNotifyOptions();
         }
         // 设置新消息是否提醒
@@ -146,7 +148,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
         // 呼入界面activity、开发者需修改该类
         Intent intent = new Intent(getInstance().mContext, VoIPCallActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity( getInstance().mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getInstance().mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         ECDevice.setPendingIntent(pendingIntent);
         ECDevice.setReceiveAllOfflineMsgEnabled(true);
         // 设置SDK注册结果回调通知，当第一次初始化注册成功或者失败会通过该引用回调
@@ -157,22 +159,22 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
         // 设置VOIP 自定义铃声路径
         ECVoIPSetupManager setupManager = ECDevice.getECVoIPSetupManager();
-        if(setupManager != null) {
-        	// 目前支持下面三种路径查找方式
-        	// 1、如果是assets目录则设置为前缀[assets://]
-        	setupManager.setInComingRingUrl(true, "assets://phonering.mp3");
-        	setupManager.setOutGoingRingUrl(true, "assets://phonering.mp3");
-        	setupManager.setBusyRingTone(true, "assets://playend.mp3");
+        if (setupManager != null) {
+            // 目前支持下面三种路径查找方式
+            // 1、如果是assets目录则设置为前缀[assets://]
+            setupManager.setInComingRingUrl(true, "assets://phonering.mp3");
+            setupManager.setOutGoingRingUrl(true, "assets://phonering.mp3");
+            setupManager.setBusyRingTone(true, "assets://playend.mp3");
             // 2、如果是raw目录则设置为前缀[raw://]
             // 3、如果是SDCard目录则设置为前缀[file://]
         }
 
-        if(ECDevice.getECMeetingManager() != null) {
+        if (ECDevice.getECMeetingManager() != null) {
             ECDevice.getECMeetingManager().setOnMeetingListener(MeetingMsgReceiver.getInstance());
         }
-        
+
         ClientUser clientUser = CCPAppManager.getClientUser();
-        if (mInitParams == null){
+        if (mInitParams == null) {
             mInitParams = ECInitParams.createParams();
         }
         mInitParams.reset();
@@ -189,27 +191,26 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
         // 如果有密码（VoIP密码，对应的登陆验证模式是）
         // ECInitParams.LoginAuthType.PASSWORD_AUTH
-        if(!TextUtils.isEmpty(clientUser.getPassword())) {
+        if (!TextUtils.isEmpty(clientUser.getPassword())) {
             mInitParams.setPwd(clientUser.getPassword());
         }
 
         // 设置登陆验证模式（是否验证密码/如VoIP方式登陆）
-        if(clientUser.getLoginAuthType() != null) {
+        if (clientUser.getLoginAuthType() != null) {
             mInitParams.setAuthType(clientUser.getLoginAuthType());
         }
 
-        if(!mInitParams.validate()) {
+        if (!mInitParams.validate()) {
             ToastUtil.showMessage(R.string.regist_params_error);
             Intent failIntent = new Intent(ACTION_SDK_CONNECT);
             failIntent.putExtra("error", -1);
             mContext.sendBroadcast(failIntent);
-            return ;
+            return;
         }
 
 
-
         ECDevice.login(mInitParams);
-        new RequestTask(mContext,clientUser.getUserId()).execute();
+        new RequestTask(mContext, clientUser.getUserId()).execute();
         //调式
 
     }
@@ -227,7 +228,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
     @Override
     public void onConnectState(ECDevice.ECConnectState state, ECError error) {
-        if(state == ECDevice.ECConnectState.CONNECT_FAILED && error.errorCode == SdkErrorCode.SDK_KICKED_OFF) {
+        if (state == ECDevice.ECConnectState.CONNECT_FAILED && error.errorCode == SdkErrorCode.SDK_KICKED_OFF) {
             try {
                 ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_REGIST_AUTO, "", true);
 //                ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_FULLY_EXIT, true, true);
@@ -238,10 +239,10 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
             mKickOff = true;
             // 失败，账号异地登陆
             Intent intent = new Intent(ACTION_KICK_OFF);
-            intent.putExtra("kickoffText" , error.errorMsg);
+            intent.putExtra("kickoffText", error.errorMsg);
             mContext.sendBroadcast(intent);
             LauncherActivity.mLauncherUI.handlerKickOff(error.errorMsg);
-            ECNotificationManager.getInstance().showKickoffNotification(mContext ,error.errorMsg);
+            ECNotificationManager.getInstance().showKickoffNotification(mContext, error.errorMsg);
         }
         getInstance().mConnect = state;
         Intent intent = new Intent(ACTION_SDK_CONNECT);
@@ -252,6 +253,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
     /**
      * 当前SDK注册状态
+     *
      * @return
      */
     public static ECDevice.ECConnectState getConnectState() {
@@ -261,7 +263,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
     @Override
     public void onLogout() {
         getInstance().mConnect = ECDevice.ECConnectState.CONNECT_FAILED;
-        if(mInitParams != null && mInitParams.getInitParams() != null) {
+        if (mInitParams != null && mInitParams.getInitParams() != null) {
             mInitParams.getInitParams().clear();
         }
         mInitParams = null;
@@ -281,16 +283,16 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
      * 状态通知
      */
     private static void postConnectNotify() {
-        if(getInstance().mContext instanceof LauncherActivity) {
+        if (getInstance().mContext instanceof LauncherActivity) {
             ((LauncherActivity) getInstance().mContext).onNetWorkNotify(getConnectState());
         }
     }
 
     public static void logout(boolean isNotice) {
-    	ECDevice.NotifyMode notifyMode = (isNotice) ? ECDevice.NotifyMode.IN_NOTIFY : ECDevice.NotifyMode.NOT_NOTIFY;
-        ECDevice.logout(notifyMode,getInstance());
-        
-        
+        ECDevice.NotifyMode notifyMode = (isNotice) ? ECDevice.NotifyMode.IN_NOTIFY : ECDevice.NotifyMode.NOT_NOTIFY;
+        ECDevice.logout(notifyMode, getInstance());
+
+
         release();
     }
 
@@ -308,6 +310,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
     /**
      * IM聊天功能接口
+     *
      * @return
      */
     public static ECChatManager getECChatManager() {
@@ -318,6 +321,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
     /**
      * 群组聊天接口
+     *
      * @return
      */
     public static ECGroupManager getECGroupManager() {
@@ -330,6 +334,7 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
 
     /**
      * VoIP呼叫接口
+     *
      * @return
      */
     public static ECVoIPCallManager getVoIPCallManager() {
@@ -341,80 +346,81 @@ public class SDKCoreHelper implements ECDevice.InitListener , ECDevice.OnECDevic
     }
 
 
-    public static class SoftUpdate  {
+    public static class SoftUpdate {
         public String version;
         public String desc;
         public boolean force;
 
-        public SoftUpdate(String version ,String desc, boolean force) {
+        public SoftUpdate(String version, String desc, boolean force) {
             this.version = version;
             this.force = force;
             this.desc = desc;
         }
     }
-    
+
     /**
-     * 
      * 是否支持voip及会议功能
      * true 表示支持 false表示不支持
      * 请在sdk初始化完成之后调用
      */
-    public boolean isSupportMedia(){
-    	
-    	return ECDevice.isSupportMedia();
+    public boolean isSupportMedia() {
+
+        return ECDevice.isSupportMedia();
     }
-    
+
     public static boolean hasFullSize(String inStr) {
-		if (inStr.getBytes().length != inStr.length()) {
-			return true;
-		}
-		return false;
-	}
-    
+        if (inStr.getBytes().length != inStr.length()) {
+            return true;
+        }
+        return false;
+    }
+
     public void onReceiveVideoMeetingMsg(ECVideoMeetingMsg msg) {
 
-		LogUtil
-				.e(TAG,
-						"[onReceivevideomsg ] Receive video phone message  , id :"
-								+ msg.getMeetingNo() + ",type="
-								+ msg.getMsgType());
-		Bundle b = new Bundle();
-		b.putParcelable("VideoConferenceMsg", msg);
+        LogUtil
+                .e(TAG,
+                        "[onReceivevideomsg ] Receive video phone message  , id :"
+                                + msg.getMeetingNo() + ",type="
+                                + msg.getMsgType());
+        Bundle b = new Bundle();
+        b.putParcelable("VideoConferenceMsg", msg);
 
-		sendTarget(VideoconferenceBaseActivity.KEY_VIDEO_RECEIVE_MESSAGE, b);
+        sendTarget(VideoconferenceBaseActivity.KEY_VIDEO_RECEIVE_MESSAGE, b);
 
-	}
+    }
+
     long t = 0;
-    
+
     public void sendTarget(int what, Object obj) {
-		t = System.currentTimeMillis();
-		while (handler == null && (System.currentTimeMillis() - t < 3500)) {
+        t = System.currentTimeMillis();
+        while (handler == null && (System.currentTimeMillis() - t < 3500)) {
 
-			try {
-				Thread.sleep(80L);
-			} catch (InterruptedException e) {
-			}
-		}
+            try {
+                Thread.sleep(80L);
+            } catch (InterruptedException e) {
+            }
+        }
 
-		if (handler == null) {
-			LogUtil
-					.w(TAG,
-							"[RLVoiceHelper] handler is null, activity maybe destory, wait...");
-			return;
-		}
+        if (handler == null) {
+            LogUtil
+                    .w(TAG,
+                            "[RLVoiceHelper] handler is null, activity maybe destory, wait...");
+            return;
+        }
 
-		Message msg = Message.obtain(handler);
-		msg.what = what;
-		msg.obj = obj;
-		msg.sendToTarget();
-	}
-    
+        Message msg = Message.obtain(handler);
+        msg.what = what;
+        msg.obj = obj;
+        msg.sendToTarget();
+    }
+
     /**
      * 判断服务是否自动重启
+     *
      * @return 是否自动重启
      */
     public static boolean isUIShowing() {
         return ECDevice.isInitialized();
     }
-    
+
 }

@@ -7,10 +7,7 @@ import com.yuntongxun.ecdemo.common.dialog.ECProgressDialog;
 import com.yuntongxun.ecdemo.common.utils.ToastUtil;
 import com.yuntongxun.ecdemo.ui.ECSuperActivity;
 import com.yuntongxun.ecdemo.ui.MeetingMsgReceiver;
-import com.yuntongxun.ecdemo.ui.meeting.MeetingHelper;
 import com.yuntongxun.ecsdk.ECError;
-import com.yuntongxun.ecsdk.meeting.ECMeeting;
-import com.yuntongxun.ecsdk.meeting.ECMeetingMember;
 import com.yuntongxun.ecsdk.meeting.intercom.ECInterPhoneMeetingMember;
 import com.yuntongxun.ecsdk.meeting.intercom.ECInterPhoneMeetingMsg;
 import com.yuntongxun.ecsdk.meeting.voice.ECVoiceMeetingMsg;
@@ -21,10 +18,11 @@ import java.util.List;
  * Created by Jorstin on 2015/7/27.
  */
 public abstract class InterPhoneBaseActivity extends ECSuperActivity implements
-        InterPhoneHelper.OnInterPhoneListener , View.OnClickListener , MeetingMsgReceiver.OnVoiceMeetingMsgReceive{
+        InterPhoneHelper.OnInterPhoneListener, View.OnClickListener, MeetingMsgReceiver.OnVoiceMeetingMsgReceive {
 
 
     private ECProgressDialog mPostingdialog;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -91,8 +89,8 @@ public abstract class InterPhoneBaseActivity extends ECSuperActivity implements
      * 关闭对话框
      */
     protected void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;

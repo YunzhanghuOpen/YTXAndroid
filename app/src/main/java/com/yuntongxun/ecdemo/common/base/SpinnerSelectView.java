@@ -15,15 +15,21 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
  * com.yuntongxun.ecdemo.common.base in ECDemo_Android
  * Created by Jorstin on 2015/7/22.
  */
-public class SpinnerSelectView extends Button implements View.OnClickListener{
+public class SpinnerSelectView extends Button implements View.OnClickListener {
 
     private static final String TAG = "ECSDK_Demo.SpinnerSelectView";
 
-    /**选项资源菜单*/
-    private String[] mItems ;
-    /**下拉菜单标题显示文字*/
+    /**
+     * 选项资源菜单
+     */
+    private String[] mItems;
+    /**
+     * 下拉菜单标题显示文字
+     */
     private int mDropTitle;
-    /**选中的模式位置*/
+    /**
+     * 选中的模式位置
+     */
     private int mChoiceItemPosition;
 
     public SpinnerSelectView(Context context) {
@@ -45,23 +51,24 @@ public class SpinnerSelectView extends Button implements View.OnClickListener{
 
     private void initTypedArray(Context context, AttributeSet attrs, int defStyle) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SpinnerView, defStyle, 0);
-        int items = typedArray.getResourceId(R.styleable.SpinnerView_Spinner_item ,-1);
-        mDropTitle = typedArray.getResourceId(R.styleable.SpinnerView_Spinner_DropDownTitle ,-1);
+        int items = typedArray.getResourceId(R.styleable.SpinnerView_Spinner_item, -1);
+        mDropTitle = typedArray.getResourceId(R.styleable.SpinnerView_Spinner_DropDownTitle, -1);
         typedArray.recycle();
 
         mChoiceItemPosition = 0;
 
-        if(items > 0) {
+        if (items > 0) {
             mItems = context.getResources().getStringArray(items);
             setOnClickListener(this);
         }
-        if(mDropTitle <= 0) {
+        if (mDropTitle <= 0) {
             mDropTitle = R.string.app_tip;
         }
     }
 
     /**
      * 当前选择的类型模式位置
+     *
      * @return
      */
     public int getChoiceItemPosition() {
@@ -78,8 +85,8 @@ public class SpinnerSelectView extends Button implements View.OnClickListener{
      * 显示弹出选项菜单
      */
     private void showDropDownViewResource() {
-        if(mItems != null) {
-            ECListDialog dialog = new ECListDialog(getContext() ,mItems , mChoiceItemPosition);
+        if (mItems != null) {
+            ECListDialog dialog = new ECListDialog(getContext(), mItems, mChoiceItemPosition);
             dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
                 @Override
                 public void onDialogItemClick(Dialog d, int position) {
@@ -89,8 +96,8 @@ public class SpinnerSelectView extends Button implements View.OnClickListener{
             });
             dialog.setTitle(mDropTitle);
             dialog.show();
-            return ;
+            return;
         }
-        LogUtil.e(TAG , "show DropDownView error , items null");
+        LogUtil.e(TAG, "show DropDownView error , items null");
     }
 }

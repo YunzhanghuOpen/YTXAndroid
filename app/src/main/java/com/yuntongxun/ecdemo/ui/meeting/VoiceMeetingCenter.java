@@ -17,16 +17,19 @@ import java.util.Random;
  */
 public class VoiceMeetingCenter extends FrameLayout {
 
-    private static int[] STATUS_ICON = new int[] {
+    private static int[] STATUS_ICON = new int[]{
             R.drawable.animation_box01
-            ,R.drawable.animation_box02
-            ,R.drawable.animation_box03
-            ,R.drawable.animation_box04
+            , R.drawable.animation_box02
+            , R.drawable.animation_box03
+            , R.drawable.animation_box04
     };
 
     private LinearLayout mCenterAmplitude;
-    /**是否启用动画*/
+    /**
+     * 是否启用动画
+     */
     private boolean mStart = false;
+
     public VoiceMeetingCenter(Context context) {
         this(context, null);
     }
@@ -61,8 +64,10 @@ public class VoiceMeetingCenter extends FrameLayout {
     public void stopAmplitude() {
         mStart = false;
     }
+
     /**
      * 计算随机数
+     *
      * @param num
      * @return 随机数
      */
@@ -72,13 +77,13 @@ public class VoiceMeetingCenter extends FrameLayout {
     }
 
 
-    synchronized void  initCenterStatus(int num){//4
+    synchronized void initCenterStatus(int num) {//4
         mCenterAmplitude.removeAllViews();
         for (int i = 0; i < num; i++) {
             ImageView imageView = new ImageView(getContext());
-            if(STATUS_ICON != null ) {
+            if (STATUS_ICON != null) {
                 imageView.setImageResource(STATUS_ICON[randomNum(4)]);
-                mCenterAmplitude.addView(imageView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT , LayoutParams.WRAP_CONTENT , 1.0f));
+                mCenterAmplitude.addView(imageView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f));
             }
         }
     }
@@ -88,7 +93,7 @@ public class VoiceMeetingCenter extends FrameLayout {
 
         @Override
         public void run() {
-            while(mStart) {
+            while (mStart) {
                 ECHandlerHelper.postRunnOnUI(new Runnable() {
                     @Override
                     public void run() {

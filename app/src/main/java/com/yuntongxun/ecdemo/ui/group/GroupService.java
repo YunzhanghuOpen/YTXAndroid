@@ -14,9 +14,6 @@ package com.yuntongxun.ecdemo.ui.group;
 
 import android.content.Intent;
 
-
-import android.util.Log;
-
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.DemoUtils;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
@@ -26,7 +23,6 @@ import com.yuntongxun.ecdemo.storage.GroupMemberSqlManager;
 import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
-import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECGroupManager;
 import com.yuntongxun.ecsdk.ECGroupManager.OnModifyMemberCardListener;
@@ -43,12 +39,13 @@ import java.util.List;
 
 /**
  * 群组同步
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-18
  * @version 4.0
+ * @date 2014-12-18
  */
 public class GroupService {
-    private static final String TAG  = "ECSDK_Demo.GroupService";
+    private static final String TAG = "ECSDK_Demo.GroupService";
 
     public static final String ACTION_SYNC_GROUP = "com.yuntongxun.ecdemo.ACTION_SYNC_GROUP";
     public static final String PRICATE_CHATROOM = "@priategroup.com";
@@ -60,13 +57,13 @@ public class GroupService {
 
     private boolean isSync = false;
 
-    private GroupService () {
+    private GroupService() {
         mGroupManager = SDKCoreHelper.getECGroupManager();
         countGroups();
     }
 
     private static GroupService getInstance() {
-        if(sInstance == null) {
+        if (sInstance == null) {
             sInstance = new GroupService();
         }
         return sInstance;
@@ -83,25 +80,25 @@ public class GroupService {
      * 开始网络同步群组列表信息
      */
     @SuppressWarnings("deprecation")
-	public static void syncGroup(Callback callback) {
+    public static void syncGroup(Callback callback) {
         getInstance().mGroupManager = SDKCoreHelper.getECGroupManager();
-        if(getInstance().mGroupManager == null || getInstance().isSync) {
+        if (getInstance().mGroupManager == null || getInstance().isSync) {
             LogUtil.e(TAG, "SDK not ready or isSync " + getInstance().isSync);
-            return ;
+            return;
         }
         getInstance().isSync = true;
         getInstance().mCallback = callback;
-        
-        
-        getInstance().mGroupManager.queryOwnGroups(Target.GROUP ,new ECGroupManager.OnQueryOwnGroupsListener() {
+
+
+        getInstance().mGroupManager.queryOwnGroups(Target.GROUP, new ECGroupManager.OnQueryOwnGroupsListener() {
 
             @Override
             public void onQueryOwnGroupsComplete(ECError error, List<ECGroup> groups) {
-                if(getInstance().isSuccess(error)) {
+                if (getInstance().isSuccess(error)) {
                     if (groups == null || groups.isEmpty()) {
                         GroupSqlManager.delALLGroup();
                     } else {
-                        LogUtil.d(TAG , "[syncGroup] groups size :" +groups.size());
+                        LogUtil.d(TAG, "[syncGroup] groups size :" + groups.size());
                         List<String> allGroupIdByJoin = GroupSqlManager.getAllGroupIdBy(true);
                         ArrayList<String> ids = new ArrayList<String>();
                         for (ECGroup group : groups) {
@@ -129,31 +126,31 @@ public class GroupService {
                     if (CCPAppManager.getContext() != null) {
                         CCPAppManager.getContext().sendBroadcast(new Intent((ACTION_SYNC_GROUP)));
                     }
-                    return ;
+                    return;
                 }
                 onErrorCallback(error.errorCode, "同步群组失败");
             }
         });
     }
-    
+
     //同步讨论组列表
     public static void syncDiscussionGroup(Callback callback) {
         getInstance().mGroupManager = SDKCoreHelper.getECGroupManager();
-        if(getInstance().mGroupManager == null ) {
+        if (getInstance().mGroupManager == null) {
             LogUtil.e(TAG, "SDK not ready or isSync " + getInstance().isSync);
-            return ;
+            return;
         }
         getInstance().mDisCallback = callback;
 
-        getInstance().mGroupManager.queryOwnGroups(Target.DISCUSSION ,new ECGroupManager.OnQueryOwnGroupsListener() {
+        getInstance().mGroupManager.queryOwnGroups(Target.DISCUSSION, new ECGroupManager.OnQueryOwnGroupsListener() {
 
             @Override
             public void onQueryOwnGroupsComplete(ECError error, List<ECGroup> groups) {
-                if(getInstance().isSuccess(error)) {
+                if (getInstance().isSuccess(error)) {
                     if (groups == null || groups.isEmpty()) {
                         GroupSqlManager.delALLDisGroup();
                     } else {
-                        LogUtil.d(TAG , "[syncGroup] groups size :" +groups.size());
+                        LogUtil.d(TAG, "[syncGroup] groups size :" + groups.size());
                         List<String> allGroupIdByJoin = GroupSqlManager.getAllDisGroupIdBy(true);
                         ArrayList<String> ids = new ArrayList<String>();
                         for (ECGroup group : groups) {
@@ -181,23 +178,23 @@ public class GroupService {
                     if (CCPAppManager.getContext() != null) {
                         CCPAppManager.getContext().sendBroadcast(new Intent((ACTION_SYNC_GROUP)));
                     }
-                    return ;
+                    return;
                 }
                 onErrorCallback(error.errorCode, "同步讨论组失败");
             }
         });
     }
-    
 
 
     /**
      * 同步群组信息
+     *
      * @param groupId
      */
     public static void syncGroupInfo(final String groupId) {
         ECGroupManager groupManager = SDKCoreHelper.getECGroupManager();
-        if(groupManager == null) {
-            return ;
+        if (groupManager == null) {
+            return;
         }
         groupManager.getGroupDetail(groupId, new ECGroupManager.OnGetGroupDetailListener() {
 
@@ -221,6 +218,7 @@ public class GroupService {
 
     /**
      * 解散群组
+     *
      * @param groupId
      */
     public static void disGroup(String groupId) {
@@ -246,6 +244,7 @@ public class GroupService {
 
     /**
      * 退出群组
+     *
      * @param groupId
      */
     public static void quitGroup(String groupId) {
@@ -271,6 +270,7 @@ public class GroupService {
 
     /**
      * 修改群组信息
+     *
      * @param group
      */
     public static void modifyGroup(ECGroup group) {
@@ -291,9 +291,9 @@ public class GroupService {
         });
     }
 
-    private static void onErrorCallback(int code ,String msg) {
+    private static void onErrorCallback(int code, String msg) {
         if (getInstance().mCallback != null) {
-            getInstance().mCallback.onError(new ECError(code , msg));
+            getInstance().mCallback.onError(new ECError(code, msg));
         }
         ToastUtil.showMessage(msg + "[" + code + "]");
     }
@@ -301,7 +301,7 @@ public class GroupService {
     /**
      * 申请加入群组
      */
-    public static void applyGroup(String groupId , String declare , final OnApplyGroupCallbackListener l) {
+    public static void applyGroup(String groupId, String declare, final OnApplyGroupCallbackListener l) {
         getGroupManager();
         getInstance().mGroupManager.joinGroup(groupId, declare, new ECGroupManager.OnJoinGroupListener() {
 
@@ -334,9 +334,10 @@ public class GroupService {
 
     /**
      * 创建私有群组
+     *
      * @param member
      */
-    public static void doCreateGroup(final String[] member , final ECGroupManager.OnInviteJoinGroupListener l) {
+    public static void doCreateGroup(final String[] member, final ECGroupManager.OnInviteJoinGroupListener l) {
         // 构建群组参数
         ECGroup group = new ECGroup();
         // 设置群组名称
@@ -355,103 +356,99 @@ public class GroupService {
 
             @Override
             public void onCreateGroupComplete(ECError error, ECGroup group) {
-                if(getInstance().isSuccess(error)) {
-                    if(group.getName() != null && group.getName().endsWith(PRICATE_CHATROOM)) {
+                if (getInstance().isSuccess(error)) {
+                    if (group.getName() != null && group.getName().endsWith(PRICATE_CHATROOM)) {
                         ArrayList<String> contactName = ContactSqlManager.getContactName(member);
                         String chatroomName = DemoUtils.listToString(contactName, ",");
                         group.setName(chatroomName);
                     }
-                    GroupSqlManager.insertGroup(group, true, false,false);
-                    GroupMemberService.inviteMembers(group.getGroupId(), "", ECGroupManager.InvitationMode.FORCE_PULL, member , l);
-                    return ;
+                    GroupSqlManager.insertGroup(group, true, false, false);
+                    GroupMemberService.inviteMembers(group.getGroupId(), "", ECGroupManager.InvitationMode.FORCE_PULL, member, l);
+                    return;
                 }
-                onErrorCallback(error.errorCode , "创建群组失败");
+                onErrorCallback(error.errorCode, "创建群组失败");
             }
         });
     }
-    
-    
-    
-    public static void queryGroupCard(String userId,String groupId,final GroupCardCallBack l){
-    	getGroupManager();
-    	getInstance().mGroupManager.queryMemberCard(userId, groupId, new OnQueryMemberCardListener() {
-			
-			@Override
-			public void onQueryMemberCardComplete(ECError error, ECGroupMember member) {
-				// TODO Auto-generated method stub
-				
-				 if (getInstance().isSuccess(error)) {
-	                    if (l != null) {
-	                        l.onQueryGroupCardSuccess(member);
-	                    }
-	                    return;
-	                }
-				 
-				 if(l!=null){
-					 l.onQueryGroupCardFailed(error);
-				 }
-				 
-			    }
-		});
-    }
-    
-    public static void modifyGroupCard(ECGroupMember member,final GroupCardCallBack l){
-    	getGroupManager();
-    	getInstance().mGroupManager.modifyMemberCard(member, new OnModifyMemberCardListener() {
-			
-			@Override
-			public void onModifyMemberCardComplete(ECError error, ECGroupMember me) {
 
-				if (getInstance().isSuccess(error)) {
+
+    public static void queryGroupCard(String userId, String groupId, final GroupCardCallBack l) {
+        getGroupManager();
+        getInstance().mGroupManager.queryMemberCard(userId, groupId, new OnQueryMemberCardListener() {
+
+            @Override
+            public void onQueryMemberCardComplete(ECError error, ECGroupMember member) {
+                // TODO Auto-generated method stub
+
+                if (getInstance().isSuccess(error)) {
+                    if (l != null) {
+                        l.onQueryGroupCardSuccess(member);
+                    }
+                    return;
+                }
+
+                if (l != null) {
+                    l.onQueryGroupCardFailed(error);
+                }
+
+            }
+        });
+    }
+
+    public static void modifyGroupCard(ECGroupMember member, final GroupCardCallBack l) {
+        getGroupManager();
+        getInstance().mGroupManager.modifyMemberCard(member, new OnModifyMemberCardListener() {
+
+            @Override
+            public void onModifyMemberCardComplete(ECError error, ECGroupMember me) {
+
+                if (getInstance().isSuccess(error)) {
                     if (l != null) {
                         l.onModifyGroupCardSuccess();
                     }
                     return;
                 }
-				
-				 if(l!=null){
-					 l.onModifyGroupCardFailed(error);
-				 }
-			 
-		    
-				
-			}
-		});
+
+                if (l != null) {
+                    l.onModifyGroupCardFailed(error);
+                }
+
+
+            }
+        });
     }
-    
-    
 
 
-    public static void operationGroupApplyOrInvite(boolean inviteAck ,String groupId , String member , ECAckType ackType , final OnAckGroupServiceListener listener) {
+    public static void operationGroupApplyOrInvite(boolean inviteAck, String groupId, String member, ECAckType ackType, final OnAckGroupServiceListener listener) {
         getGroupManager();
-        if(!inviteAck) {
-            getInstance().mGroupManager.ackJoinGroupRequest(groupId , member , ackType , new ECGroupManager.OnAckJoinGroupRequestListener() {
+        if (!inviteAck) {
+            getInstance().mGroupManager.ackJoinGroupRequest(groupId, member, ackType, new ECGroupManager.OnAckJoinGroupRequestListener() {
                 @Override
                 public void onAckJoinGroupRequestComplete(ECError error, String groupId, String member) {
-                    if(getInstance().isSuccess(error)) {
-                        if(listener != null) {
+                    if (getInstance().isSuccess(error)) {
+                        if (listener != null) {
                             listener.onAckGroupService(true);
                         }
-                        return ;
+                        return;
                     }
-                    onErrorCallback(error.errorCode , "操作失败");
+                    onErrorCallback(error.errorCode, "操作失败");
                 }
             });
-            return ;
+            return;
         }
 
-        
-        getInstance().mGroupManager.ackInviteJoinGroupRequest(groupId, ackType,member, new ECGroupManager.OnAckInviteJoinGroupRequestListener() {
+
+        getInstance().mGroupManager.ackInviteJoinGroupRequest(groupId, ackType, member, new ECGroupManager.OnAckInviteJoinGroupRequestListener() {
             @Override
             public void onAckInviteJoinGroupRequestComplete(ECError error, String groupId) {
-                if(getInstance().isSuccess(error)) {
+                if (getInstance().isSuccess(error)) {
 
-                    if(listener != null) {
+                    if (listener != null) {
                         listener.onAckGroupService(true);
                     }
-                    return ;
+                    return;
                 }
-                onErrorCallback(error.errorCode , "操作失败");
+                onErrorCallback(error.errorCode, "操作失败");
             }
 
         });
@@ -474,24 +471,25 @@ public class GroupService {
             }
         });
     }
-    public static void setGroupIsAnonymity(final String groupId,final boolean isAnonymity) {
-    	getGroupManager();
-    	
-    	
+
+    public static void setGroupIsAnonymity(final String groupId, final boolean isAnonymity) {
+        getGroupManager();
+
+
     }
 
-    public static void setGroupMessageOption(final ECGroupOption option , final GroupOptionCallback listener) {
-        
-    	getGroupManager();
+    public static void setGroupMessageOption(final ECGroupOption option, final GroupOptionCallback listener) {
+
+        getGroupManager();
         getInstance().mGroupManager.setGroupMessageOption(option, new ECGroupManager.OnSetGroupMessageOptionListener() {
             @Override
             public void onSetGroupMessageOptionComplete(ECError error, String groupId) {
-                if(getInstance().isSuccess(error)) {
-                    GroupSqlManager.updateGroupNofity(option.getRule().ordinal() , option.getGroupId());
-                    if(listener != null) {
+                if (getInstance().isSuccess(error)) {
+                    GroupSqlManager.updateGroupNofity(option.getRule().ordinal(), option.getGroupId());
+                    if (listener != null) {
                         listener.onComplete(option.getGroupId());
                     }
-                    return ;
+                    return;
                 }
                 if (listener != null) {
                     listener.onError(error);
@@ -504,11 +502,12 @@ public class GroupService {
 
     /**
      * 请求是否成功
+     *
      * @param error
      * @return
      */
     private boolean isSuccess(ECError error) {
-        if(error.errorCode == SdkErrorCode.REQUEST_SUCCESS)  {
+        if (error.errorCode == SdkErrorCode.REQUEST_SUCCESS) {
             return true;
         }
         return false;
@@ -527,26 +526,33 @@ public class GroupService {
 
     public interface Callback {
         void onSyncGroup();
+
         void onSyncGroupInfo(String groupId);
+
         void onGroupDel(String groupId);
+
         void onError(ECError error);
-        void onUpdateGroupAnonymitySuccess(String groupId,boolean isAnonymity);
+
+        void onUpdateGroupAnonymitySuccess(String groupId, boolean isAnonymity);
 
     }
 
-    public interface GroupCardCallBack{
+    public interface GroupCardCallBack {
 
-		void onQueryGroupCardSuccess(ECGroupMember member);
-		void onQueryGroupCardFailed(ECError error);
+        void onQueryGroupCardSuccess(ECGroupMember member);
 
-		void onModifyGroupCardSuccess();
-		void onModifyGroupCardFailed(ECError error);
-    	
-    	
+        void onQueryGroupCardFailed(ECError error);
+
+        void onModifyGroupCardSuccess();
+
+        void onModifyGroupCardFailed(ECError error);
+
+
     }
 
     public interface GroupOptionCallback {
         void onComplete(String groupId);
+
         void onError(ECError error);
     }
 

@@ -14,9 +14,9 @@ import com.yuntongxun.ecdemo.R;
 public class AnimatorUtils {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void updateViewAnimation(View arcView , long duration , float translationX , final OnAnimationListener listener) {
-        if(arcView == null || SDKVersionUtils.isSmallerorEqual(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
-            return ;
+    public static void updateViewAnimation(View arcView, long duration, float translationX, final OnAnimationListener listener) {
+        if (arcView == null || SDKVersionUtils.isSmallerorEqual(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+            return;
         }
         Animator animator = (Animator) arcView.getTag(R.anim.property_anim);
         if (animator != null) {
@@ -49,12 +49,12 @@ public class AnimatorUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void startViewAnimation(View arcView , float translationX) {
-        if(arcView == null || SDKVersionUtils.isSmallerorEqual(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
-            return ;
+    public static void startViewAnimation(View arcView, float translationX) {
+        if (arcView == null || SDKVersionUtils.isSmallerorEqual(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+            return;
         }
         Animator animator = (Animator) arcView.getTag(R.anim.property_anim);
-        if(animator != null) {
+        if (animator != null) {
             animator.cancel();
         }
         arcView.animate().cancel();
@@ -66,6 +66,7 @@ public class AnimatorUtils {
     public interface OnAnimationListener {
 
         void onAnimationCancel();
+
         void onAnimationEnd();
     }
 }

@@ -12,8 +12,6 @@
  */
 package com.yuntongxun.ecdemo.ui.settings;
 
-import java.io.InvalidClassException;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +23,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.redpacketsdk.constant.RPConstant;
-import com.easemob.redpacketui.ui.activity.RPChangeActivity;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
@@ -45,18 +41,20 @@ import com.yuntongxun.ecdemo.ui.chatting.IMChattingHelper;
 import com.yuntongxun.ecdemo.ui.chatting.base.EmojiconTextView;
 import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
-import com.yuntongxun.ecsdk.ECDevice;
+
+import java.io.InvalidClassException;
 
 import utils.RedPacketUtil;
 
 
 /**
  * 设置界面/设置新消息提醒（声音或者振动）
+ *
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-27
  * @version 4.0
+ * @date 2014-12-27
  */
-public class SettingsActivity extends ECSuperActivity implements View.OnClickListener{
+public class SettingsActivity extends ECSuperActivity implements View.OnClickListener {
 
     private static final String TAG = "ECDemo.SettingsActivity";
 
@@ -65,11 +63,17 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
     public static final int CONFIG_TYPE_TOKEN = 3;
     public static final int CONFIG_TYPE_GROUP_NAME = 4;
     public static final int CONFIG_TYPE_GROUP_NOTICE = 5;
-    /**头像*/
+    /**
+     * 头像
+     */
     private ImageView mPhotoView;
-    /**号码*/
+    /**
+     * 号码
+     */
     private EmojiconTextView mUsername;
-    /**昵称*/
+    /**
+     * 昵称
+     */
     private TextView mNumber;
     private SettingItem mSettingSound;
     private SettingItem mSettingShake;
@@ -87,25 +91,25 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
     private int mExitType = 0;
 
     private final View.OnClickListener mSettingExitClickListener
-                = new View.OnClickListener() {
+            = new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-            	View contentView = View.inflate(SettingsActivity.this,R.layout.exit_dialog_view , null);
-            	final CheckBox cb = (CheckBox) contentView.findViewById(R.id.open_dialog_cb);
-            	cb.setChecked(true);
-            	ECAlertDialog alertDialog = new ECAlertDialog(SettingsActivity.this);
-            	alertDialog.setContentView(contentView);
-            	alertDialog.setButton(ECAlertDialog.BUTTON_NEGATIVE, R.string.app_cancel, null);
-            	alertDialog.setButton(ECAlertDialog.BUTTON_POSITIVE, R.string.dialog_alert_close, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mExitType = 1;
-			            handleLogout(cb.isChecked());
-					}
-				});
-            	alertDialog.show();
+        @Override
+        public void onClick(View v) {
+            View contentView = View.inflate(SettingsActivity.this, R.layout.exit_dialog_view, null);
+            final CheckBox cb = (CheckBox) contentView.findViewById(R.id.open_dialog_cb);
+            cb.setChecked(true);
+            ECAlertDialog alertDialog = new ECAlertDialog(SettingsActivity.this);
+            alertDialog.setContentView(contentView);
+            alertDialog.setButton(ECAlertDialog.BUTTON_NEGATIVE, R.string.app_cancel, null);
+            alertDialog.setButton(ECAlertDialog.BUTTON_POSITIVE, R.string.dialog_alert_close, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mExitType = 1;
+                    handleLogout(cb.isChecked());
+                }
+            });
+            alertDialog.show();
         }
     };
 
@@ -129,19 +133,21 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         }
     };
 
-	private TextView mSignureTv;
+    private TextView mSignureTv;
 
     private final class OnConfigClickListener implements View.OnClickListener {
 
         private int type;
+
         public OnConfigClickListener(int type) {
             this.type = type;
         }
+
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(SettingsActivity.this , EditConfigureActivity.class);
-            intent.putExtra("setting_type" , type);
-            startActivityForResult(intent , 0xa);
+            Intent intent = new Intent(SettingsActivity.this, EditConfigureActivity.class);
+            intent.putExtra("setting_type", type);
+            startActivityForResult(intent, 0xa);
         }
     }
 
@@ -179,8 +185,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         mPhotoView = (ImageView) findViewById(R.id.desc);
         mUsername = (EmojiconTextView) findViewById(R.id.contact_nameTv);
         mNumber = (TextView) findViewById(R.id.contact_numer);
-       mSignureTv = (TextView) findViewById(R.id.contact_signure);
-        
+        mSignureTv = (TextView) findViewById(R.id.contact_signure);
+
         mSignureTv.setText(CCPAppManager.getClientUser().getSignature());
 
         mSettingSound = (SettingItem) findViewById(R.id.settings_new_msg_sound);
@@ -211,12 +217,12 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         mSettingAppkey = (SettingItem) findViewById(R.id.settings_appkey);
         mSettingToken = (SettingItem) findViewById(R.id.settings_token);
         mSettingUpdater = (SettingItem) findViewById(R.id.settings_update);
-        mSettingUpdater.setTitleText(getString(R.string.demo_current_version ,CCPAppManager.getVersion()));
+        mSettingUpdater.setTitleText(getString(R.string.demo_current_version, CCPAppManager.getVersion()));
         mSettingServerIp.setOnClickListener(new OnConfigClickListener(CONFIG_TYPE_SERVERIP));
         mSettingAppkey.setOnClickListener(new OnConfigClickListener(CONFIG_TYPE_APPKEY));
         mSettingToken.setOnClickListener(new OnConfigClickListener(CONFIG_TYPE_TOKEN));
 
-        if( IMChattingHelper.getInstance() != null
+        if (IMChattingHelper.getInstance() != null
                 && SDKCoreHelper.mSoftUpdate != null
                 && DemoUtils.checkUpdater(SDKCoreHelper.mSoftUpdate.version)) {
             mSettingUpdater.setNewUpdateVisibility(true);
@@ -237,8 +243,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
                 String fromNickname = CCPAppManager.getClientUser().getUserName();
                 String fromAvatarUrl = "none";
                 fromAvatarUrl = TextUtils.isEmpty(fromAvatarUrl) ? "none" : fromAvatarUrl;
-                fromNickname = TextUtils.isEmpty(fromNickname) ?  CCPAppManager.getClientUser().getUserId() : fromNickname;
-                RedPacketUtil.startChangeActivity(SettingsActivity.this,fromNickname,fromAvatarUrl, CCPAppManager.getClientUser().getUserId());
+                fromNickname = TextUtils.isEmpty(fromNickname) ? CCPAppManager.getClientUser().getUserId() : fromNickname;
+                RedPacketUtil.startChangeActivity(SettingsActivity.this, fromNickname, fromAvatarUrl, CCPAppManager.getClientUser().getUserId());
             }
         });
     }
@@ -250,10 +256,9 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-
     private String getConfig(ECPreferenceSettings settings) {
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
-        String value = sharedPreferences.getString(settings.getId() , (String)settings.getDefaultValue());
+        String value = sharedPreferences.getString(settings.getId(), (String) settings.getDefaultValue());
         return value;
     }
 
@@ -261,16 +266,16 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
     @Override
     protected void handleReceiver(Context context, Intent intent) {
         super.handleReceiver(context, intent);
-        if(SDKCoreHelper.ACTION_LOGOUT.equals(intent.getAction())) {
+        if (SDKCoreHelper.ACTION_LOGOUT.equals(intent.getAction())) {
 
             try {
                 Intent outIntent = new Intent(SettingsActivity.this, LauncherActivity.class);
                 outIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if(mExitType == 1) {
+                if (mExitType == 1) {
                     ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_FULLY_EXIT, true, true);
                     startActivity(outIntent);
                     finish();
-                    return ;
+                    return;
                 }
                 dismissPostingDialog();
                 ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_REGIST_AUTO, "", true);
@@ -287,8 +292,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         super.onResume();
         initSettings();
         initActivityState();
-        if(mSignureTv!=null){
-          mSignureTv.setText(CCPAppManager.getClientUser().getSignature());
+        if (mSignureTv != null) {
+            mSignureTv.setText(CCPAppManager.getClientUser().getSignature());
         }
     }
 
@@ -304,8 +309,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
      * 初始化新消息声音设置参数
      */
     private void initNewMsgNotificationSound() {
-        if(mSettingSound == null) {
-            return ;
+        if (mSettingSound == null) {
+            return;
         }
         mSettingSound.setVisibility(View.VISIBLE);
         boolean shakeSetting = ECPreferences.getSharedPreferences().getBoolean(ECPreferenceSettings.SETTINGS_NEW_MSG_SOUND.getId(),
@@ -317,8 +322,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
      * 初始化新消息震动设置参数
      */
     private void initNewMsgNotificationShake() {
-        if(mSettingShake == null) {
-            return ;
+        if (mSettingShake == null) {
+            return;
         }
         mSettingShake.setVisibility(View.VISIBLE);
         boolean shakeSetting = ECPreferences.getSharedPreferences().getBoolean(ECPreferenceSettings.SETTINGS_NEW_MSG_SHAKE.getId(),
@@ -328,22 +333,23 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
 
     /**
      * 更新状态设置
+     *
      * @param type
      */
     protected void updateNewMsgNotification(int type) {
         try {
-            if(type == 0) {
-                if(mSettingSound == null) {
-                    return ;
+            if (type == 0) {
+                if (mSettingSound == null) {
+                    return;
                 }
                 mSettingSound.toggle();
                 ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_NEW_MSG_SOUND, mSettingSound.isChecked(), true);
                 LogUtil.d(TAG, "com.yuntongxun.ecdemo_new_msg_sound " + mSettingSound.isChecked());
-                return ;
+                return;
             }
-            if(type == 1) {
-                if(mSettingShake == null) {
-                    return ;
+            if (type == 1) {
+                if (mSettingShake == null) {
+                    return;
                 }
                 mSettingShake.toggle();
                 ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_NEW_MSG_SHAKE, mSettingShake.isChecked(), true);
@@ -359,12 +365,12 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
      */
     private void initActivityState() {
         ClientUser clientUser = CCPAppManager.getClientUser();
-        if(clientUser == null) {
-            return ;
+        if (clientUser == null) {
+            return;
         }
         ECContacts contact = ContactSqlManager.getContact(clientUser.getUserId());
-        if(contact == null) {
-            return ;
+        if (contact == null) {
+            return;
         }
 
         mPhotoView.setImageBitmap(ContactLogic.getPhoto(contact.getRemark()));
@@ -377,8 +383,8 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
      * 关闭对话框
      */
     private void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;
@@ -392,11 +398,10 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.text_right:
-                startActivity(new Intent(this , SettingPersionInfoActivity.class));
+                startActivity(new Intent(this, SettingPersionInfoActivity.class));
                 break;
             case R.id.settings_about:
-                startActivity(new Intent(this , AboutActivity.class));
-
+                startActivity(new Intent(this, AboutActivity.class));
 
 
                 break;

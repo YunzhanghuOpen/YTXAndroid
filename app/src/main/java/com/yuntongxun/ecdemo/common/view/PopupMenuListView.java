@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.view;
+ */
+package com.yuntongxun.ecdemo.common.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -51,25 +52,26 @@ public class PopupMenuListView extends SuperListView {
 
     /**
      * 计算宽度
+     *
      * @return
      */
     private int measureWidth() {
         int maxWidth = 0;
         View convertView = null;
-        for(int i = 0 ; i < getAdapter().getCount() ; i ++) {
+        for (int i = 0; i < getAdapter().getCount(); i++) {
             convertView = getAdapter().getView(i, convertView, this);
-            if(convertView == null) {
+            if (convertView == null) {
                 continue;
             }
             convertView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            if(convertView.getMeasuredWidth() <= maxWidth) {
+            if (convertView.getMeasuredWidth() <= maxWidth) {
                 continue;
             }
             maxWidth = convertView.getMeasuredWidth();
         }
 
         int max = DensityUtil.dip2px(112.0F);
-        if(maxWidth < max) {
+        if (maxWidth < max) {
             maxWidth = max;
         }
         return maxWidth;

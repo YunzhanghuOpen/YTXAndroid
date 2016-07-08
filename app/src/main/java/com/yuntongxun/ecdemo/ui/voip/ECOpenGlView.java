@@ -21,7 +21,7 @@ import com.yuntongxun.ecdemo.common.utils.LogUtil;
  * Created by Jorstin on 2015/7/8.
  */
 public class ECOpenGlView extends SurfaceView
-        implements SurfaceHolder.Callback{
+        implements SurfaceHolder.Callback {
 
     private static final String TAG = "ECSDK_Demo.ECOpenGlView";
     private Context mContext;
@@ -82,30 +82,31 @@ public class ECOpenGlView extends SurfaceView
 
     /**
      * 设置显示的款和高
-     * @param width 宽
+     *
+     * @param width  宽
      * @param height 高
      */
-    public void setDisplaySize(int width , int height) {
+    public void setDisplaySize(int width, int height) {
         mWidth = width;
         mHeight = height;
         setLayoutParams(new RelativeLayout.LayoutParams(mWidth, mHeight));
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
+        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
     }
 
     public void drawBitmap(Bitmap bitmap) {
-        if(bitmap == null || bitmap.isRecycled()) {
-            LogUtil.e(TAG , "DrawBmp, bitmap null or isRecycled!");
-            return ;
+        if (bitmap == null || bitmap.isRecycled()) {
+            LogUtil.e(TAG, "DrawBmp, bitmap null or isRecycled!");
+            return;
         }
-        if(mPreviousTime == 0L) {
+        if (mPreviousTime == 0L) {
             mPreviousTime = System.currentTimeMillis();
         }
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         Canvas canvas = mSurfaceHolder.lockCanvas();
-        if(canvas == null) {
-            return ;
+        if (canvas == null) {
+            return;
         }
 
         Matrix matrix = new Matrix();
@@ -113,13 +114,13 @@ public class ECOpenGlView extends SurfaceView
         float beH = canvas.getHeight() / width;
         matrix.postRotate(90.0F, 0.0F, height);
         matrix.postTranslate(0.0F, -height);
-        matrix.postScale(beW , beH);
+        matrix.postScale(beW, beH);
         canvas.drawBitmap(bitmap, matrix, mPaint);
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        LogUtil.d(TAG , "surfaceCreated");
+        LogUtil.d(TAG, "surfaceCreated");
         isSurfaceReady = true;
         Canvas localCanvas = mSurfaceHolder.lockCanvas(null);
         localCanvas.drawColor(mContext.getResources().getColor(R.color.ec_voip_talk_bg_color));
@@ -128,7 +129,7 @@ public class ECOpenGlView extends SurfaceView
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        LogUtil.d(TAG , "surfaceChanged");
+        LogUtil.d(TAG, "surfaceChanged");
         isSurfaceReady = true;
         try {
             mSurfaceHolder.removeCallback(this);
@@ -141,7 +142,7 @@ public class ECOpenGlView extends SurfaceView
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        LogUtil.d(TAG , "surfaceDestroyed");
+        LogUtil.d(TAG, "surfaceDestroyed");
         isSurfaceReady = false;
     }
 }

@@ -30,64 +30,64 @@ import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 
 /**
  * @author Jorstin Chan
- * @date 2014-4-17
  * @version 1.0
+ * @date 2014-4-17
  */
-public class DescriptionTxRow extends BaseChattingRow{
+public class DescriptionTxRow extends BaseChattingRow {
 
-	public DescriptionTxRow(int type){
-		super(type);
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.hisun.cas.model.im.ChattingRow#buildChatView(android.view.LayoutInflater, android.view.View)
-	 */
-	@Override
-	public View buildChatView(LayoutInflater inflater, View convertView) {
+    public DescriptionTxRow(int type) {
+        super(type);
+    }
+
+    /* (non-Javadoc)
+     * @see com.hisun.cas.model.im.ChattingRow#buildChatView(android.view.LayoutInflater, android.view.View)
+     */
+    @Override
+    public View buildChatView(LayoutInflater inflater, View convertView) {
         //we have a don't have a converView so we'll have to create a new one
-        if (convertView == null || ((BaseHolder)convertView.getTag()).getType() != mRowType) {
-        	
-        	convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_to);
+        if (convertView == null || ((BaseHolder) convertView.getTag()).getType() != mRowType) {
+
+            convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_to);
 
             //use the view holder pattern to save of already looked up subviews
-        	DescriptionViewHolder holder = new DescriptionViewHolder(mRowType);
-        	convertView.setTag(holder.initBaseHolder(convertView, false));
+            DescriptionViewHolder holder = new DescriptionViewHolder(mRowType);
+            convertView.setTag(holder.initBaseHolder(convertView, false));
         }
-		return convertView;
-	}
+        return convertView;
+    }
 
-	@Override
-	public void buildChattingData(Context context, BaseHolder baseHolder,
-			ECMessage msg, int position) {
-		DescriptionViewHolder holder = (DescriptionViewHolder) baseHolder;
-		if(msg != null) {
-			ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
-			ViewHolderTag holderTag = ViewHolderTag.createTag(msg,
-					ViewHolderTag.TagType.TAG_IM_TEXT, position);
-			holder.getDescTextView().setText(textBody.getMessage());
-			holder.getDescTextView().setMovementMethod(LinkMovementMethod.getInstance());
-			OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
-			getMsgStateResId(position, holder, msg, onClickListener);
+    @Override
+    public void buildChattingData(Context context, BaseHolder baseHolder,
+                                  ECMessage msg, int position) {
+        DescriptionViewHolder holder = (DescriptionViewHolder) baseHolder;
+        if (msg != null) {
+            ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
+            ViewHolderTag holderTag = ViewHolderTag.createTag(msg,
+                    ViewHolderTag.TagType.TAG_IM_TEXT, position);
+            holder.getDescTextView().setText(textBody.getMessage());
+            holder.getDescTextView().setMovementMethod(LinkMovementMethod.getInstance());
+            OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
+            getMsgStateResId(position, holder, msg, onClickListener);
 
-			holder.getDescTextView().setTag(holderTag);
-			holder.getDescTextView().setOnClickListener(onClickListener);
+            holder.getDescTextView().setTag(holderTag);
+            holder.getDescTextView().setOnClickListener(onClickListener);
 //			setAutoLinkForTextView(holder.getDescTextView());
 
-		}
-	}
+        }
+    }
 
 
-	@Override
-	public int getChatViewType() {
-		return ChattingRowType.DESCRIPTION_ROW_TRANSMIT.ordinal();
-	}
-	
-	@Override
-	public boolean onCreateRowContextMenu(ContextMenu contextMenu,
-			View targetView, ECMessage detail) {
-		
-		return false;
-	}
-	
+    @Override
+    public int getChatViewType() {
+        return ChattingRowType.DESCRIPTION_ROW_TRANSMIT.ordinal();
+    }
+
+    @Override
+    public boolean onCreateRowContextMenu(ContextMenu contextMenu,
+                                          View targetView, ECMessage detail) {
+
+        return false;
+    }
+
 
 }

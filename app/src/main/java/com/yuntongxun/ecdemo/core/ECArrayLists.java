@@ -28,7 +28,7 @@ public class ECArrayLists<E> extends ArrayList<E> {
     @Override
     public boolean add(E object) {
         super.add(object);
-        if(object instanceof ECContacts) {
+        if (object instanceof ECContacts) {
             try {
                 ECContacts simpleContact = (ECContacts) object;
                 List<Phone> phoneList = simpleContact.getPhoneList();

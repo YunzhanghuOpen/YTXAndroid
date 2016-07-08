@@ -12,11 +12,12 @@ import android.text.style.ImageSpan;
 public class VerticalImageSpan extends ImageSpan {
 
     private int mPadding = 0;
+
     /**
      * @param drawable
      */
     public VerticalImageSpan(Drawable drawable) {
-        super(drawable , 1);
+        super(drawable, 1);
     }
 
     @Override
@@ -28,11 +29,11 @@ public class VerticalImageSpan extends ImageSpan {
 
         int length = 0;
         int dy = bottom - drawable.getBounds().bottom + mPadding;
-        if(mVerticalAlignment == ALIGN_BASELINE) {
+        if (mVerticalAlignment == ALIGN_BASELINE) {
             length = text.length();
         }
 
-        for(int i = 0 ; i < length ; i++) {
+        for (int i = 0; i < length; i++) {
             if (!(Character.isLetterOrDigit(text.charAt(i)))) {
                 continue;
             }
@@ -40,12 +41,11 @@ public class VerticalImageSpan extends ImageSpan {
             canvas.translate(x, dy);
             drawable.draw(canvas);
             canvas.restore();
-            return ;
+            return;
         }
     }
 
     /**
-     *
      * @param padding
      */
     public final void setPadding(int padding) {

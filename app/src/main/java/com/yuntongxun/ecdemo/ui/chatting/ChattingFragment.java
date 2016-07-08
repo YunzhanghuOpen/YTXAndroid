@@ -71,7 +71,6 @@ import com.yuntongxun.ecdemo.photopicker.PhotoPickerActivity;
 import com.yuntongxun.ecdemo.pojo.ImUserState;
 import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.ConversationSqlManager;
-import com.yuntongxun.ecdemo.storage.GroupMemberSqlManager;
 import com.yuntongxun.ecdemo.storage.GroupSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
@@ -181,7 +180,7 @@ public class ChattingFragment extends CCPFragment implements
     /**
      * 聊天界面消息适配器
      */
-    private ChattingListAdapter2 mChattingAdapter;
+    private ChattingListAdapter mChattingAdapter;
     /** 界面消息下拉刷新 */
     // private RefreshableView mPullDownView;
     // private long mPageCount;
@@ -508,7 +507,7 @@ public class ChattingFragment extends CCPFragment implements
 
             }
         });
-        mChattingAdapter = new ChattingListAdapter2(getActivity(), ECMessage.createECMessage(ECMessage.Type.NONE), mRecipients, mThread);
+        mChattingAdapter = new ChattingListAdapter(getActivity(), ECMessage.createECMessage(ECMessage.Type.NONE), mRecipients, mThread);
         mListView.setAdapter(mChattingAdapter);
     }
 
@@ -620,7 +619,7 @@ public class ChattingFragment extends CCPFragment implements
      *
      * @return the mChattingAdapter
      */
-    public ChattingListAdapter2 getChattingAdapter() {
+    public ChattingListAdapter getChattingAdapter() {
         return mChattingAdapter;
     }
 
@@ -765,15 +764,15 @@ public class ChattingFragment extends CCPFragment implements
 
                                         for (int i = 0; i < members.size(); i++) {
                                             RPUserBean userBean = new RPUserBean();
-                                            ECGroupMember member=(ECGroupMember) members.get(i);
-                                            userBean.userId =member.getVoipAccount();
+                                            ECGroupMember member = (ECGroupMember) members.get(i);
+                                            userBean.userId = member.getVoipAccount();
                                             if (userBean.userId.equals(CCPAppManager.getUserId())) {
                                                 continue;
                                             }
 
                                             if (member != null) {
-                                                userBean.userAvatar =  "none"  ;
-                                                userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() :member.getDisplayName();
+                                                userBean.userAvatar = "none";
+                                                userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() : member.getDisplayName();
                                             } else {
                                                 userBean.userNickname = userBean.userId;
                                                 userBean.userAvatar = "none";
@@ -783,7 +782,6 @@ public class ChattingFragment extends CCPFragment implements
                                         mCallBack.setGroupMember(userBeanList);
                                     }
                                 });
-
 
 
                                 return;
@@ -854,7 +852,7 @@ public class ChattingFragment extends CCPFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.d(TAG, "onActivityResult: requestCode=" + requestCode
                 + ", resultCode=" + resultCode + ", data=" + data);
-         // If there's no data (because the user didn't select a picture and
+        // If there's no data (because the user didn't select a picture and
         // just hit BACK, for example), there's nothing to do.
 
         if (requestCode == 0x2a || requestCode == SELECT_AT_SOMONE) {
@@ -946,8 +944,8 @@ public class ChattingFragment extends CCPFragment implements
         }
 
         if (requestCode == REQUEST_CODE_REDPACKET) {
-             if (data != null) {
-                 handlesendRedPacketMessage(data);
+            if (data != null) {
+                handlesendRedPacketMessage(data);
             }
         }
 
@@ -1469,7 +1467,7 @@ public class ChattingFragment extends CCPFragment implements
     }
 
     public boolean checkUserThread() {
-        ChattingListAdapter2 forceAdapter = mChattingAdapter;
+        ChattingListAdapter forceAdapter = mChattingAdapter;
         if (forceAdapter == null) {
             return false;
         }
@@ -1774,7 +1772,6 @@ public class ChattingFragment extends CCPFragment implements
         }
 
 
-
         @Override
         public void OnSelectRedPacketRequest() {//红包
             //传递到sdk里的数据
@@ -1794,16 +1791,15 @@ public class ChattingFragment extends CCPFragment implements
                 //如果是群聊传递群id和群人数
                 ECGroup ecGroup = GroupSqlManager.getECGroup(mRecipients);
                 jsonObject.put(RedPacketConstant.KEY_GROUP_ID, ecGroup.getGroupId());
-                jsonObject.put(RedPacketConstant.KEY_GROUO_MEMBERS_COUNT, ecGroup.getCount());
+                jsonObject.put(RedPacketConstant.KEY_GROUP_MEMBERS_COUNT, ecGroup.getCount());
                 jsonObject.put(RedPacketConstant.KEY_CHAT_TYPE, 2);
             }
-
             RedPacketUtil.startRedPacketActivityForResult(ChattingFragment.this, jsonObject, REQUEST_CODE_REDPACKET);
-
             hideBottomPanel();
         }
 
     }
+
     ClientUser clientUser = CCPAppManager.getClientUser();
     public static boolean isFireMsg = false;
 
@@ -2662,20 +2658,21 @@ public class ChattingFragment extends CCPFragment implements
 
         ToastUtil.showMessage("下载完成,再次点击即可播放");
     }
-    public void sendRedPacketAckMessage(String senderId,String senderNickName){
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE,true);//是否是红包领取消息
+
+    public void sendRedPacketAckMessage(String senderId, String senderNickName) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE, true);//是否是红包领取消息
         jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID,senderId);//发送者id
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME,clientUser.getUserName());//接收者昵称
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID,clientUser.getUserId());//接收者id
-        String  text=getResources().getString(R.string.ytx_luckymoney) ;
-        if(senderId.equals(clientUser.getUserId())){
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID, senderId);//发送者id
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME, clientUser.getUserName());//接收者昵称
+        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID, clientUser.getUserId());//接收者id
+        String text = getResources().getString(R.string.ytx_luckymoney);
+        if (senderId.equals(clientUser.getUserId())) {
 
-            text=this.getResources().getString(R.string.money_msg_take_money);
-        }else{
+            text = this.getResources().getString(R.string.money_msg_take_money);
+        } else {
 
-            text=String.format(getResources().getString(R.string.money_msg_take_someone_money), senderNickName);
+            text = String.format(getResources().getString(R.string.money_msg_take_someone_money), senderNickName);
 
 
         }
@@ -2704,7 +2701,6 @@ public class ChattingFragment extends CCPFragment implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
     }

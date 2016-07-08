@@ -16,7 +16,6 @@ package com.yuntongxun.ecdemo.ui.chatting;
 import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ChattingRowType;
 import com.yuntongxun.ecsdk.ECMessage;
-import com.yuntongxun.ecsdk.ECMeetingManager.ECMeetingType;
 
 /**
  * @author Jorstin Chan@容联•云通讯
@@ -35,7 +34,7 @@ public class ChattingsRowUtils {
             if (CheckRedPacketMessageUtil.isRedPacketMessage(ecMessage) != null) {
 
                 return 7000;
-            } else if (CheckRedPacketMessageUtil.isRedPacketAckedMessage(ecMessage) != null) {
+            } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(ecMessage) != null) {
 
                 return 8000;
             }
@@ -76,7 +75,7 @@ public class ChattingsRowUtils {
                 if (CheckRedPacketMessageUtil.isRedPacketMessage(iMessage) != null) {
 
                     return ChattingRowType.REDPACKET_ROW_RECEIVED.getId();
-                } else if (CheckRedPacketMessageUtil.isRedPacketAckedMessage(iMessage) != null) {
+                } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(iMessage) != null) {
 
                     return ChattingRowType.REDPACKE_ROW_ACK_RECEIVED.getId();
                 }
@@ -88,7 +87,7 @@ public class ChattingsRowUtils {
                 if (CheckRedPacketMessageUtil.isRedPacketMessage(iMessage) != null) {
 
                     return ChattingRowType.REDPACKE_ROW_TO.getId();
-                } else if (CheckRedPacketMessageUtil.isRedPacketAckedMessage(iMessage) != null) {
+                } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(iMessage) != null) {
 
                     return ChattingRowType.REDPACKE_ROW_ACK_TO.getId();
                 }

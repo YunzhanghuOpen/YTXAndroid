@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.common.base;
+ */
+package com.yuntongxun.ecdemo.common.base;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -118,7 +119,7 @@ public class CCPTabView extends ViewGroup {
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         description.setTextColor(getResources().getColor(R.color.ccp_green));
-        description.setTextSize(TypedValue.COMPLEX_UNIT_PX , getResources().getDimensionPixelSize(R.dimen.HintTextSize) + dip2px);
+        description.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.HintTextSize) + dip2px);
         description.setText(R.string.tab_view_name);
         description.setTypeface(null, Typeface.NORMAL);
         addView(mTabDescription = description);
@@ -146,16 +147,16 @@ public class CCPTabView extends ViewGroup {
 
         int widthD_value = r - l;
         int heightD_value = b - t;
-        int left = (widthD_value - mTabDescription.getMeasuredWidth()) / 2 ;
+        int left = (widthD_value - mTabDescription.getMeasuredWidth()) / 2;
         int right = left + mTabDescription.getMeasuredWidth();
 
-        int top = (heightD_value - mTabDescription.getMeasuredHeight() ) / 2 ;
+        int top = (heightD_value - mTabDescription.getMeasuredHeight()) / 2;
         int bottom = top + mTabDescription.getMeasuredHeight();
-        mTabDescription.layout(left, top, right , bottom);
+        mTabDescription.layout(left, top, right, bottom);
 
         int imageLeft = left + padding;
         int imageRight = imageLeft + mTabImage.getMeasuredWidth();
-        int imageTop = (heightD_value - mTabImage.getMeasuredHeight() ) / 2 ;
+        int imageTop = (heightD_value - mTabImage.getMeasuredHeight()) / 2;
         int imageBottom = imageTop + mTabImage.getMeasuredHeight();
         mTabImage.layout(imageLeft, imageTop, imageRight, imageBottom);
 
@@ -164,17 +165,17 @@ public class CCPTabView extends ViewGroup {
         int unreadTipsTop;
         int unreadTipsBottom;
 
-        if((left - padding) < mTabUnreadTips.getMeasuredWidth()) {
+        if ((left - padding) < mTabUnreadTips.getMeasuredWidth()) {
             unreadTipsLeft = widthD_value - mTabUnreadTips.getMeasuredWidth();
             unreadTipsRight = unreadTipsLeft + mTabUnreadTips.getMeasuredWidth();
-            unreadTipsTop = (heightD_value - mTabUnreadTips.getMeasuredHeight() ) / 2 ;
+            unreadTipsTop = (heightD_value - mTabUnreadTips.getMeasuredHeight()) / 2;
             unreadTipsBottom = unreadTipsTop + mTabUnreadTips.getMeasuredHeight();
             mTabUnreadTips.layout(unreadTipsLeft, unreadTipsTop, unreadTipsRight, unreadTipsBottom);
             return;
         }
         unreadTipsLeft = right + padding;
         unreadTipsRight = unreadTipsLeft + mTabUnreadTips.getMeasuredWidth();
-        unreadTipsTop = (heightD_value - mTabUnreadTips.getMeasuredHeight()) / 2 ;
+        unreadTipsTop = (heightD_value - mTabUnreadTips.getMeasuredHeight()) / 2;
         unreadTipsBottom = unreadTipsTop + mTabUnreadTips.getMeasuredHeight();
         mTabUnreadTips.layout(unreadTipsLeft, unreadTipsTop, unreadTipsRight, unreadTipsBottom);
     }
@@ -185,7 +186,7 @@ public class CCPTabView extends ViewGroup {
         int width = View.MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
         int height = View.MeasureSpec.getSize(heightMeasureSpec) - getPaddingLeft() - getPaddingRight();
         int makeHeightMeasureSpec = 0;
-        if(View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.AT_MOST) {
+        if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.AT_MOST) {
             View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST);
         } else {
             makeHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -198,7 +199,6 @@ public class CCPTabView extends ViewGroup {
     }
 
 
-
     /**
      *
      */
@@ -208,16 +208,16 @@ public class CCPTabView extends ViewGroup {
     }
 
     /**
-     *
      * @param visibility
      */
     public final void setTabImageVisibility(boolean visibility) {
 
-        mTabImage.setVisibility(visibility? View.VISIBLE :View.INVISIBLE);
+        mTabImage.setVisibility(visibility ? View.VISIBLE : View.INVISIBLE);
     }
 
     /**
      * set tab name description.
+     *
      * @param resid
      */
     public final void setText(int resid) {
@@ -233,6 +233,7 @@ public class CCPTabView extends ViewGroup {
 
     /**
      * set tab name color description.
+     *
      * @param color
      */
     public final void setTextColor(int color) {
@@ -244,7 +245,7 @@ public class CCPTabView extends ViewGroup {
     }
 
     public final void setUnreadTips(final String count) {
-        if(TextUtils.isEmpty(count)) {
+        if (TextUtils.isEmpty(count)) {
             mTabUnreadTips.setVisibility(View.INVISIBLE);
             return;
         }

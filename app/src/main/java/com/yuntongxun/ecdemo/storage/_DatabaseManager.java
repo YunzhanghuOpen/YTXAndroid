@@ -33,7 +33,7 @@ public class _DatabaseManager {
     }
 
     public synchronized SQLiteDatabase openDatabase() {
-        if(mOpenCounter.incrementAndGet() == 1) {
+        if (mOpenCounter.incrementAndGet() == 1) {
             // Opening new database
             mDatabase = mDatabaseHelper.getWritableDatabase();
         }
@@ -41,7 +41,7 @@ public class _DatabaseManager {
     }
 
     public synchronized void closeDatabase() {
-        if(mOpenCounter.decrementAndGet() == 0) {
+        if (mOpenCounter.decrementAndGet() == 0) {
             // Closing database
             mDatabase.close();
 

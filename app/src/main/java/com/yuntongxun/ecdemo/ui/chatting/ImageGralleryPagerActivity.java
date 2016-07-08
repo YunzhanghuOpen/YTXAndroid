@@ -29,14 +29,14 @@ import java.util.List;
  * com.yuntongxun.ecdemo.ui.chatting in ECDemo_Android
  * Created by Jorstin on 2015/3/30.
  */
-public class ImageGralleryPagerActivity extends ECSuperActivity implements View.OnClickListener{
+public class ImageGralleryPagerActivity extends ECSuperActivity implements View.OnClickListener {
 
     private static final String TAG = "ImageGralleryPagerActivity";
 
     private static final String STATE_POSITION = "STATE_POSITION";
     public static final String EXTRA_IMAGE_INDEX = "image_index";
     public static final String EXTRA_IMAGE_URLS = "image_urls";
-    public static boolean isFireMsg=false;
+    public static boolean isFireMsg = false;
 
     /**
      *
@@ -46,32 +46,33 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
     private int pagerPosition;
     private TextView indicator;
     private List<ViewImageInfo> urls;
+
     @Override
     protected int getLayoutId() {
         return R.layout.image_grallery_container;
     }
-    
+
     @Override
     protected boolean isEnableSwipe() {
-    	// TODO Auto-generated method stub
-    	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ImageGalleryFragment.i=0;
+        ImageGalleryFragment.i = 0;
         getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt, -1, "1 / 1", this);
 
         pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
         urls = getIntent().getParcelableArrayListExtra(EXTRA_IMAGE_URLS);
 
-        if(urls == null || urls.isEmpty()) {
+        if (urls == null || urls.isEmpty()) {
             finish();
-            return ;
+            return;
         }
-        if(pagerPosition > urls.size()) {
+        if (pagerPosition > urls.size()) {
             pagerPosition = 0;
         }
 
@@ -83,16 +84,16 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
         findViewById(R.id.imagebrower_iv_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAdapter != null) {
+                if (mAdapter != null) {
                     ViewImageInfo viewImageInfo = urls.get(mPager.getCurrentItem());
-                    if(viewImageInfo == null || !viewImageInfo.isDownload()) {
+                    if (viewImageInfo == null || !viewImageInfo.isDownload()) {
                         ToastUtil.showMessage(R.string.save_img_waite_download);
-                        return ;
+                        return;
                     }
                     try {
-                        File file = new File(FileAccessor.getImagePathName() ,viewImageInfo.getPicurl());
-                        if(viewImageInfo != null && viewImageInfo.isGif()) {
-                            DemoUtils.saveImage(file.getAbsolutePath(),".gif");
+                        File file = new File(FileAccessor.getImagePathName(), viewImageInfo.getPicurl());
+                        if (viewImageInfo != null && viewImageInfo.isGif()) {
+                            DemoUtils.saveImage(file.getAbsolutePath(), ".gif");
                             return;
                         }
                         DemoUtils.saveImage(file.getAbsolutePath());
@@ -104,19 +105,18 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
             }
         });
         //待改 lu
-        if(mAdapter!=null){
-        	ViewImageInfo viewImageInfoItem = urls.get(mPager.getCurrentItem());
-        	if(viewImageInfoItem!=null&&IMessageSqlManager.isFireMsg(viewImageInfoItem.getMsgLocalId())){
-        		findViewById(R.id.imagebrower_iv_save).setVisibility(View.GONE);
-        	}else {
-        		findViewById(R.id.imagebrower_iv_save).setVisibility(View.GONE);
-        		
-        	}
-        	
+        if (mAdapter != null) {
+            ViewImageInfo viewImageInfoItem = urls.get(mPager.getCurrentItem());
+            if (viewImageInfoItem != null && IMessageSqlManager.isFireMsg(viewImageInfoItem.getMsgLocalId())) {
+                findViewById(R.id.imagebrower_iv_save).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.imagebrower_iv_save).setVisibility(View.GONE);
+
+            }
+
         }
-        
-        
-        
+
+
         // 更新下标
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -166,16 +166,16 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(urls != null) {
+        if (urls != null) {
             urls.clear();
             urls = null;
         }
-        if(mHandlerCallbck != null) {
+        if (mHandlerCallbck != null) {
             mHandlerCallbck.removeCallbacksAndMessages(null);
         }
         mPager = null;
-        isFireMsg=false;
-        ImageGalleryFragment.i=0;
+        isFireMsg = false;
+        ImageGalleryFragment.i = 0;
         System.gc();
 
     }
@@ -195,19 +195,18 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
     public void onBaseContentViewAttach(View contentView) {
         View activityLayoutView = getActivityLayoutView();
         ((ViewGroup) activityLayoutView.getParent()).removeView(activityLayoutView);
-        ((ViewGroup) getWindow().getDecorView()).addView(activityLayoutView , 1);
+        ((ViewGroup) getWindow().getDecorView()).addView(activityLayoutView, 1);
 
     }
 
 
     /**
-     *
      * @param request
      */
     private void requestStatusbars(boolean request) {
-        if(request) {
+        if (request) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            return ;
+            return;
         }
         LogUtil.d(LogUtil.getLogUtilsTag(getClass()), "request custom title");
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -215,13 +214,14 @@ public class ImageGralleryPagerActivity extends ECSuperActivity implements View.
 
     /**
      * Full screen, hidden actionBar
+     *
      * @param visible
      */
     void setTitleFooterVisible(boolean visible) {
-        if(visible) {
+        if (visible) {
             requestStatusbars(false);
             showTitleView();
-            return ;
+            return;
         }
 
         requestStatusbars(true);

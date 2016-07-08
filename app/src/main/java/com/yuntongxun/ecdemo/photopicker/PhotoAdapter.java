@@ -9,10 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.photopicker;
-
-import java.util.ArrayList;
-import java.util.List;
+ */
+package com.yuntongxun.ecdemo.photopicker;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -30,11 +28,15 @@ import com.yuntongxun.ecdemo.photopicker.model.Photo;
 import com.yuntongxun.ecdemo.photopicker.utils.PhotoUtils;
 import com.yuntongxun.ecdemo.photopicker.widgets.SquareImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 图片适配器
+ *
  * @author 容联•云通讯
- * @since 2016-4-6
  * @version 5.0
+ * @since 2016-4-6
  */
 public class PhotoAdapter extends BaseAdapter {
 
@@ -60,7 +62,7 @@ public class PhotoAdapter extends BaseAdapter {
         this.mData = mData;
         this.mContext = context;
         int screenWidth = PhotoUtils.getWidthInPx(mContext);
-        mWidth = (screenWidth - PhotoUtils.dip2px(mContext, 4))/3;
+        mWidth = (screenWidth - PhotoUtils.dip2px(mContext, 4)) / 3;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class PhotoAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 && mIsShowCamera) {
+        if (position == 0 && mIsShowCamera) {
             return TYPE_CAMERA;
         } else {
             return TYPE_PHOTO;
@@ -84,12 +86,12 @@ public class PhotoAdapter extends BaseAdapter {
 
     @Override
     public Photo getItem(int position) {
-        if(mIsShowCamera) {
-            if(position == 0){
+        if (mIsShowCamera) {
+            if (position == 0) {
                 return null;
             }
-            return mData.get(position-1);
-        }else{
+            return mData.get(position - 1);
+        } else {
             return mData.get(position);
         }
     }
@@ -122,6 +124,7 @@ public class PhotoAdapter extends BaseAdapter {
 
     /**
      * 获取已选中相片
+     *
      * @return 已选中相片
      */
     public List<String> getSelectedPhotos() {
@@ -130,7 +133,7 @@ public class PhotoAdapter extends BaseAdapter {
 
     public void setSelectMode(int selectMode) {
         this.mSelectMode = selectMode;
-        if(mSelectMode == PhotoPickerActivity.MODE_MULTI) {
+        if (mSelectMode == PhotoPickerActivity.MODE_MULTI) {
             initMultiMode();
         }
     }
@@ -144,12 +147,12 @@ public class PhotoAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 String path = ((SquareImageView) v.findViewById(R.id.imageview_photo)).key;
-                if(mSelectedPhotos.contains(path)) {
+                if (mSelectedPhotos.contains(path)) {
                     v.findViewById(R.id.mask).setVisibility(View.GONE);
                     v.findViewById(R.id.checkmark).setSelected(false);
                     mSelectedPhotos.remove(path);
                 } else {
-                    if(mSelectedPhotos.size() >= mMaxNum) {
+                    if (mSelectedPhotos.size() >= mMaxNum) {
                         Toast.makeText(mContext, R.string.picker_msg_maxi_capacity,
                                 Toast.LENGTH_SHORT).show();
                         return;
@@ -158,7 +161,7 @@ public class PhotoAdapter extends BaseAdapter {
                     v.findViewById(R.id.mask).setVisibility(View.VISIBLE);
                     v.findViewById(R.id.checkmark).setSelected(true);
                 }
-                if(mCallBack != null) {
+                if (mCallBack != null) {
                     mCallBack.onPhotoClick();
                 }
             }
@@ -167,7 +170,7 @@ public class PhotoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(getItemViewType(position) == TYPE_CAMERA) {
+        if (getItemViewType(position) == TYPE_CAMERA) {
             convertView = LayoutInflater.from(mContext).inflate(
                     R.layout.picker_item_camera_layout, null);
             convertView.setTag(null);
@@ -191,11 +194,11 @@ public class PhotoAdapter extends BaseAdapter {
 
             holder.photoImageView.setImageResource(R.drawable.picker_ic_photo_loading);
             Photo photo = getItem(position);
-            if(mSelectMode == PhotoPickerActivity.MODE_MULTI) {
+            if (mSelectMode == PhotoPickerActivity.MODE_MULTI) {
                 holder.wrapLayout.setOnClickListener(mOnPhotoClick);
-                ((SquareImageView)holder.photoImageView).key = (photo.getPath());
+                ((SquareImageView) holder.photoImageView).key = (photo.getPath());
                 holder.selectView.setVisibility(View.VISIBLE);
-                if(mSelectedPhotos != null && mSelectedPhotos.contains(photo.getPath())) {
+                if (mSelectedPhotos != null && mSelectedPhotos.contains(photo.getPath())) {
                     holder.selectView.setSelected(true);
                     holder.maskView.setVisibility(View.VISIBLE);
                 } else {
@@ -205,8 +208,8 @@ public class PhotoAdapter extends BaseAdapter {
             } else {
                 holder.selectView.setVisibility(View.GONE);
             }
-			Glide.with(mContext).load(photo.getPath()).dontAnimate()
-					.thumbnail(0.1f).into(holder.photoImageView);
+            Glide.with(mContext).load(photo.getPath()).dontAnimate()
+                    .thumbnail(0.1f).into(holder.photoImageView);
         }
         return convertView;
     }

@@ -23,6 +23,7 @@ public class ECContentObservers {
     }
 
     private Context mContext;
+
     private ECContentObservers() {
 
         mContext = ECApplication.getInstance().getApplicationContext();
@@ -55,6 +56,8 @@ public class ECContentObservers {
                     ContactsCache.getInstance().reload();
                     break;
             }
-        };
+        }
+
+        ;
     };
 }

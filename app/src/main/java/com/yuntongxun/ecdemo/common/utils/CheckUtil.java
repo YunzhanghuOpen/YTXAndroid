@@ -2,7 +2,6 @@ package com.yuntongxun.ecdemo.common.utils;
 
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,11 +10,11 @@ import java.util.regex.Pattern;
  * Created by Jorstin on 2015/3/30.
  */
 public class CheckUtil {
-    public static final String[] PHONE_PREFIX = new String[] { "130", "131",
+    public static final String[] PHONE_PREFIX = new String[]{"130", "131",
             "132", "133", "134", "135", "136", "137", "138", "139", "150",
             "151", "152", "153", "154", "155", "156", "157", "158", "159",
             "180", "181", "182", "183", "184", "185", "186", "187", "188",
-            "189" };
+            "189"};
 
     public static boolean checkLocation(String mdn) {
         return checkMDN(mdn, false);
@@ -65,16 +64,16 @@ public class CheckUtil {
     }
 
     public static final char[] INVALID_CH_CN = {
-            'A','B','C','D','E','F','G','H','I','J','K','L',
-            'M','N','O','P','Q','R','S','T','U','V','W','X',
-            'Y','Z',
-            'a','b','c','d','e','f','g','h','i','j','k','l',
-            'm','n','o','p','q','r','s','t','u','v','w','x',
-            'y','z',
-            '0','1','2','3','4','5','6','7','8','9',
-            '.',',',';',':','!','@','/','(',')','[',']','{',
-            '}','|','#','$','%','^','&','<','>','?','\'','+',
-            '-','*','\\','\"'};
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+            'Y', 'Z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            '.', ',', ';', ':', '!', '@', '/', '(', ')', '[', ']', '{',
+            '}', '|', '#', '$', '%', '^', '&', '<', '>', '?', '\'', '+',
+            '-', '*', '\\', '\"'};
 
     public static boolean checkCN(String str) {
         if (str == null || str.length() == 0) {
@@ -129,7 +128,7 @@ public class CheckUtil {
                 return false;
             }
         }
-        if (newint.length > oldint.length){
+        if (newint.length > oldint.length) {
             return true;
         }
         return false;
@@ -137,6 +136,7 @@ public class CheckUtil {
 
     /**
      * 检测邮箱合法性
+     *
      * @param email
      * @return
      */
@@ -167,6 +167,7 @@ public class CheckUtil {
             + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\:\\d{1,5}$";
 
     private static final Pattern IP_PORT = Pattern.compile(regex);
+
     public static boolean isIPv4Address(final String input) {
         return IPV4_PATTERN.matcher(input).matches();
     }
@@ -188,23 +189,21 @@ public class CheckUtil {
     }
 
 
-
     /**
-     *
      * @param mobile
      * @return
      */
     public static String formatMobileNumber(String mobile) {
-        if(TextUtils.isEmpty(mobile)) {
+        if (TextUtils.isEmpty(mobile)) {
             return "";
         }
         return mobile.replaceAll("[\\.\\-\\ ]", "").trim();
     }
 
-    public static boolean isVailUrl(String url){
-         if(TextUtils.isEmpty(url)){
-             return  false;
-         }
-        return  url.startsWith("http://")||url.startsWith("https://")||url.startsWith("wwww.");
+    public static boolean isVailUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+        return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("wwww.");
     }
 }

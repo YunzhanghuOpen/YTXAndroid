@@ -49,22 +49,23 @@ public class ECServerConfigListUI extends ECSuperActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt,
-                -1, null,null,
+                -1, null, null,
                 "配置列表", null, this);
         initView();
 
     }
+
     private ListView lv;
     private List<ServerConfigBean> list;
     private ServerConfigAdapter adapter;
 
     private void initView() {
-        lv= (ListView) findViewById(R.id.lv_serverconfig);
-         list= ServerConfigSqlManager.queryServerConfigs();
-        adapter=new ServerConfigAdapter(this,0,list);
+        lv = (ListView) findViewById(R.id.lv_serverconfig);
+        list = ServerConfigSqlManager.queryServerConfigs();
+        adapter = new ServerConfigAdapter(this, 0, list);
         lv.setAdapter(adapter);
         lv.setOnItemLongClickListener(listener);
-        operateArr=new ArrayList<String>();
+        operateArr = new ArrayList<String>();
         operateArr.add("删除该配置");
         operateArr.add("使用该配置");
         operateArr.add("修改该配置");
@@ -81,26 +82,27 @@ public class ECServerConfigListUI extends ECSuperActivity implements View.OnClic
 
     }
 
-    private AdapterView.OnItemLongClickListener listener =new AdapterView.OnItemLongClickListener() {
+    private AdapterView.OnItemLongClickListener listener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                ServerConfigBean bean=list.get(i);
-                showDialog(bean);
+            ServerConfigBean bean = list.get(i);
+            showDialog(bean);
 
 
             return false;
         }
     };
-    private  List<String> operateArr;
+    private List<String> operateArr;
+
     private boolean showDialog(final ServerConfigBean bean) {
         ECListDialog dialog = new ECListDialog(this, operateArr
-                );
+        );
         dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
             @Override
             public void onDialogItemClick(Dialog d, int position) {
 
-                doOperate(bean,position);
+                doOperate(bean, position);
             }
         });
         dialog.setTitle("选择操作类型");
@@ -108,26 +110,26 @@ public class ECServerConfigListUI extends ECSuperActivity implements View.OnClic
         return true;
     }
 
-    private void doOperate(ServerConfigBean bean,int position) {
+    private void doOperate(ServerConfigBean bean, int position) {
 
-        if(position==0){
-            if(bean!=null) {
+        if (position == 0) {
+            if (bean != null) {
                 ServerConfigSqlManager.deleteServerConfig(bean.getId());
                 adapter.remove(bean);
                 adapter.notifyDataSetChanged();
 
             }
 
-        }else if(position==1){
+        } else if (position == 1) {
 
             setItemServerConfig(bean);
-        }else if(position==2){
+        } else if (position == 2) {
 
             Intent intent = new Intent();
             //把返回数据存入Intent
             intent.putExtra("result", bean);
             //设置返回数据
-           setResult(2, intent);
+            setResult(2, intent);
             //关闭Activity
             finish();
 
@@ -137,7 +139,7 @@ public class ECServerConfigListUI extends ECSuperActivity implements View.OnClic
 
     private void setItemServerConfig(ServerConfigBean bean) {
 
-        if(bean==null){
+        if (bean == null) {
             return;
         }
         ECDevice.initServer(this, CommomUtil.setUpXml(bean.getConnectip(), bean.getConnectport(),
@@ -182,7 +184,7 @@ public class ECServerConfigListUI extends ECSuperActivity implements View.OnClic
                 holder.name = (TextView) view.findViewById(R.id.chatroom_name);
                 holder.tips = (TextView) view.findViewById(R.id.chatroom_tips);
                 holder.lock = (ImageView) view.findViewById(R.id.lock);
-                holder.tvGo=(TextView)view.findViewById(R.id.goto_icon);
+                holder.tvGo = (TextView) view.findViewById(R.id.goto_icon);
             } else {
                 view = convertView;
                 holder = (ServerConfigHolder) convertView.getTag();

@@ -31,18 +31,26 @@ import java.util.List;
  */
 public class ContactListFragment extends TabFragment {
 
-    /**当前联系人列表类型（查看、联系人选择）*/
+    /**
+     * 当前联系人列表类型（查看、联系人选择）
+     */
     public static final int TYPE_NORMAL = 1;
     public static final int TYPE_SELECT = 2;
     public static final int TYPE_NON_GROUP = 3;
-    /**当前选择联系人位置*/
+    /**
+     * 当前选择联系人位置
+     */
     public static ArrayList<Integer> positions = new ArrayList<Integer>();
-    /**列表类型*/
+    /**
+     * 列表类型
+     */
     private int mType;
     private ListView mListView;
     private ContactsAdapter mAdapter;
     private OnContactClickListener mClickListener;
-    /**选择群组*/
+    /**
+     * 选择群组
+     */
     private View mGroupCardItem;
     ECHandlerHelper mHandlerHelper = new ECHandlerHelper();
 
@@ -56,33 +64,33 @@ public class ContactListFragment extends TabFragment {
                                 int position, long id) {
 
             int headerViewsCount = mListView.getHeaderViewsCount();
-            if(position < headerViewsCount) {
+            if (position < headerViewsCount) {
                 return;
             }
             int _position = position - headerViewsCount;
 
-            if(mAdapter == null || mAdapter.getItem(_position) == null) {
-                return ;
+            if (mAdapter == null || mAdapter.getItem(_position) == null) {
+                return;
             }
 
-            if(mType != TYPE_NORMAL) {
+            if (mType != TYPE_NORMAL) {
                 // 如果是选择联系人模式
                 Integer object = Integer.valueOf(_position);
-                if(positions.contains(object)) {
+                if (positions.contains(object)) {
                     positions.remove(object);
                 } else {
                     positions.add(object);
                 }
                 notifyClick(positions.size());
                 mAdapter.notifyDataSetChanged();
-                return ;
+                return;
             }
 
 
             ECContacts contacts = mAdapter.getItem(_position);
-            if(contacts == null || contacts.getId() == -1) {
+            if (contacts == null || contacts.getId() == -1) {
                 ToastUtil.showMessage(R.string.contact_none);
-                return ;
+                return;
             }
             Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
             intent.putExtra(ContactDetailActivity.RAW_ID, contacts.getId());
@@ -121,14 +129,14 @@ public class ContactListFragment extends TabFragment {
      */
     public String getChatuser() {
         StringBuilder selectUser = new StringBuilder();
-        for(Integer position : positions) {
+        for (Integer position : positions) {
             ECContacts item = mAdapter.getItem(position);
-            if(item != null ) {
+            if (item != null) {
                 selectUser.append(item.getContactid()).append(",");
             }
         }
 
-        if(selectUser.length() > 0) {
+        if (selectUser.length() > 0) {
             selectUser.substring(0, selectUser.length() - 1);
         }
         return selectUser.toString();
@@ -141,7 +149,7 @@ public class ContactListFragment extends TabFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getArguments() != null ? getArguments().getInt("type") : TYPE_NORMAL;
-        if(positions == null ) {
+        if (positions == null) {
             positions = new ArrayList<Integer>();
         }
     }
@@ -161,7 +169,7 @@ public class ContactListFragment extends TabFragment {
     }
 
     private void notifyClick(int count) {
-        if(mClickListener != null) {
+        if (mClickListener != null) {
             mClickListener.onContactClick(count);
         }
     }
@@ -170,7 +178,7 @@ public class ContactListFragment extends TabFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(mListView != null && mGroupCardItem != null) {
+        if (mListView != null && mGroupCardItem != null) {
             mListView.removeHeaderView(mGroupCardItem);
             mListView.setAdapter(null);
         }
@@ -179,7 +187,7 @@ public class ContactListFragment extends TabFragment {
         mListView.setEmptyView(emptyView);
 
         mListView.setOnItemClickListener(onItemClickListener);
-        if(mType == TYPE_SELECT) {
+        if (mType == TYPE_SELECT) {
             mGroupCardItem = View.inflate(getActivity(), R.layout.group_card_item, null);
             View startGroup = mGroupCardItem.findViewById(R.id.card_item_tv);
             if (startGroup != null) {
@@ -225,10 +233,10 @@ public class ContactListFragment extends TabFragment {
     }
 
 
-
     class ContactsAdapter extends ArrayAdapter<ECContacts> {
 
         Context mContext;
+
         public ContactsAdapter(Context context) {
             super(context, 0);
             mContext = context;
@@ -251,7 +259,7 @@ public class ContactListFragment extends TabFragment {
 
             View view;
             ViewHolder mViewHolder;
-            if(convertView == null || convertView.getTag() == null) {
+            if (convertView == null || convertView.getTag() == null) {
                 view = View.inflate(mContext, R.layout.contact_list_item, null);
 
                 mViewHolder = new ViewHolder();
@@ -267,15 +275,15 @@ public class ContactListFragment extends TabFragment {
             }
 
             ECContacts contacts = getItem(position);
-            if(contacts != null) {
+            if (contacts != null) {
                 mViewHolder.mAvatar.setImageBitmap(ContactLogic.getPhoto(contacts.getRemark()));
                 mViewHolder.name_tv.setText(contacts.getNickname());
                 mViewHolder.account.setText(contacts.getContactid());
             }
 
-            if(mType != TYPE_NORMAL) {
+            if (mType != TYPE_NORMAL) {
                 mViewHolder.checkBox.setVisibility(View.VISIBLE);
-                if(mViewHolder.checkBox.isEnabled() && positions != null ) {
+                if (mViewHolder.checkBox.isEnabled() && positions != null) {
                     mViewHolder.checkBox.setChecked(positions.contains(position));
                 } else {
                     mViewHolder.checkBox.setChecked(false);
@@ -288,13 +296,21 @@ public class ContactListFragment extends TabFragment {
         }
 
         class ViewHolder {
-            /**头像*/
+            /**
+             * 头像
+             */
             ImageView mAvatar;
-            /**名称*/
+            /**
+             * 名称
+             */
             TextView name_tv;
-            /**账号*/
+            /**
+             * 账号
+             */
             TextView account;
-            /**选择状态*/
+            /**
+             * 选择状态
+             */
             CheckBox checkBox;
 
         }
@@ -303,7 +319,7 @@ public class ContactListFragment extends TabFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if(positions != null) {
+        if (positions != null) {
             positions.clear();
             positions = null;
         }
@@ -311,6 +327,7 @@ public class ContactListFragment extends TabFragment {
 
     public interface OnContactClickListener {
         void onContactClick(int count);
+
         void onSelectGroupClick();
     }
 

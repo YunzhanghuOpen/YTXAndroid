@@ -27,18 +27,18 @@ import java.util.List;
  * Created by Jorstin on 2015/7/17.
  */
 public abstract class MeetingBaseActivity extends ECSuperActivity
-        implements MeetingHelper.OnMeetingCallback , View.OnClickListener , MeetingMsgReceiver.OnVoiceMeetingMsgReceive{
+        implements MeetingHelper.OnMeetingCallback, View.OnClickListener, MeetingMsgReceiver.OnVoiceMeetingMsgReceive {
 
 
     private ECProgressDialog mPostingdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    	// TODO Auto-generated method stub
-    	super.onCreate(savedInstanceState);
-    	MeetingMsgReceiver.addVoiceMeetingListener(this);
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        MeetingMsgReceiver.addVoiceMeetingListener(this);
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -65,7 +65,7 @@ public abstract class MeetingBaseActivity extends ECSuperActivity
     }
 
     @Override
-    public void onError(int type ,ECError e) {
+    public void onError(int type, ECError e) {
         ToastUtil.showMessage("请求错误[" + e.errorCode + "]");
     }
 
@@ -106,36 +106,38 @@ public abstract class MeetingBaseActivity extends ECSuperActivity
 
     /**
      * 跳转到会议聊天界面
+     *
      * @param meeting
      * @param pass
      */
-    protected void doStartMeetingActivity(ECMeeting meeting ,String pass) {
-        doStartMeetingActivity(meeting , pass , true);
+    protected void doStartMeetingActivity(ECMeeting meeting, String pass) {
+        doStartMeetingActivity(meeting, pass, true);
     }
 
     /**
      * 跳转到会议聊天界面
+     *
      * @param meeting
      * @param pass
      */
-    protected void doStartMeetingActivity(ECMeeting meeting ,String pass , boolean callin) {
-        Intent intent = new Intent(MeetingBaseActivity.this , VoiceMeetingActivity.class);
-        intent.putExtra(VoiceMeetingActivity.EXTRA_MEETING , meeting);
-        if(!TextUtils.isEmpty(pass)) {
-            intent.putExtra(VoiceMeetingActivity.EXTRA_MEETING_PASS , pass);
+    protected void doStartMeetingActivity(ECMeeting meeting, String pass, boolean callin) {
+        Intent intent = new Intent(MeetingBaseActivity.this, VoiceMeetingActivity.class);
+        intent.putExtra(VoiceMeetingActivity.EXTRA_MEETING, meeting);
+        if (!TextUtils.isEmpty(pass)) {
+            intent.putExtra(VoiceMeetingActivity.EXTRA_MEETING_PASS, pass);
         }
-        intent.putExtra(VoiceMeetingActivity.EXTRA_CALL_IN , callin);
-        startActivity(intent) ;
+        intent.putExtra(VoiceMeetingActivity.EXTRA_CALL_IN, callin);
+        startActivity(intent);
     }
 
     protected void showInputCodeDialog(final ECMeeting meeting, String title, String message) {
-        View view = View.inflate(this , R.layout.dialog_edit_context , null);
+        View view = View.inflate(this, R.layout.dialog_edit_context, null);
         final EditText editText = (EditText) view.findViewById(R.id.sendrequest_content);
         ((TextView) view.findViewById(R.id.sendrequest_tip)).setText(message);
         ECAlertDialog dialog = ECAlertDialog.buildAlert(this, message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                handleInput(meeting , editText);
+                handleInput(meeting, editText);
             }
         });
         dialog.setContentView(view);
@@ -143,34 +145,35 @@ public abstract class MeetingBaseActivity extends ECSuperActivity
         dialog.show();
     }
 
-    protected void handleInput(ECMeeting meeting , EditText editText) {
+    protected void handleInput(ECMeeting meeting, EditText editText) {
 
     }
 
 
     protected void showProcessDialog() {
-    	if(mPostingdialog!=null && mPostingdialog.isShowing()){
-    		return;
-    	}
+        if (mPostingdialog != null && mPostingdialog.isShowing()) {
+            return;
+        }
         mPostingdialog = new ECProgressDialog(MeetingBaseActivity.this, R.string.login_posting_submit);
         mPostingdialog.show();
     }
+
     protected void showCustomProcessDialog(String content) {
-    	
-    	if(mPostingdialog!=null&&mPostingdialog.isShowing()){
-    		return;
-    	}
-    	
-    	mPostingdialog = new ECProgressDialog(MeetingBaseActivity.this, content);
-    	mPostingdialog.show();
+
+        if (mPostingdialog != null && mPostingdialog.isShowing()) {
+            return;
+        }
+
+        mPostingdialog = new ECProgressDialog(MeetingBaseActivity.this, content);
+        mPostingdialog.show();
     }
-    
+
     /**
      * 关闭对话框
      */
     protected void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;

@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.storage;
+ */
+package com.yuntongxun.ecdemo.storage;
 
 /**
  * Created by Jorstin on 2015/3/18.

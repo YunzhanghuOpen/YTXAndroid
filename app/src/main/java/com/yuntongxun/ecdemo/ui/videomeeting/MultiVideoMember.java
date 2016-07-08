@@ -16,93 +16,97 @@ import com.yuntongxun.ecsdk.meeting.ECVideoMeetingMember;
 
 /**
  * 视频会议成员对象
+ *
  * @author Jorstin Chan
- * @date 2014-8-28
  * @version 1.0
+ * @date 2014-8-28
  */
 public class MultiVideoMember extends ECVideoMeetingMember {
 
 
-	private boolean publish = true;
-	private boolean requestVideoFrame;
-	private int width;
-	private int height;
-	
-	/**
-	 * 
-	 */
-	public MultiVideoMember() {
+    private boolean publish = true;
+    private boolean requestVideoFrame;
+    private int width;
+    private int height;
 
-	}
-	
-	/**
-	 * 
-	 */
-	public MultiVideoMember(ECVideoMeetingMember member) {
-		setMeetingNo(member.getMeetingNo());
-		
-		setNumber(member.getNumber());
-		
-		setType(member.getType());
-		setPort(member.getPort());
-		setIp(member.getIp());
-		
-		setPublish(member.isPublish());
-		publish = true;
-		requestVideoFrame = false;
-	}
-	
-	/**
-	 * @return the publish
-	 */
-	public boolean isPublish() {
-		return publish;
-	}
-	/**
-	 * @param publish the publish to set
-	 */
-	public void setPublish(boolean publish) {
-		this.publish = publish;
-	}
-	/**
-	 * @return the requestVideoFrame
-	 */
-	public boolean isRequestVideoFrame() {
-		return requestVideoFrame;
-	}
-	/**
-	 * @param requestVideoFrame the requestVideoFrame to set
-	 */
-	public void setRequestVideoFrame(boolean requestVideoFrame) {
-		this.requestVideoFrame = requestVideoFrame;
-	}
+    /**
+     *
+     */
+    public MultiVideoMember() {
 
-	/**
-	 * @return the width
-	 */
-	public int getWidth() {
-		return width;
-	}
+    }
 
-	/**
-	 * @param width the width to set
-	 */
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    /**
+     *
+     */
+    public MultiVideoMember(ECVideoMeetingMember member) {
+        setMeetingNo(member.getMeetingNo());
 
-	/**
-	 * @return the height
-	 */
-	public int getHeight() {
-		return height;
-	}
+        setNumber(member.getNumber());
 
-	/**
-	 * @param height the height to set
-	 */
-	public void setHeight(int height) {
-		this.height = height;
-	}
+        setType(member.getType());
+        setPort(member.getPort());
+        setIp(member.getIp());
+
+        setPublish(member.isPublish());
+        publish = true;
+        requestVideoFrame = false;
+    }
+
+    /**
+     * @return the publish
+     */
+    public boolean isPublish() {
+        return publish;
+    }
+
+    /**
+     * @param publish the publish to set
+     */
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
+
+    /**
+     * @return the requestVideoFrame
+     */
+    public boolean isRequestVideoFrame() {
+        return requestVideoFrame;
+    }
+
+    /**
+     * @param requestVideoFrame the requestVideoFrame to set
+     */
+    public void setRequestVideoFrame(boolean requestVideoFrame) {
+        this.requestVideoFrame = requestVideoFrame;
+    }
+
+    /**
+     * @return the width
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * @param width the width to set
+     */
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    /**
+     * @return the height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @param height the height to set
+     */
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
 }

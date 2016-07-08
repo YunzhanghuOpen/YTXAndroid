@@ -1,6 +1,5 @@
 package com.yuntongxun.ecdemo.ui.settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.base.OverflowAdapter;
@@ -18,26 +21,10 @@ import com.yuntongxun.ecdemo.common.utils.BitmapUtil;
 import com.yuntongxun.ecdemo.common.utils.CheckUtil;
 import com.yuntongxun.ecdemo.common.utils.DemoUtils;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
-import com.yuntongxun.ecdemo.common.utils.ToastUtil;
 import com.yuntongxun.ecdemo.core.ECAsyncTask;
 import com.yuntongxun.ecdemo.pojo.RichTextBean;
 import com.yuntongxun.ecdemo.ui.ECSuperActivity;
-import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
-import com.yuntongxun.ecdemo.ui.contact.MobileContactSelectActivity;
 import com.yuntongxun.ecdemo.ui.contact.SelectContactUI;
-import com.yuntongxun.ecdemo.ui.group.BaseSearch;
-import com.yuntongxun.ecdemo.ui.group.CreateGroupActivity;
-import com.yuntongxun.ecdemo.ui.group.ECDiscussionActivity;
-import com.yuntongxun.ecdemo.ui.interphone.InterPhoneListActivity;
-import com.yuntongxun.ecdemo.ui.meeting.MeetingListActivity;
-import com.yuntongxun.ecdemo.ui.videomeeting.VideoconferenceConversation;
-
-import android.webkit.WebSettings.TextSize;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,11 +36,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.wechat.friends.Wechat;
-import cn.sharesdk.wechat.moments.WechatMoments;
-import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.Platform.ShareParams;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
@@ -63,17 +45,17 @@ import cn.sharesdk.wechat.moments.WechatMoments;
 public class WebAboutActivity extends ECSuperActivity implements View.OnClickListener, PlatformActionListener {
 
     private OverflowHelper mOverflowHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        url=getIntent().getStringExtra("url");
-        isFromAbout=getIntent().getBooleanExtra("isFormAbout",false);
+        url = getIntent().getStringExtra("url");
+        isFromAbout = getIntent().getBooleanExtra("isFormAbout", false);
         initResViews();
         ShareSDK.initSDK(this);
 
 
         saveDefaultImgToSDCard();
-
 
 
         getTopBarView().setTopBarToStatus(1, R.drawable.topbar_back_bt,
@@ -84,10 +66,10 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-    public void saveDefaultImgToSDCard(){
-        String imagePath = FileAccessor.IMESSAGE_RICH_TEXT + "/" + DemoUtils.md5(BitmapUtil.ATTACT_ICON)+".jpg";
+    public void saveDefaultImgToSDCard() {
+        String imagePath = FileAccessor.IMESSAGE_RICH_TEXT + "/" + DemoUtils.md5(BitmapUtil.ATTACT_ICON) + ".jpg";
         File file = new File(imagePath);
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.attachment_icon);
@@ -100,7 +82,7 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-    private  boolean isFromAbout;
+    private boolean isFromAbout;
 
     private OverflowAdapter.OverflowItem[] mItems;
 
@@ -115,7 +97,7 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
             return;
         }
 
-        if(mItems == null) {
+        if (mItems == null) {
             initOverflowItems();
         }
 
@@ -127,24 +109,23 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
 
     void initOverflowItems() {
 
-            if(isFromAbout){
-                mItems = new OverflowAdapter.OverflowItem[1];
-                mItems[0] = new OverflowAdapter.OverflowItem(
-                        "分享");
+        if (isFromAbout) {
+            mItems = new OverflowAdapter.OverflowItem[1];
+            mItems[0] = new OverflowAdapter.OverflowItem(
+                    "分享");
 
-            }else {
-                mItems = new OverflowAdapter.OverflowItem[2];
-                mItems[0] = new OverflowAdapter.OverflowItem(
-                        "转发");
-                mItems[1] = new OverflowAdapter.OverflowItem(
-                        "分享");
+        } else {
+            mItems = new OverflowAdapter.OverflowItem[2];
+            mItems[0] = new OverflowAdapter.OverflowItem(
+                    "转发");
+            mItems[1] = new OverflowAdapter.OverflowItem(
+                    "分享");
 
-            }
-
-
+        }
 
 
     }
+
     private final AdapterView.OnItemClickListener mOverflowItemCliclListener = new AdapterView.OnItemClickListener() {
 
         @Override
@@ -152,12 +133,12 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
                                 long id) {
             controlPlusSubMenu();
 
-            OverflowAdapter.OverflowItem overflowItem= mItems[position];
-            String title=overflowItem.getTitle();
-            url=mWebView.getUrl();
+            OverflowAdapter.OverflowItem overflowItem = mItems[position];
+            String title = overflowItem.getTitle();
+            url = mWebView.getUrl();
 
             if ("转发".equals(title)) {
-            startActivity(new Intent(WebAboutActivity.this, SelectContactUI.class).putExtra("url",mWebView.getUrl()));
+                startActivity(new Intent(WebAboutActivity.this, SelectContactUI.class).putExtra("url", mWebView.getUrl()));
 
             } else if ("分享".equals(title)) {
                 startShareAction();
@@ -168,8 +149,9 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     };
 
 
-    private  String url;
-    ShareDialog  shareDialog;
+    private String url;
+    ShareDialog shareDialog;
+
     @Override
     public void onClick(View v) {
 
@@ -191,7 +173,7 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
 
     }
 
-    private void  shareToWeChat(String title,String text,String imgurl,String url){
+    private void shareToWeChat(String title, String text, String imgurl, String url) {
 
         ShareParams sp = new ShareParams();
         sp.setShareType(Platform.SHARE_WEBPAGE);//非常重要：一定要设置分享属性
@@ -207,7 +189,8 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
         wechat.share(sp);
 
     }
-    private void  shareToWeChatFriend(String title,String text,String imgurl,String url){
+
+    private void shareToWeChatFriend(String title, String text, String imgurl, String url) {
 
         ShareParams sp = new ShareParams();
         sp.setShareType(Platform.SHARE_WEBPAGE);//非常重要：一定要设置分享属性
@@ -239,20 +222,20 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
-                if (arg2==0) {
-                    if(isFromAbout){
-                        shareToWeChat("容联云通讯","国内顶级云通讯平台,功能全,技术强,集成快","http://www.yuntongxun.com/front/images/im_img4.png","http://m.yuntongxun.com/qrcode/tiyan/tiyan.html?m_im");
-                    }else {
-                       new ParseHtmlTask(WebAboutActivity.this).execute();
-                        position=0;
+                if (arg2 == 0) {
+                    if (isFromAbout) {
+                        shareToWeChat("容联云通讯", "国内顶级云通讯平台,功能全,技术强,集成快", "http://www.yuntongxun.com/front/images/im_img4.png", "http://m.yuntongxun.com/qrcode/tiyan/tiyan.html?m_im");
+                    } else {
+                        new ParseHtmlTask(WebAboutActivity.this).execute();
+                        position = 0;
                     }
 
-                } else if (arg2==1) {
-                    if(isFromAbout){
+                } else if (arg2 == 1) {
+                    if (isFromAbout) {
                         shareToWeChatFriend("容联云通讯", "国内顶级云通讯平台,功能全,技术强,集成快", "http://www.yuntongxun.com/front/images/im_img4.png", "http://m.yuntongxun.com/qrcode/tiyan/tiyan.html?m_im");
-                    }else {
+                    } else {
                         new ParseHtmlTask(WebAboutActivity.this).execute();
-                        position=1;
+                        position = 1;
                     }
                 }
                 shareDialog.dismiss();
@@ -262,7 +245,8 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-    private  int position=0;
+    private int position = 0;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_web_about_url;
@@ -294,8 +278,6 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-
-
     @Override
     public void onCancel(Platform arg0, int arg1) {//回调的地方是子线程，进行UI操作要用handle处理
         handler.sendEmptyMessage(5);
@@ -304,7 +286,7 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
 
     @Override
     public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {//回调的地方是子线程，进行UI操作要用handle处理
-          if (arg0.getName().equals(Wechat.NAME)) {
+        if (arg0.getName().equals(Wechat.NAME)) {
             handler.sendEmptyMessage(1);
         } else if (arg0.getName().equals(WechatMoments.NAME)) {
             handler.sendEmptyMessage(3);
@@ -313,9 +295,9 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
-
     Document doc = null;
     RichTextBean richTextBean;
+
     private class ParseHtmlTask extends ECAsyncTask {
 
 
@@ -340,14 +322,15 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
             }
             return richTextBean;
         }
+
         @Override
         protected void onPostExecute(Object o) {
             dismissCommonPostingDialog();
-            if(o!=null&&o instanceof RichTextBean) {
+            if (o != null && o instanceof RichTextBean) {
                 RichTextBean bean = (RichTextBean) o;
                 if (position == 0) {
                     shareToWeChat(bean.getTitle(), bean.getDesc(), bean.getPicUrl(), bean.getUrl());
-                }else {
+                } else {
                     shareToWeChatFriend(bean.getTitle(), bean.getDesc(), bean.getPicUrl(), bean.getUrl());
 
                 }
@@ -363,7 +346,7 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
 
             Elements element = doc.select("[src]");
 
-            if(element!=null&&element.size()>0) {
+            if (element != null && element.size() > 0) {
                 for (Element src : element) {
                     if (src.tagName().equals("img")) {
 
@@ -380,14 +363,14 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
 
             Elements titleArr = doc.getElementsByTag("title");
 
-             if(titleArr!=null&&titleArr.size()>0){
-                 String title = doc.getElementsByTag("title").first().text();
-                 richTextBean.setTitle(title);
-             }else {
-                 richTextBean.setTitle("标题");
-             }
-            for(Element s :elementMeta){
-                if(s!=null) {
+            if (titleArr != null && titleArr.size() > 0) {
+                String title = doc.getElementsByTag("title").first().text();
+                richTextBean.setTitle(title);
+            } else {
+                richTextBean.setTitle("标题");
+            }
+            for (Element s : elementMeta) {
+                if (s != null) {
                     if (s.hasAttr("name") && s.attr("name").equals("Description")) {
                         richTextBean.setDesc(s.attr("content"));
                         break;
@@ -407,43 +390,43 @@ public class WebAboutActivity extends ECSuperActivity implements View.OnClickLis
     }
 
 
+    @Override
+    public void onError(Platform arg0, int arg1, Throwable arg2) {//回调的地方是子线程，进行UI操作要用handle处理
+        arg2.printStackTrace();
+        Message msg = new Message();
+        msg.what = 6;
+        msg.obj = arg2.getMessage();
+        handler.sendMessage(msg);
+    }
+
+    Handler handler = new Handler() {
+
         @Override
-        public void onError(Platform arg0, int arg1, Throwable arg2) {//回调的地方是子线程，进行UI操作要用handle处理
-            arg2.printStackTrace();
-            Message msg = new Message();
-            msg.what = 6;
-            msg.obj = arg2.getMessage();
-            handler.sendMessage(msg);
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+
+
+                case 2:
+                    Toast.makeText(getApplicationContext(), "微信分享成功", Toast.LENGTH_LONG).show();
+                    break;
+                case 3:
+                    Toast.makeText(getApplicationContext(), "微信朋友圈分享成功", Toast.LENGTH_LONG).show();
+                    break;
+                case 4:
+                    break;
+
+                case 5:
+                    Toast.makeText(getApplicationContext(), "取消分享", Toast.LENGTH_LONG).show();
+                    break;
+                case 6:
+                    Toast.makeText(getApplicationContext(), "分享失败" + msg.obj, Toast.LENGTH_LONG).show();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        Handler handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-
-
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "微信分享成功", Toast.LENGTH_LONG).show();
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "微信朋友圈分享成功", Toast.LENGTH_LONG).show();
-                        break;
-                    case 4:
-                        break;
-
-                    case 5:
-                        Toast.makeText(getApplicationContext(), "取消分享", Toast.LENGTH_LONG).show();
-                        break;
-                    case 6:
-                        Toast.makeText(getApplicationContext(), "分享失败" + msg.obj, Toast.LENGTH_LONG).show();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-        };
+    };
 
 }

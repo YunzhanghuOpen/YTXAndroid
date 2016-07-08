@@ -1,7 +1,5 @@
 package com.yuntongxun.ecdemo.common.view;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -23,6 +21,8 @@ import com.yuntongxun.ecdemo.common.SwipeActivityManager;
 import com.yuntongxun.ecdemo.common.ViewDragHelper;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecsdk.platformtools.ECHandlerHelper;
+
+import java.lang.ref.WeakReference;
 
 /**
  * com.yuntongxun.ecdemo.common.view in ECDemo_Android
@@ -84,10 +84,10 @@ public class SwipeBackLayout extends FrameLayout {
     }
 
     public boolean isScrolling() {
-        if(!mScrolling) {
+        if (!mScrolling) {
             return false;
         }
-        if(Float.compare(this.mContentView.getLeft(), 0.01F) <= 0) {
+        if (Float.compare(this.mContentView.getLeft(), 0.01F) <= 0) {
             mScrolling = false;
             return false;
         }
@@ -100,7 +100,7 @@ public class SwipeBackLayout extends FrameLayout {
             return false;
         }
         try {
-            LogUtil.d(TAG , "onInterceptTouchEvent");
+            LogUtil.d(TAG, "onInterceptTouchEvent");
             return mDragHelper.shouldInterceptTouchEvent(event);
         } catch (ArrayIndexOutOfBoundsException e) {
             // FIXME: handle exception
@@ -114,7 +114,7 @@ public class SwipeBackLayout extends FrameLayout {
         if (!mEnable) {
             return false;
         }
-        LogUtil.d(TAG , "onTouchEvent");
+        LogUtil.d(TAG, "onTouchEvent");
         mDragHelper.processTouchEvent(event);
         return true;
     }
@@ -152,10 +152,10 @@ public class SwipeBackLayout extends FrameLayout {
 
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
-        LogUtil.d(TAG , "drawChild " + drawingTime);
+        LogUtil.d(TAG, "drawChild " + drawingTime);
         final boolean drawContent = child == mContentView;
         boolean ret = super.drawChild(canvas, child, drawingTime);
-        if (Float.compare(mScrimOpacity , 0.0F) > 0 && drawContent
+        if (Float.compare(mScrimOpacity, 0.0F) > 0 && drawContent
                 && mDragHelper.getViewDragState() != ViewDragHelper.STATE_IDLE) {
             drawShadow(canvas, child);
         }
@@ -174,7 +174,7 @@ public class SwipeBackLayout extends FrameLayout {
 
     public void init() {
         mScrollThreshold = 0.3f;
-        mDragHelper = ViewDragHelper.create(this , new ViewDragCallback());
+        mDragHelper = ViewDragHelper.create(this, new ViewDragCallback());
         setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
         final float density = getResources().getDisplayMetrics().density;
         final float minVel = MIN_FLING_VELOCITY * density;
@@ -190,7 +190,7 @@ public class SwipeBackLayout extends FrameLayout {
     }
 
     public void markTranslucent(boolean translucent) {
-        LogUtil.i(TAG , "markTranslucent : " +translucent);
+        LogUtil.i(TAG, "markTranslucent : " + translucent);
         mTranslucent = translucent;
     }
 
@@ -224,7 +224,7 @@ public class SwipeBackLayout extends FrameLayout {
         mEnable = enable;
     }
 
-    public void setNeedRequestActivityTranslucent( boolean request) {
+    public void setNeedRequestActivityTranslucent(boolean request) {
         mRequestTranslucent = request;
     }
 
@@ -250,7 +250,7 @@ public class SwipeBackLayout extends FrameLayout {
     public void computeScroll() {
         super.computeScroll();
         mScrimOpacity = Math.max(0.0F, 1.0F - mScrollPercent);
-        LogUtil.d(TAG , "computeScroll :: mScrimOpacity " + mScrimOpacity);
+        LogUtil.d(TAG, "computeScroll :: mScrimOpacity " + mScrimOpacity);
         if (mDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
@@ -266,7 +266,7 @@ public class SwipeBackLayout extends FrameLayout {
         @Override
         public boolean tryCaptureView(View view, int i) {
             boolean edgeTouched = mDragHelper.isEdgeTouched(ViewDragHelper.EDGE_LEFT, i);
-            LogUtil.d(TAG , "tryCaptureView i :" + i + " ,edgeTouched:" + edgeTouched);
+            LogUtil.d(TAG, "tryCaptureView i :" + i + " ,edgeTouched:" + edgeTouched);
             return edgeTouched;
         }
 
@@ -279,9 +279,9 @@ public class SwipeBackLayout extends FrameLayout {
             int top = 0;
             mReleasedLeft = left;
             //mIsScrollOverValid = true;
-            LogUtil.i(TAG , "onViewReleased, xvel: " + xvel + " yvel: " + yvel + ", releaseLeft: " + left + ", releaseTop: " + top +", translucent: " + mTranslucent);
-            if(!mTranslucent) {
-                return ;
+            LogUtil.i(TAG, "onViewReleased, xvel: " + xvel + " yvel: " + yvel + ", releaseLeft: " + left + ", releaseTop: " + top + ", translucent: " + mTranslucent);
+            if (!mTranslucent) {
+                return;
             }
             mDragHelper.settleCapturedViewAt(left, top);
             invalidate();
@@ -292,47 +292,47 @@ public class SwipeBackLayout extends FrameLayout {
         @Override
         public void onViewDragStateChanged(int state) {
             super.onViewDragStateChanged(state);
-            LogUtil.d(TAG , "onViewDragStateChanged state " + state + "mTranslucent " + mTranslucent + " , requestedTranslucent " + mRequestTranslucent + " fastRelease " + mFastRelease);
+            LogUtil.d(TAG, "onViewDragStateChanged state " + state + "mTranslucent " + mTranslucent + " , requestedTranslucent " + mRequestTranslucent + " fastRelease " + mFastRelease);
             Activity mActivity = null;
-            if(state == ViewDragHelper.STATE_DRAGGING) {
-                LogUtil.d(TAG , "on drag");
-                if(SwipeBackLayout.this.getContext() instanceof Activity) {
-                    ((Activity)SwipeBackLayout.this.getContext()).getWindow().getDecorView().setBackgroundResource(R.drawable.transparent);
+            if (state == ViewDragHelper.STATE_DRAGGING) {
+                LogUtil.d(TAG, "on drag");
+                if (SwipeBackLayout.this.getContext() instanceof Activity) {
+                    ((Activity) SwipeBackLayout.this.getContext()).getWindow().getDecorView().setBackgroundResource(R.drawable.transparent);
                 }
-                if(mOnSwipeGestureDelegate != null) {
+                if (mOnSwipeGestureDelegate != null) {
                     mOnSwipeGestureDelegate.onDragging();
                 }
                 mIsScrollOverValid = false;
-                if(mTranslucent) {
+                if (mTranslucent) {
                     SwipeActivityManager.notifySwipe(0.0F);
                 }
             }
 
-            if(state == ViewDragHelper.STATE_IDLE && !mFastRelease) {
-                LogUtil.i(TAG , "on cancel");
-                if(mOnSwipeGestureDelegate != null) {
+            if (state == ViewDragHelper.STATE_IDLE && !mFastRelease) {
+                LogUtil.i(TAG, "on cancel");
+                if (mOnSwipeGestureDelegate != null) {
                     mOnSwipeGestureDelegate.onCancel();
                 }
                 SwipeActivityManager.notifySwipe(1.0F);
             }
 
-            if(state == ViewDragHelper.STATE_DRAGGING /*&& mScrolling*/ && (SwipeBackLayout.this.getContext() instanceof Activity) && !mTranslucent && !mRequestTranslucent) {
-                LogUtil.i(TAG , " match dragging");
+            if (state == ViewDragHelper.STATE_DRAGGING /*&& mScrolling*/ && (SwipeBackLayout.this.getContext() instanceof Activity) && !mTranslucent && !mRequestTranslucent) {
+                LogUtil.i(TAG, " match dragging");
                 mTranslucent = true;
-                mActivity = ((Activity)SwipeBackLayout.this.getContext());
-                if(SDKVersionUtils.isGreaterorEqual(16)) {
-                    LogUtil.w(TAG , "convertActivityToTranslucent::Android Version Error " + Integer.valueOf(Build.VERSION.SDK_INT));
+                mActivity = ((Activity) SwipeBackLayout.this.getContext());
+                if (SDKVersionUtils.isGreaterorEqual(16)) {
+                    LogUtil.w(TAG, "convertActivityToTranslucent::Android Version Error " + Integer.valueOf(Build.VERSION.SDK_INT));
                 }
             }
-            if(state == ViewDragHelper.STATE_SETTLING) {
-                LogUtil.i(TAG , "notify settle, mReleasedLeft " + mReleasedLeft);
+            if (state == ViewDragHelper.STATE_SETTLING) {
+                LogUtil.i(TAG, "notify settle, mReleasedLeft " + mReleasedLeft);
                 boolean open = (mReleasedLeft > 0);
                 SwipeActivityManager.notifySettle(open, mReleasedLeft);
             }
-            if(mActivity != null) {
+            if (mActivity != null) {
                 MethodInvoke.SwipeInvocationHandler handler = new MethodInvoke.SwipeInvocationHandler();
                 handler.mWeakReference = new WeakReference<MethodInvoke.OnSwipeInvokeResultListener>(this);
-                SwipTranslucentMethodUtils.convertActivityToTranslucent(mActivity , handler);
+                SwipTranslucentMethodUtils.convertActivityToTranslucent(mActivity, handler);
             }
         }
 
@@ -340,35 +340,35 @@ public class SwipeBackLayout extends FrameLayout {
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
-            LogUtil.d(TAG , "onViewPositionChanged: Translucent : " + mTranslucent + "' ,left :"
+            LogUtil.d(TAG, "onViewPositionChanged: Translucent : " + mTranslucent + "' ,left :"
                     + left + " ,top :" + top + " ,dx:" + dx + " ,dy:" + dy);
-            if(!mTranslucent) {
-                return ;
+            if (!mTranslucent) {
+                return;
             }
             mScrollPercent = Math.abs((float) left / (mContentView.getWidth() + mShadowLeft.getIntrinsicWidth()));
             mContentLeft = left;
             mContentTop = top;
             invalidate();
-            LogUtil.d(TAG , "onViewPositionChanged: mScrollPercent : " + mScrollPercent + "' ,mIsScrollOverValid :" + mIsScrollOverValid);
-            if(Float.compare(mScrollPercent , DEFAULT_SCROLL_THRESHOLD) >=0 && !mIsScrollOverValid) {
+            LogUtil.d(TAG, "onViewPositionChanged: mScrollPercent : " + mScrollPercent + "' ,mIsScrollOverValid :" + mIsScrollOverValid);
+            if (Float.compare(mScrollPercent, DEFAULT_SCROLL_THRESHOLD) >= 0 && !mIsScrollOverValid) {
                 mIsScrollOverValid = true;
                 mScrolling = true;
                 ECHandlerHelper.postRunnOnUI(new Runnable() {
                     @Override
                     public void run() {
-                        if(mOnSwipeGestureDelegate != null) {
+                        if (mOnSwipeGestureDelegate != null) {
                             mOnSwipeGestureDelegate.onSwipeBack();
                         }
                         mTranslucent = false;
                     }
                 });
             } else {
-                if(!(Float.compare(mScrollPercent, 0.01F) > 0)) {
+                if (!(Float.compare(mScrollPercent, 0.01F) > 0)) {
                     mIsScrollOverValid = false;
                     mScrolling = false;
                 }
             }
-            if(mDragHelper.getViewDragState() == ViewDragHelper.STATE_DRAGGING) {
+            if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_DRAGGING) {
                 SwipeActivityManager.notifySwipe(mScrollPercent);
             }
         }
@@ -376,7 +376,7 @@ public class SwipeBackLayout extends FrameLayout {
         // 拖动位置的处理，可以处理拖动过程中的最高位置或者最低位置
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            LogUtil.d(TAG , "clampViewPositionHorizontal : translucent : " + mTranslucent + " ,left " + left + " , dx " + dx);
+            LogUtil.d(TAG, "clampViewPositionHorizontal : translucent : " + mTranslucent + " ,left " + left + " , dx " + dx);
             int ret = 0;
             if (mTranslucent) {
                 int max = Math.max(mTemp, left);
@@ -385,7 +385,7 @@ public class SwipeBackLayout extends FrameLayout {
             } else {
                 mTemp = Math.max(mTemp, left);
             }
-            LogUtil.d(TAG , "clampViewPositionHorizontal ret " + ret);
+            LogUtil.d(TAG, "clampViewPositionHorizontal ret " + ret);
             return ret;
         }
 
@@ -397,17 +397,17 @@ public class SwipeBackLayout extends FrameLayout {
 
         @Override
         public void onSwipeInvoke(final boolean result) {
-            LogUtil.d(TAG , "onSwipeInvoke :" + result );
+            LogUtil.d(TAG, "onSwipeInvoke :" + result);
             ECHandlerHelper.postRunnOnUI(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtil.i(TAG , "on Complete, result " + result + " ,releaseLeft " + mReleasedLeft);
-                    if(result) {
-                        if(mReleasedLeft > 0) {
+                    LogUtil.i(TAG, "on Complete, result " + result + " ,releaseLeft " + mReleasedLeft);
+                    if (result) {
+                        if (mReleasedLeft > 0) {
                             SwipeActivityManager.notifySwipe(0.0F);
                             SwipeBackLayout.this.markTranslucent(result);
-                            if(result && !mFastRelease) {
-                                if(mReleasedLeft == 0) {
+                            if (result && !mFastRelease) {
+                                if (mReleasedLeft == 0) {
                                     AnimatorUtils.updateViewAnimation(SwipeBackLayout.this, 200L, 0.0F, new AnimatorUtils.OnAnimationListener() {
                                         @Override
                                         public void onAnimationCancel() {
@@ -432,9 +432,9 @@ public class SwipeBackLayout extends FrameLayout {
                                             ECHandlerHelper.postRunnOnUI(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if(mOnSwipeGestureDelegate != null) {
+                                                    if (mOnSwipeGestureDelegate != null) {
                                                         mOnSwipeGestureDelegate.onSwipeBack();
-                                                        LogUtil.d(TAG , "on onSwipeBack");
+                                                        LogUtil.d(TAG, "on onSwipeBack");
                                                     }
                                                     SwipeActivityManager.notifySwipe(1.0F);
                                                     mIsScrollOverValid = false;
@@ -453,10 +453,11 @@ public class SwipeBackLayout extends FrameLayout {
     }
 
 
-
     public interface OnSwipeGestureDelegate {
         void onSwipeBack();
+
         void onDragging();
+
         void onCancel();
     }
 }

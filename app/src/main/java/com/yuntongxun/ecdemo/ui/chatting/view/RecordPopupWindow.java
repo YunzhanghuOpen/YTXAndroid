@@ -18,31 +18,31 @@ import android.widget.PopupWindow;
 
 /**
  * @author Jorstin Chan@容联•云通讯
- * @date 2014-12-10
  * @version 4.0
+ * @date 2014-12-10
  */
 public class RecordPopupWindow extends PopupWindow {
 
-	public RecordPopupWindow(View contentView) {
-		super(contentView);
-	}
+    public RecordPopupWindow(View contentView) {
+        super(contentView);
+    }
 
-	public RecordPopupWindow(View contentView, int width, int height) {
-		super(contentView, width, height, false);
-	}
+    public RecordPopupWindow(View contentView, int width, int height) {
+        super(contentView, width, height, false);
+    }
 
-	public RecordPopupWindow(View contentView, int width, int height,
-			boolean focusable) {
-		super(contentView, width, height, focusable);
-	}
-	
-	public void dismiss() {
+    public RecordPopupWindow(View contentView, int width, int height,
+                             boolean focusable) {
+        super(contentView, width, height, focusable);
+    }
 
-		try {
-			super.dismiss();
-		} catch (Exception e) {
-			Log.d("MicroMsg.MMPopupWindow", "dismiss exception, e = " + e.getMessage());
-			e.printStackTrace();
-		}
+    public void dismiss() {
+
+        try {
+            super.dismiss();
+        } catch (Exception e) {
+            Log.d("MicroMsg.MMPopupWindow", "dismiss exception, e = " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

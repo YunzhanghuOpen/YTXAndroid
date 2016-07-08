@@ -1423,7 +1423,7 @@ public final class EmojiconHandler {
 
         int textLength = text.length();
         int textLengthToProcessMax = textLength - index;
-        int textLengthToProcess = length < 0 || length >= textLengthToProcessMax ? textLength : (length+index);
+        int textLengthToProcess = length < 0 || length >= textLengthToProcessMax ? textLength : (length + index);
 
         // remove spans throughout all text
         EmojiconSpan[] oldSpans = text.getSpans(0, textLength, EmojiconSpan.class);

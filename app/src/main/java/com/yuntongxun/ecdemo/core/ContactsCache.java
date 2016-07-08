@@ -26,7 +26,7 @@ public class ContactsCache {
 
     private LoadingTask asyncTask;
 
-    private ContactsCache(){
+    private ContactsCache() {
 
     }
 

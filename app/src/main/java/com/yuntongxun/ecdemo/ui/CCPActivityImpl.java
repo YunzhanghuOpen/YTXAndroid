@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui;
+ */
+package com.yuntongxun.ecdemo.ui;
 
 import android.view.View;
 
@@ -21,7 +22,7 @@ public class CCPActivityImpl extends CCPActivityBase {
     final private ECSuperActivity mActivity;
 
     public CCPActivityImpl(ECSuperActivity activity) {
-        mActivity  = activity;
+        mActivity = activity;
     }
 
     @Override

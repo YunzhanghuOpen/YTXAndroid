@@ -103,13 +103,13 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
     /**
      *
      */
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             LogUtil.v(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "onMainTabClick");
-            if(mListener != null) {
+            if (mListener != null) {
                 mListener.onTabClick(TAB_VIEW_MAIN);
             }
         }
@@ -193,13 +193,13 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
         contactsLayoutParams.weight = 1.0F;
         layout.addView(tabViewContacts.tabView, contactsLayoutParams);
         mThirdTabView = tabViewContacts;
-        
-        
+
+
         // 讨论组
         TabViewHolder tabViewDisGroup = createTabView(TAB_VIEW_FOUR);
         tabViewDisGroup.tabView.setText(R.string.main_discussiongroup);
         LinearLayout.LayoutParams fourLayoutParams = new LinearLayout.LayoutParams(
-        		0, getResources().getDimensionPixelSize(R.dimen.DefaultTabbarHeight));
+                0, getResources().getDimensionPixelSize(R.dimen.DefaultTabbarHeight));
         fourLayoutParams.weight = 1.0F;
         layout.addView(tabViewDisGroup.tabView, fourLayoutParams);
         mFourTabView = tabViewDisGroup;
@@ -207,6 +207,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * Register a callback to be invoked when this UITabView is clicked.
+     *
      * @param l The callback that will run
      */
     public void setOnUITabViewClickListener(OnUITabViewClickListener l) {
@@ -217,6 +218,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
     /**
      * Set a list of items to be displayed in the UITableView as the content, you will be notified of the
      * selected item via the supplied listener. This should be an array type i.e. R.array.foo
+     *
      * @param itemsId
      */
     public final void setTabViewItems(int itemsId) {
@@ -225,10 +227,9 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
     }
 
     /**
-     *
      * @param index
      */
-    public final void setTabViewText(int index , int resid) {
+    public final void setTabViewText(int index, int resid) {
         switch (index) {
             case TAB_VIEW_MAIN:
                 mMainTabView.tabView.setText(resid);
@@ -241,9 +242,9 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
                 mThirdTabView.tabView.setText(resid);
                 break;
             case TAB_VIEW_FOUR:
-            	mFourTabView.tabView.setText(resid);
-            	break;
-           
+                mFourTabView.tabView.setText(resid);
+                break;
+
             default:
                 break;
         }
@@ -251,6 +252,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * create new TabView.
+     *
      * @param index
      * @return
      */
@@ -264,7 +266,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
 
     public final void resetTabViewDesc() {
-        if(mMainTabView == null || mSecondTabView == null || mThirdTabView == null||mFourTabView.tabView==null) {
+        if (mMainTabView == null || mSecondTabView == null || mThirdTabView == null || mFourTabView.tabView == null) {
             return;
         }
 
@@ -277,8 +279,8 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        int intValue = ((Integer)v.getTag()).intValue();
-        if((mCurrentSlideIndex == intValue) && (intValue == TAB_VIEW_SECOND) && (System.currentTimeMillis() - mClickTime <= 300L)) {
+        int intValue = ((Integer) v.getTag()).intValue();
+        if ((mCurrentSlideIndex == intValue) && (intValue == TAB_VIEW_SECOND) && (System.currentTimeMillis() - mClickTime <= 300L)) {
             LogUtil.v(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "onMainTabDoubleClick");
             mHandler.removeMessages(0);
             // Processing double click
@@ -287,8 +289,8 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
             return;
         }
 
-        if(mListener != null) {
-            if(intValue != TAB_VIEW_MAIN || mCurrentSlideIndex != TAB_VIEW_SECOND) {
+        if (mListener != null) {
+            if (intValue != TAB_VIEW_MAIN || mCurrentSlideIndex != TAB_VIEW_SECOND) {
                 mClickTime = System.currentTimeMillis();
                 mCurrentSlideIndex = intValue;
                 mListener.onTabClick(intValue);
@@ -299,15 +301,15 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
         mClickTime = System.currentTimeMillis();
         mCurrentSlideIndex = intValue;
-        LogUtil.v(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "on UITabView click, index " + intValue+ ", but listener is " + mListener );
+        LogUtil.v(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "on UITabView click, index " + intValue + ", but listener is " + mListener);
     }
 
     /**
      *
      */
     public final void doSentEvents() {
-        if(mSecondTabView == null || mMainTabView == null) {
-            return ;
+        if (mSecondTabView == null || mMainTabView == null) {
+            return;
         }
 
         mMainTabView.tabView.notifyChange();
@@ -318,16 +320,18 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * 移动
-     * @param start 开始位置
+     *
+     * @param start    开始位置
      * @param distance 移动距离
      */
     public final void doTranslateImageMatrix(int start, float distance) {
-        mMatrix.setTranslate(mTabViewBaseWidth * (start + distance) , 0.0F);
+        mMatrix.setTranslate(mTabViewBaseWidth * (start + distance), 0.0F);
         mSlideImage.setImageMatrix(mMatrix);
     }
 
     /**
      * Set the TabView to operate
+     *
      * @param visibility
      */
     public final void setUnreadDotVisibility(boolean visibility) {
@@ -336,12 +340,13 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * Update the interface number of unread
+     *
      * @param unreadCount
      */
     public final void updateMainTabUnread(int unreadCount) {
         LogUtil.d(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "updateMainTabUnread unread count " + unreadCount);
-        if(unreadCount > 0) {
-            if(unreadCount > 99) {
+        if (unreadCount > 0) {
+            if (unreadCount > 99) {
                 mMainTabView.tabView.setUnreadTips(getResources().getString(R.string.unread_count_overt_100));
                 return;
             }
@@ -354,8 +359,8 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     public final void updateSecondTabUnread(int unreadCount) {
         LogUtil.d(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "updateSecondTabUnread unread count " + unreadCount);
-        if(unreadCount > 0) {
-            if(unreadCount > 99) {
+        if (unreadCount > 0) {
+            if (unreadCount > 99) {
                 mSecondTabView.tabView.setUnreadTips(getResources().getString(R.string.unread_count_overt_100));
                 return;
             }
@@ -367,12 +372,13 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * Update the interface number of unread
+     *
      * @param unreadCount
      */
     public final void updateContactsTabUnread(int unreadCount) {
         LogUtil.d(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "updateContactsTabUnread unread count " + unreadCount);
-        if(unreadCount > 0) {
-            if(unreadCount > 99) {
+        if (unreadCount > 0) {
+            if (unreadCount > 99) {
                 mThirdTabView.tabView.setUnreadTips(getResources().getString(R.string.unread_count_overt_100));
                 return;
             }
@@ -384,6 +390,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * Change the selected TabView color
+     *
      * @param index
      */
     @SuppressLint("ResourceAsColor")
@@ -407,15 +414,15 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
                 mSecondTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
                 mThirdTabView.tabView.setTextColor(getResources().getColorStateList(R.color.red_btn_color_normal));
                 mFourTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
-                
+
                 break;
             case TAB_VIEW_FOUR:
-            	mMainTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
-            	mSecondTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
-            	mThirdTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
-            	mFourTabView.tabView.setTextColor(getResources().getColorStateList(R.color.red_btn_color_normal));
-            	
-            	break;
+                mMainTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
+                mSecondTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
+                mThirdTabView.tabView.setTextColor(getResources().getColorStateList(R.color.launcher_tab_text_selector));
+                mFourTabView.tabView.setTextColor(getResources().getColorStateList(R.color.red_btn_color_normal));
+
+                break;
             default:
                 break;
         }
@@ -427,10 +434,10 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
         LogUtil.d(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class), "on layout, width " + (r - l));
         int width = mTabViewBaseWidth = ((r - l) / 4);
 
-        if(mIndicatorBitmap == null || mIndicatorBitmap.getWidth() != mTabViewBaseWidth) {
+        if (mIndicatorBitmap == null || mIndicatorBitmap.getWidth() != mTabViewBaseWidth) {
 
             int from = -1;
-            if(mIndicatorBitmap != null) {
+            if (mIndicatorBitmap != null) {
                 from = mIndicatorBitmap.getWidth();
             }
             LogUtil.d(LogUtil.getLogUtilsTag(CCPLauncherUITabView.class),
@@ -451,8 +458,8 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
     /**
      * @author Jorstin Chan
-     * @date 2014-4-26
      * @version 1.0
+     * @date 2014-4-26
      */
     public class TabViewHolder {
 
@@ -466,6 +473,7 @@ public class CCPLauncherUITabView extends RelativeLayout implements View.OnClick
 
         /**
          * Called when a UITabView has been clicked.
+         *
          * @param tabIndex index of UITabView
          */
         public abstract void onTabClick(int tabIndex);

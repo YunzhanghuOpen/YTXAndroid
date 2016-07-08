@@ -11,14 +11,14 @@ public class RichTextBean implements Parcelable {
     private String title;
     private String desc;
     private String url;
-    private String picUrl="";
+    private String picUrl = "";
 
 
     protected RichTextBean(Parcel in) {
         title = in.readString();
         desc = in.readString();
         url = in.readString();
-        picUrl=in.readString();
+        picUrl = in.readString();
     }
 
     public String getPicUrl() {
@@ -29,7 +29,7 @@ public class RichTextBean implements Parcelable {
         this.picUrl = picUrl;
     }
 
-    public RichTextBean(){
+    public RichTextBean() {
         super();
     }
 

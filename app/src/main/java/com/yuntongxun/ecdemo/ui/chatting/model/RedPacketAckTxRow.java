@@ -8,11 +8,9 @@ import android.view.View;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
-import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
 import com.yuntongxun.ecdemo.ui.chatting.RedPackUtils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketAckViewHolder;
-import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
 
@@ -52,7 +50,7 @@ public class RedPacketAckTxRow extends BaseChattingRow {
         if (message != null) {
 
             if (message.getType() == ECMessage.Type.TXT) {
-                JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketAckedMessage(message);
+                JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketAckMessage(message);
                 if (jsonObject != null) {
                     holder.getChattingAvatar().setVisibility(View.GONE);
                     holder.getChattingUser().setVisibility(View.GONE);
@@ -62,22 +60,22 @@ public class RedPacketAckTxRow extends BaseChattingRow {
                     String recieveUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
                     String sendUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
                     String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
-                    String text="";
+                    String text = "";
                     //发送者和领取者都是自己-
                     if (currentUserId.equals(recieveUserId) && currentUserId.equals(sendUserId)) {
 
-                        text=context.getResources().getString(R.string.money_msg_take_money);
+                        text = context.getResources().getString(R.string.money_msg_take_money);
 
                     } else if (currentUserId.equals(sendUserId)) {
                         //我仅仅是发送者
-                        text=String.format(context.getResources().getString(R.string.money_msg_someone_take_money), recieveUserNick);
+                        text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), recieveUserNick);
 
                     } else if (currentUserId.equals(recieveUserId)) {
                         //我仅仅是接收者
-                        text=String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
+                        text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
 
                     }
-                    holder.getMoneyMsgTv().setText(text);
+                    holder.getRedPacketAckMsgTv().setText(text);
                 }
             }
         }

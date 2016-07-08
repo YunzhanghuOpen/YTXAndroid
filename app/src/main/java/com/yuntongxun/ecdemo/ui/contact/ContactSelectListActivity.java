@@ -29,15 +29,18 @@ import java.util.List;
  * 联系人选择页面
  * Created by Jorstin on 2015/3/18.
  */
-public class ContactSelectListActivity  extends ECSuperActivity implements
-        View.OnClickListener  , ContactListFragment.OnContactClickListener {
+public class ContactSelectListActivity extends ECSuperActivity implements
+        View.OnClickListener, ContactListFragment.OnContactClickListener {
     private ECProgressDialog mPostingdialog;
     private static final String TAG = "ECSDK_Demo.ContactSelectListActivity";
-    /**查看群组*/
+    /**
+     * 查看群组
+     */
     public static final int REQUEST_CODE_VIEW_GROUP_OWN = 0x2a;
     private TopBarView mTopBarView;
     private boolean mNeedResult;
     private boolean mShowGroup;
+
     @Override
     protected int getLayoutId() {
         return R.layout.layout_contact_select;
@@ -56,7 +59,7 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
             fm.beginTransaction().add(R.id.contact_container, list).commit();
         }
         mTopBarView = getTopBarView();
-        String actionBtn = getString(R.string.radar_ok_count, getString(R.string.dialog_ok_button) , 0);
+        String actionBtn = getString(R.string.radar_ok_count, getString(R.string.dialog_ok_button), 0);
         mTopBarView.setTopBarToStatus(1, R.drawable.topbar_back_bt, R.drawable.btn_style_green, null, actionBtn, getString(R.string.select_contacts), null, this);
         mTopBarView.setRightBtnEnable(false);
     }
@@ -71,26 +74,26 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
             case R.id.text_right:
                 List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
-                if(fragments.get(0) instanceof ContactListFragment) {
-                    String chatuser = ((ContactListFragment) fragments.get(0) ).getChatuser();
+                if (fragments.get(0) instanceof ContactListFragment) {
+                    String chatuser = ((ContactListFragment) fragments.get(0)).getChatuser();
                     String[] split = chatuser.split(",");
-                    if(split.length == 1 && !mNeedResult) {
-                        Intent intent = new Intent(ContactSelectListActivity.this , ChattingActivity.class);
+                    if (split.length == 1 && !mNeedResult) {
+                        Intent intent = new Intent(ContactSelectListActivity.this, ChattingActivity.class);
                         intent.putExtra(ChattingFragment.RECIPIENTS, split[0]);
                         startActivity(intent);
                         finish();
-                        return ;
+                        return;
                     }
 
-                    if(mNeedResult) {
+                    if (mNeedResult) {
                         Intent intent = new Intent();
                         intent.putExtra("Select_Conv_User", split);
                         setResult(-1, intent);
                         finish();
-                        return ;
+                        return;
                     }
 
-                    if(split.length > 0) {
+                    if (split.length > 0) {
                         postCreatePrivateChatroom(split);
                     }
                 }
@@ -107,6 +110,7 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
 
     /**
      * 创建一个私有群组
+     *
      * @param split
      */
     private void postCreatePrivateChatroom(String[] split) {
@@ -134,7 +138,7 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -159,8 +163,8 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
 
         String contactId = data.getStringExtra(ChattingFragment.RECIPIENTS);
         String contactUser = data.getStringExtra(ChattingFragment.CONTACT_USER);
-        if(contactId != null && contactId.length() > 0) {
-            Intent intent = new Intent(this ,  ChattingActivity.class);
+        if (contactId != null && contactId.length() > 0) {
+            Intent intent = new Intent(this, ChattingActivity.class);
             intent.putExtra(ChattingFragment.RECIPIENTS, contactId);
             intent.putExtra(ChattingFragment.CONTACT_USER, contactUser);
             startActivity(intent);
@@ -171,22 +175,22 @@ public class ContactSelectListActivity  extends ECSuperActivity implements
 
     @Override
     public void onContactClick(int count) {
-        mTopBarView.setRightBtnEnable(count > 0 ? true:false);
-        mTopBarView.setRightButtonText(getString(R.string.radar_ok_count, getString(R.string.dialog_ok_button) , count));
+        mTopBarView.setRightBtnEnable(count > 0 ? true : false);
+        mTopBarView.setRightButtonText(getString(R.string.radar_ok_count, getString(R.string.dialog_ok_button), count));
     }
 
     @Override
     public void onSelectGroupClick() {
         Intent intent = new Intent(this, GroupCardSelectUI.class);
-        startActivityForResult(intent ,REQUEST_CODE_VIEW_GROUP_OWN);
+        startActivityForResult(intent, REQUEST_CODE_VIEW_GROUP_OWN);
     }
 
     /**
      * 关闭对话框
      */
     private void dismissPostingDialog() {
-        if(mPostingdialog == null || !mPostingdialog.isShowing()) {
-            return ;
+        if (mPostingdialog == null || !mPostingdialog.isShowing()) {
+            return;
         }
         mPostingdialog.dismiss();
         mPostingdialog = null;

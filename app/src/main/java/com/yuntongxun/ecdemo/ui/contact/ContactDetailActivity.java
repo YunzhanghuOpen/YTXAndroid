@@ -9,7 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo.ui.contact;
+ */
+package com.yuntongxun.ecdemo.ui.contact;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,7 +29,7 @@ import com.yuntongxun.ecdemo.ui.chatting.base.EmojiconTextView;
 /**
  * Created by Jorstin on 2015/3/18.
  */
-public class ContactDetailActivity extends ECSuperActivity implements View.OnClickListener{
+public class ContactDetailActivity extends ECSuperActivity implements View.OnClickListener {
 
     public final static String RAW_ID = "raw_id";
     public final static String MOBILE = "mobile";
@@ -45,8 +46,8 @@ public class ContactDetailActivity extends ECSuperActivity implements View.OnCli
 
         @Override
         public void onClick(View v) {
-            if(mContacts == null) {
-                return ;
+            if (mContacts == null) {
+                return;
             }
             CCPAppManager.startChattingAction(ContactDetailActivity.this, mContacts.getContactid(), mContacts.getNickname(), true);
             setResult(RESULT_OK);
@@ -75,28 +76,28 @@ public class ContactDetailActivity extends ECSuperActivity implements View.OnCli
      */
     private void initActivityState(Bundle savedInstanceState) {
         long rawId = getIntent().getLongExtra(RAW_ID, -1);
-        if(rawId == -1) {
+        if (rawId == -1) {
             String mobile = getIntent().getStringExtra(MOBILE);
             String displayname = getIntent().getStringExtra(DISPLAY_NAME);
             mContacts = ContactSqlManager.getCacheContact(mobile);
-            if(mContacts == null) {
+            if (mContacts == null) {
                 mContacts = new ECContacts(mobile);
                 mContacts.setNickname(displayname);
             }
         }
 
-        if(mContacts == null && rawId != -1) {
+        if (mContacts == null && rawId != -1) {
             mContacts = ContactSqlManager.getContact(rawId);
         }
 
-        if(mContacts == null) {
+        if (mContacts == null) {
             ToastUtil.showMessage(R.string.contact_none);
             finish();
-            return ;
+            return;
         }
 
         mPhotoView.setImageBitmap(ContactLogic.getPhoto(mContacts.getRemark()));
-        mUsername.setText(TextUtils.isEmpty(mContacts.getNickname()) ?mContacts.getContactid() :mContacts.getNickname());
+        mUsername.setText(TextUtils.isEmpty(mContacts.getNickname()) ? mContacts.getContactid() : mContacts.getNickname());
         mNumber.setText(mContacts.getContactid());
     }
 
@@ -112,24 +113,24 @@ public class ContactDetailActivity extends ECSuperActivity implements View.OnCli
         findViewById(R.id.entrance_voip).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mContacts == null) {
-                    return ;
+                if (mContacts == null) {
+                    return;
                 }
-                CCPAppManager.showCallMenu(ContactDetailActivity.this ,mContacts.getNickname() , mContacts.getContactid());
+                CCPAppManager.showCallMenu(ContactDetailActivity.this, mContacts.getNickname(), mContacts.getContactid());
             }
         });
-        
-       if(!SDKCoreHelper.getInstance().isSupportMedia()){
-    	   
-    	   findViewById(R.id.entrance_voip).setVisibility(View.GONE);
-       }
-        
+
+        if (!SDKCoreHelper.getInstance().isSupportMedia()) {
+
+            findViewById(R.id.entrance_voip).setVisibility(View.GONE);
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mPhotoView != null) {
+        if (mPhotoView != null) {
             mPhotoView.setImageDrawable(null);
         }
         onClickListener = null;

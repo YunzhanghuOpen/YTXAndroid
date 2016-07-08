@@ -9,11 +9,8 @@
  *  An additional intellectual property rights grant can be found
  *  in the file PATENTS.  All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
- */package com.yuntongxun.ecdemo;
-
-import java.io.File;
-
-import java.io.InvalidClassException;
+ */
+package com.yuntongxun.ecdemo;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
@@ -21,7 +18,6 @@ import android.content.pm.PackageManager;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.easemob.redpacketsdk.RedPacket;
-import com.easemob.redpacketsdk.bean.AuthData;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -35,7 +31,9 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferenceSettings;
 import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
-import com.yuntongxun.ecdemo.storage.ServerConfigSqlManager;
+
+import java.io.File;
+import java.io.InvalidClassException;
 
 import utils.AuthDataUtils;
 
@@ -48,6 +46,7 @@ public class ECApplication extends Application {
 
     /**
      * 单例，返回一个实例
+     *
      * @return
      */
     public static ECApplication getInstance() {
@@ -93,9 +92,9 @@ public class ECApplication extends Application {
                 .memoryCache(new WeakMemoryCache())
                 // .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(CCPAppManager.md5FileNameGenerator)
-                        // 将保存的时候的URI名称用MD5 加密
+                // 将保存的时候的URI名称用MD5 加密
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .diskCache(new UnlimitedDiscCache(cacheDir ,null ,CCPAppManager.md5FileNameGenerator))//自定义缓存路径
+                .diskCache(new UnlimitedDiscCache(cacheDir, null, CCPAppManager.md5FileNameGenerator))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 // .writeDebugLogs() // Remove for release app
                 .build();//开始构建
@@ -104,6 +103,7 @@ public class ECApplication extends Application {
 
     /**
      * 返回配置文件的日志开关
+     *
      * @return
      */
     public boolean getLoggingSwitch() {
