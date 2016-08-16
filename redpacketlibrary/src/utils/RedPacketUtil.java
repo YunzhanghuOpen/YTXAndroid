@@ -40,7 +40,8 @@ public class RedPacketUtil {
         Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
         intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
         String currentUserId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
-        TokenData tokenData = AuthDataUtils.getInstance().getTokenData(currentUserId);
+        TokenData tokenData = new TokenData();
+        tokenData.appUserId = currentUserId;
         intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
         fragment.startActivityForResult(intent, requestCode);
     }
@@ -78,7 +79,8 @@ public class RedPacketUtil {
         }
         String currentUserId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         redPacketInfo.toUserId = currentUserId;
-        TokenData tokenData = AuthDataUtils.getInstance().getTokenData(currentUserId);
+        TokenData tokenData = new TokenData();
+        tokenData.appUserId = currentUserId;
         RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, tokenData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
             @Override
             public void onSuccess(String senderId, String senderNickname) {
@@ -118,7 +120,8 @@ public class RedPacketUtil {
         redPacketInfo.fromNickName = fromNickname;
         redPacketInfo.fromAvatarUrl = fromAvatarUrl;
         intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
-        TokenData tokenData = AuthDataUtils.getInstance().getTokenData(userId);
+        TokenData tokenData = new TokenData();
+        tokenData.appUserId = userId;
         intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
         fragmentActivity.startActivity(intent);
     }
