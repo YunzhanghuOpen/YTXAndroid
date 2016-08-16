@@ -15,9 +15,6 @@ import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
 import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
 import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
 
-/**
- * Created by ustc on 2016/5/31.
- */
 public class RedPacketUtil {
     /**
      * 进入发红包页面
@@ -40,10 +37,14 @@ public class RedPacketUtil {
             redPacketInfo.groupMemberCount = jsonObject.getInteger(RedPacketConstant.KEY_GROUP_MEMBERS_COUNT);
             redPacketInfo.chatType = 2;
         }
-        String currentId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         Intent intent = new Intent(fragment.getActivity(), RPRedPacketActivity.class);
         intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, AuthDataUtils.getInstance().getTokenData(currentId));
+        TokenData tokenData = new TokenData();
+        tokenData.timestamp = "";
+        tokenData.imToken = "";
+        tokenData.userName = "";
+        tokenData.appId = "";
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
         fragment.startActivityForResult(intent, requestCode);
     }
 
@@ -62,13 +63,13 @@ public class RedPacketUtil {
         String toAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_TO_AVATAR_URL);
         //接收者昵称 默认值为当前用户ID
         final String toNickname = jsonObject.getString(RedPacketConstant.KEY_TO_NICK_NAME);
-        String moneyId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_ID);
+        String redPacketId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_ID);
         messageDirect = jsonObject.getString(RedPacketConstant.KEY_MESSAGE_DIRECT);
         final int chatType = jsonObject.getInteger(RedPacketConstant.KEY_CHAT_TYPE);
         String specialAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_SPECIAL_AVATAR_URL);
         String specialNickname = jsonObject.getString(RedPacketConstant.KEY_SPECIAL_NICK_NAME);
         RedPacketInfo redPacketInfo = new RedPacketInfo();
-        redPacketInfo.moneyID = moneyId;
+        redPacketInfo.redPacketId = redPacketId;
         redPacketInfo.toAvatarUrl = toAvatarUrl;
         redPacketInfo.toNickName = toNickname;
         redPacketInfo.moneyMsgDirect = messageDirect;
@@ -81,7 +82,13 @@ public class RedPacketUtil {
         String currentUserId = jsonObject.getString(RedPacketConstant.KEY_CURRENT_ID);
         redPacketInfo.toUserId = currentUserId;
         TokenData authData = AuthDataUtils.getInstance().getTokenData(currentUserId);
-        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, authData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
+        TokenData tokenData = new TokenData();
+        tokenData.timestamp = "";
+        tokenData.imToken = "";
+        tokenData.userName = "";
+        tokenData.appId = "";
+        tokenData.authMethod = RPConstant.AUTH_METHOD_YTX;
+        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, tokenData, activity, new RPOpenPacketUtil.RPOpenPacketCallBack() {
             @Override
             public void onSuccess(String senderId, String senderNickname) {
                 openRedPacketSuccess.onSuccess(senderId, senderNickname);
@@ -120,7 +127,12 @@ public class RedPacketUtil {
         redPacketInfo.fromNickName = fromNickname;
         redPacketInfo.fromAvatarUrl = fromAvatarUrl;
         intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, AuthDataUtils.getInstance().getTokenData(userId));
+        TokenData tokenData = new TokenData();
+        tokenData.timestamp = "";//时间戳
+        tokenData.imToken = "";//token
+        tokenData.userName = "";
+        tokenData.appId = "";
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
         fragmentActivity.startActivity(intent);
     }
 

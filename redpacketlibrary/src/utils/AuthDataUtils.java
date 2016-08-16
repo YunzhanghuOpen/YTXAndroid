@@ -70,7 +70,7 @@ public class AuthDataUtils {
                 String timestamp = jsonObject.getString("timestamp");
                 String sign = jsonObject.getString("sign");
                 authData.appUserId = user_id;
-                authData.authTimestamp = timestamp;
+                authData.timestamp = timestamp;
                 authData.authPartner = partner;
                 authData.authSign = sign;
             }

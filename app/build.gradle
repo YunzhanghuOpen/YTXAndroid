@@ -9,6 +9,12 @@ android {
         versionCode 17
         versionName "5.2.1r"
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            java.srcDirs = ['src/main/java']
+        }
+    }
 }
 
 dependencies {
