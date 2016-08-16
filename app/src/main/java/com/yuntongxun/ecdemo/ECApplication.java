@@ -30,7 +30,12 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferenceSettings;
 import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
+import com.yuntongxun.ecdemo.core.ClientUser;
+import com.yunzhanghu.redpacketsdk.RPRefreshSignListener;
+import com.yunzhanghu.redpacketsdk.RPValueCallback;
 import com.yunzhanghu.redpacketsdk.RedPacket;
+import com.yunzhanghu.redpacketsdk.bean.TokenData;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import java.io.File;
 import java.io.InvalidClassException;
@@ -67,10 +72,18 @@ public class ECApplication extends Application {
         CrashHandler.getInstance().init(this);
         SDKInitializer.initialize(instance);
         //红包SDK的注册上下文
-        RedPacket.getInstance().initContext(this);
+        RedPacket.getInstance().initContext(this, RPConstant.AUTH_METHOD_SIGN);
         RedPacket.getInstance().setDebugMode(true);
         //红包SDK验证信息的管理工具类
         AuthDataUtils.init(this);
+        RedPacket.getInstance().setRefreshSignListener(new RPRefreshSignListener() {
+            @Override
+            public void onRefreshSign(RPValueCallback<TokenData> rpValueCallback) {
+                ClientUser clientUser = CCPAppManager.getClientUser();
+                new RequestTask(clientUser.getUserId()).execute();
+                rpValueCallback.onSuccess(AuthDataUtils.getInstance().getTokenData(clientUser.getUserId()));
+            }
+        });
     }
 
     /**
