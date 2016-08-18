@@ -1,6 +1,7 @@
 package utils;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +9,14 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.yunzhanghu.redpacketsdk.RPValueCallback;
 import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
 import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
@@ -15,7 +24,30 @@ import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
 import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
 import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
 
-public class RedPacketUtil {
+import org.json.JSONException;
+
+public class RedPacketUtil implements Response.Listener<org.json.JSONObject>, Response.ErrorListener {
+
+    public static final int REQUEST_CODE_SEND_MONEY = 15;
+
+    private TokenData mTokenData;
+
+    private RPValueCallback<TokenData> mRPValueCallback;
+
+    private static RedPacketUtil mRedPacketUtil;
+
+    public static RedPacketUtil getInstance() {
+        if (mRedPacketUtil == null) {
+            synchronized (RedPacketUtil.class) {
+                if (mRedPacketUtil == null) {
+                    mRedPacketUtil = new RedPacketUtil();
+                }
+
+            }
+        }
+        return mRedPacketUtil;
+    }
+
     /**
      * 进入发红包页面
      *
@@ -124,6 +156,47 @@ public class RedPacketUtil {
         tokenData.appUserId = userId;
         intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
         fragmentActivity.startActivity(intent);
+    }
+
+    public void requestSign(Context context, String userId,final RPValueCallback<TokenData> rpValueCallback) {
+        mRPValueCallback = rpValueCallback;
+        String mockUrl = "http://rpv2.yunzhanghu.com/api/sign?duid=" + userId;
+        RequestQueue mRequestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mockUrl, this, this);
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError volleyError) {
+        mRPValueCallback.onError(volleyError.getMessage(), volleyError.toString());
+    }
+
+    @Override
+    public void onResponse(org.json.JSONObject jsonObject) {
+        if (jsonObject != null && jsonObject.length() > 0) {
+            try {
+                String partner = jsonObject.getString("partner");
+                String userId = jsonObject.getString("user_id");
+                String timestamp = jsonObject.getString("timestamp");
+                String sign = jsonObject.getString("sign");
+                //保存红包Token
+                if (mTokenData == null) {
+                    mTokenData = new TokenData();
+                }
+                mTokenData.authPartner = partner;
+                mTokenData.appUserId = userId;
+                mTokenData.timestamp = timestamp;
+                mTokenData.authSign = sign;
+                mRPValueCallback.onSuccess(mTokenData);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                mRPValueCallback.onError(e.getMessage(), e.getMessage());
+            }
+
+        } else {
+            mRPValueCallback.onError("", "sign data is  null");
+        }
     }
 
 }

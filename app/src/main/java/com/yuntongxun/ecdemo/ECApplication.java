@@ -40,7 +40,7 @@ import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import java.io.File;
 import java.io.InvalidClassException;
 
-import utils.AuthDataUtils;
+import utils.RedPacketUtil;
 
 /**
  * Created by Jorstin on 2015/3/17.
@@ -73,15 +73,14 @@ public class ECApplication extends Application {
         SDKInitializer.initialize(instance);
         //红包SDK的注册上下文
         RedPacket.getInstance().initContext(this, RPConstant.AUTH_METHOD_SIGN);
+        //打开Log开关，正式发布需要关闭
         RedPacket.getInstance().setDebugMode(true);
-        //红包SDK验证信息的管理工具类
-        AuthDataUtils.init(this);
+        //刷新签名机制
         RedPacket.getInstance().setRefreshSignListener(new RPRefreshSignListener() {
             @Override
             public void onRefreshSign(RPValueCallback<TokenData> rpValueCallback) {
                 ClientUser clientUser = CCPAppManager.getClientUser();
-                new RequestTask(clientUser.getUserId()).execute();
-                rpValueCallback.onSuccess(AuthDataUtils.getInstance().getTokenData(clientUser.getUserId()));
+                RedPacketUtil.getInstance().requestSign(ECApplication.this,clientUser.getUserId(),rpValueCallback);
             }
         });
     }
