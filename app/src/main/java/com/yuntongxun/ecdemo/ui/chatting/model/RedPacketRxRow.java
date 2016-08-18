@@ -14,6 +14,7 @@ import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketViewHolder;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import utils.RedPacketConstant;
 
@@ -51,7 +52,7 @@ public class RedPacketRxRow extends BaseChattingRow {
                 JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketMessage(message);
                 if (jsonObject != null) {
                     //清除文本框，和加载progressdialog
-                    holder.getGreetingTv().setText(jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_GREETING));
+                    holder.getGreetingTv().setText(jsonObject.getString(RPConstant.EXTRA_RED_PACKET_GREETING));
                     holder.getSponsorNameTv().setText(context.getResources().getString(R.string.ytx_luckymoney));
                     String packetType = jsonObject.getString(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
                     if (!TextUtils.isEmpty(packetType) && TextUtils.equals(packetType, RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {

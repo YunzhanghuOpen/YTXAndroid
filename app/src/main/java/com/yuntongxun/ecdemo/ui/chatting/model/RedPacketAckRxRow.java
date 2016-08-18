@@ -8,13 +8,12 @@ import android.view.View;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketAckViewHolder;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
-
-import utils.RedPacketConstant;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 /**
  * Created by ustc on 2016/6/24.
@@ -52,10 +51,10 @@ public class RedPacketAckRxRow extends BaseChattingRow {
                     holder.getChattingAvatar().setVisibility(View.GONE);
                     holder.getChattingUser().setVisibility(View.GONE);
                     String currentUserId = CCPAppManager.getClientUser().getUserId();   //当前登陆用户id
-                    String recieveUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                    String recieveUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
-                    String sendUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                    String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
+                    String recieveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                    String recieveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                    String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+                    String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                     String text = "";
                     //发送者和领取者都是自己-
                     if (currentUserId.equals(recieveUserId) && currentUserId.equals(sendUserId)) {

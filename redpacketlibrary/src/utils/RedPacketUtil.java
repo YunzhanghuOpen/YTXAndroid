@@ -61,7 +61,7 @@ public class RedPacketUtil {
         String toAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_TO_AVATAR_URL);
         //接收者昵称 默认值为当前用户ID
         final String toNickname = jsonObject.getString(RedPacketConstant.KEY_TO_NICK_NAME);
-        String redPacketId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_ID);
+        String redPacketId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_ID);
         messageDirect = jsonObject.getString(RedPacketConstant.KEY_MESSAGE_DIRECT);
         final int chatType = jsonObject.getInteger(RedPacketConstant.KEY_CHAT_TYPE);
         String specialAvatarUrl = jsonObject.getString(RedPacketConstant.KEY_SPECIAL_AVATAR_URL);

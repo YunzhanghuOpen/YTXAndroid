@@ -108,6 +108,7 @@ import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 import com.yuntongxun.ecsdk.platformtools.ECHandlerHelper;
 import com.yunzhanghu.redpacketsdk.bean.RPUserBean;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.callback.GroupMemberCallback;
 import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
 import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
@@ -957,17 +958,17 @@ public class ChattingFragment extends CCPFragment implements
      * 发送红包消息
      */
     private void handlesendRedPacketMessage(Intent data) {
-        String greetings = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_GREETING);
-        String moneyID = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_ID);
-        String specialReceiveId = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);
+        String greetings = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);
+        String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);
+        String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);
         String redPacketType = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_TYPE);
         String text = "[" + getResources().getString(R.string.ytx_luckymoney) + "]" + greetings;
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);//是否是红包消息
-        jsonObject.put(RedPacketConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
+        jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);//是否是红包消息
+        jsonObject.put(RPConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
         jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE, redPacketType);//红包类型，是否是专属红包
         jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);//指定接收者
         // 组建一个待发送的ECMessage
@@ -2661,11 +2662,11 @@ public class ChattingFragment extends CCPFragment implements
 
     public void sendRedPacketAckMessage(String senderId, String senderNickName) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE, true);//是否是红包领取消息
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID, senderId);//发送者id
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME, clientUser.getUserName());//接收者昵称
-        jsonObject.put(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID, clientUser.getUserId());//接收者id
+        jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE, true);//是否是红包领取消息
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_ID, senderId);//发送者id
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME, clientUser.getUserName());//接收者昵称
+        jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID, clientUser.getUserId());//接收者id
         String text = getResources().getString(R.string.ytx_luckymoney);
         if (senderId.equals(clientUser.getUserId())) {
 

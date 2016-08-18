@@ -5,8 +5,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecsdk.ECMessage;
-
-import utils.RedPacketConstant;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 public class CheckRedPacketMessageUtil {
 
@@ -19,8 +18,8 @@ public class CheckRedPacketMessageUtil {
             if (extraData != null) {
                 try {
                     JSONObject jsonObject = JSONObject.parseObject(extraData);
-                    if (jsonObject != null && jsonObject.containsKey(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)
-                            && jsonObject.getBoolean(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)) {
+                    if (jsonObject != null && jsonObject.containsKey(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)
+                            && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)) {
                         rpJSON = jsonObject;
                     }
                 } catch (JSONException e) {
@@ -39,7 +38,7 @@ public class CheckRedPacketMessageUtil {
             if (extraData != null) {
                 try {
                     JSONObject jsonObject = JSONObject.parseObject(extraData);
-                    if (jsonObject != null && jsonObject.containsKey(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE) && jsonObject.getBoolean(RedPacketConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE)) {
+                    if (jsonObject != null && jsonObject.containsKey(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE) && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE)) {
 
                         jsonRedPacketAck = jsonObject;
                     }
@@ -55,8 +54,8 @@ public class CheckRedPacketMessageUtil {
         boolean isMyselfAckMsg = true;
         JSONObject jsonObject = isRedPacketAckMessage(message);
         if (jsonObject != null) {
-            String receiverId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-            String senderId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+            String receiverId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+            String senderId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
             //发送者和领取者都不是自己
             if (!currentUserId.equals(receiverId) && !currentUserId.equals(senderId)) {
                 isMyselfAckMsg = false;

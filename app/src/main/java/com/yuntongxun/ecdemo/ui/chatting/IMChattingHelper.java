@@ -60,6 +60,7 @@ import com.yuntongxun.ecsdk.im.ECUserStateMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 import com.yuntongxun.ecsdk.im.group.ECGroupNoticeMessage;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,8 +68,6 @@ import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import utils.RedPacketConstant;
 
 
 /**
@@ -420,10 +419,10 @@ public class IMChattingHelper implements OnChatReceiveListener,
             if (jsonObject != null) {
                 //改写回执红包消息的内容
                 String currentUserId = CCPAppManager.getClientUser().getUserId();//当前登陆用户id
-                String recieveUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                String recieveUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
-                String sendUserId = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                String sendUserNick = jsonObject.getString(RedPacketConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
+                String recieveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                String recieveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+                String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                 ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
                 String text = textBody.getMessage();
                 //发送者和领取者都是自己-
