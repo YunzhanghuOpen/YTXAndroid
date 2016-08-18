@@ -108,9 +108,12 @@ import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 import com.yuntongxun.ecsdk.platformtools.ECHandlerHelper;
 import com.yunzhanghu.redpacketsdk.bean.RPUserBean;
+import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.callback.GroupMemberCallback;
 import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
+import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
 import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
 
 import java.io.File;
@@ -944,7 +947,7 @@ public class ChattingFragment extends CCPFragment implements
             handleSendLocationMessage(locationInfo);
         }
 
-        if (requestCode == REQUEST_CODE_REDPACKET) {
+        if (requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {
             if (data != null) {
                 handlesendRedPacketMessage(data);
             }
@@ -1775,27 +1778,29 @@ public class ChattingFragment extends CCPFragment implements
 
         @Override
         public void OnSelectRedPacketRequest() {//红包
-            //传递到sdk里的数据
-            JSONObject jsonObject = new JSONObject();
+            RedPacketInfo redPacketInfo = new RedPacketInfo();
             //传递参数到红包sdk：发送者头像url，昵称（缺失则传id）
             String fromAvatarUrl = "none";
             String fromNickName = clientUser.getUserName();
             fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
-            jsonObject.put(RedPacketConstant.KEY_FROM_AVATAR_URL, fromAvatarUrl);
-            jsonObject.put(RedPacketConstant.KEY_FROM_NICK_NAME, fromNickName);
-            jsonObject.put(RedPacketConstant.KEY_CURRENT_ID, CCPAppManager.getUserId());
+            redPacketInfo.fromAvatarUrl = fromAvatarUrl;//发送者头像
+            redPacketInfo.fromNickName = fromNickName;//发送者昵称
             if (!isPeerChat()) {
                 //如果是单聊传递对方id
-                jsonObject.put(RedPacketConstant.KEY_USER_ID, mRecipients);
-                jsonObject.put(RedPacketConstant.KEY_CHAT_TYPE, 1);
+                redPacketInfo.toUserId = mRecipients;
+                redPacketInfo.chatType = RPConstant.CHATTYPE_SINGLE;//单聊
             } else {
                 //如果是群聊传递群id和群人数
                 ECGroup ecGroup = GroupSqlManager.getECGroup(mRecipients);
-                jsonObject.put(RedPacketConstant.KEY_GROUP_ID, ecGroup.getGroupId());
-                jsonObject.put(RedPacketConstant.KEY_GROUP_MEMBERS_COUNT, ecGroup.getCount());
-                jsonObject.put(RedPacketConstant.KEY_CHAT_TYPE, 2);
+                redPacketInfo.toGroupId = ecGroup.getGroupId();
+                redPacketInfo.chatType = RPConstant.CHATTYPE_GROUP;//群聊
+                redPacketInfo.groupMemberCount = ecGroup.getCount();//群成员个数
             }
-            RedPacketUtil.startRedPacketActivityForResult(ChattingFragment.this, jsonObject, REQUEST_CODE_REDPACKET);
+            Intent intent = new Intent(getActivity(), RPRedPacketActivity.class);
+            intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+            TokenData tokenData = new TokenData();
+            intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
+            startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_MONEY);
             hideBottomPanel();
         }
 
