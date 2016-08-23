@@ -24,8 +24,8 @@ import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.ChattingActivity;
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecdemo.ui.contact.ContactDetailActivity;
 import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
@@ -152,7 +152,7 @@ public abstract class BaseChattingRow implements IChattingRow {
         buildChattingData(context, baseHolder, detail, position);
 
         setContactPhoto(baseHolder, detail);
-        if (((ChattingActivity) context).isPeerChat() && detail.getDirection() == ECMessage.Direction.RECEIVE && CheckRedPacketMessageUtil.isRedPacketAckMessage(detail) == null) {
+        if (((ChattingActivity) context).isPeerChat() && detail.getDirection() == ECMessage.Direction.RECEIVE && RedPacketUtil.getInstance().isRedPacketAckMessage(detail) == null) {
             ECContacts contact = ContactSqlManager.getContact(detail.getForm());
             if (contact != null) {
                 if (TextUtils.isEmpty(contact.getNickname())) {

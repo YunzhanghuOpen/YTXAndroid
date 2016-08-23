@@ -13,8 +13,8 @@
 package com.yuntongxun.ecdemo.ui.chatting;
 
 
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
 import com.yuntongxun.ecdemo.ui.chatting.model.ChattingRowType;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecsdk.ECMessage;
 
 /**
@@ -31,17 +31,12 @@ public class ChattingsRowUtils {
     public static int getChattingMessageType(ECMessage ecMessage) {
         ECMessage.Type type = ecMessage.getType();
         if (type == ECMessage.Type.TXT) {
-            if (CheckRedPacketMessageUtil.isRedPacketMessage(ecMessage) != null) {
-
+            if (RedPacketUtil.getInstance().isRedPacketMessage(ecMessage) != null) {
                 return 7000;
-            } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(ecMessage) != null) {
-
+            } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(ecMessage) != null) {
                 return 8000;
             }
-
             return 2000;
-
-
         } else if (type == ECMessage.Type.VOICE) {
             return 60;
         } else if (type == ECMessage.Type.FILE) {
@@ -68,35 +63,22 @@ public class ChattingsRowUtils {
         ECMessage.Type type = iMessage.getType();
         ECMessage.Direction direction = iMessage.getDirection();
         if (type == ECMessage.Type.TXT) {
-
             if (direction == ECMessage.Direction.RECEIVE) {
-
-
-                if (CheckRedPacketMessageUtil.isRedPacketMessage(iMessage) != null) {
-
+                if (RedPacketUtil.getInstance().isRedPacketMessage(iMessage) != null) {
                     return ChattingRowType.REDPACKET_ROW_RECEIVED.getId();
-                } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(iMessage) != null) {
-
+                } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(iMessage) != null) {
                     return ChattingRowType.REDPACKE_ROW_ACK_RECEIVED.getId();
                 }
-
-
                 return ChattingRowType.DESCRIPTION_ROW_RECEIVED.getId();
             } else {
-
-                if (CheckRedPacketMessageUtil.isRedPacketMessage(iMessage) != null) {
-
+                if (RedPacketUtil.getInstance().isRedPacketMessage(iMessage) != null) {
                     return ChattingRowType.REDPACKE_ROW_TO.getId();
-                } else if (CheckRedPacketMessageUtil.isRedPacketAckMessage(iMessage) != null) {
-
+                } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(iMessage) != null) {
                     return ChattingRowType.REDPACKE_ROW_ACK_TO.getId();
                 }
-
-
                 return ChattingRowType.DESCRIPTION_ROW_TRANSMIT.getId();
 
             }
-
 
         } else if (type == ECMessage.Type.VOICE) {
             if (direction == ECMessage.Direction.RECEIVE) {

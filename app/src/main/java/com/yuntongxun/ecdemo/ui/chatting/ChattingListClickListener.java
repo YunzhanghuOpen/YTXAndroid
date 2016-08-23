@@ -16,17 +16,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.utils.CheckUtil;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.MediaPlayTools;
-import com.yuntongxun.ecdemo.storage.ContactSqlManager;
 import com.yuntongxun.ecdemo.storage.IMessageSqlManager;
 import com.yuntongxun.ecdemo.storage.ImgInfoSqlManager;
 import com.yuntongxun.ecdemo.ui.chatting.model.ViewHolderTag;
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
-import com.yuntongxun.ecdemo.ui.contact.ECContacts;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecdemo.ui.settings.WebAboutActivity;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECMessage;
@@ -37,14 +34,11 @@ import com.yuntongxun.ecsdk.im.ECPreviewMessageBody;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
-import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.RedPacketConstant;
-import utils.RedPacketUtil;
 
 /**
  * 处理聊天消息点击事件响应
@@ -175,52 +169,8 @@ public class ChattingListClickListener implements View.OnClickListener {
 
                 break;
             case ViewHolderTag.TagType.TAG_IM_REDPACKET:
-
-                JSONObject jsonRedPacket = CheckRedPacketMessageUtil.isRedPacketMessage(iMessage);
-                JSONObject jsonObject = new JSONObject();
-                String toAvatarUrl = "none";
-                String toNickName = CCPAppManager.getClientUser().getUserName();
-                toAvatarUrl = TextUtils.isEmpty(toAvatarUrl) ? "none" : toAvatarUrl;
-                toNickName = TextUtils.isEmpty(toNickName) ? CCPAppManager.getClientUser().getUserId() : toNickName;
-                jsonObject.put(RedPacketConstant.KEY_TO_AVATAR_URL, toAvatarUrl);
-                jsonObject.put(RedPacketConstant.KEY_TO_NICK_NAME, toNickName);
-                jsonObject.put(RedPacketConstant.KEY_CURRENT_ID, CCPAppManager.getClientUser().getUserId());
-
-                if (iMessage.getDirection() == Direction.RECEIVE) {
-                    jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT, RPConstant.MESSAGE_DIRECT_RECEIVE);
-                } else {
-                    jsonObject.put(RedPacketConstant.KEY_MESSAGE_DIRECT, RPConstant.MESSAGE_DIRECT_SEND);
-                }
-                String moneyID = jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);
-                jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);
-                if (mContext.mChattingFragment.isPeerChat()) {
-                    jsonObject.put("chatType", RPConstant.CHATTYPE_GROUP);
-                } else {
-                    jsonObject.put("chatType", RPConstant.CHATTYPE_SINGLE);
-                }
-                String specialAvatarUrl = "none";
-                String specialNickname = "";
-                String packetType = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
-                String specialReceiveId = jsonRedPacket.getString(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID);
-                if (!TextUtils.isEmpty(packetType) && packetType.equals(RedPacketConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
-                    ECContacts contact = ContactSqlManager.getContact(specialReceiveId);
-                    if (contact != null) {
-                        specialNickname = contact.getNickname();
-                    } else {
-                        specialNickname = specialReceiveId;
-                    }
-                }
-                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);
-                jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE, packetType);
-                jsonObject.put(RedPacketConstant.KEY_SPECIAL_AVATAR_URL, specialAvatarUrl);
-                jsonObject.put(RedPacketConstant.KEY_SPECIAL_NICK_NAME, specialNickname);
-                RedPacketUtil.openRedPacket(mContext, jsonObject, new RedPacketUtil.OpenRedPacketSuccess() {
-
-                    @Override
-                    public void onSuccess(String senderId, String senderNickname) {
-                        mContext.mChattingFragment.sendRedPacketAckMessage(senderId, senderNickname);
-                    }
-                });
+                //打开红包
+                RedPacketUtil.getInstance().openRedPacket(mContext,iMessage,CCPAppManager.getClientUser());
                 break;
             default:
                 break;

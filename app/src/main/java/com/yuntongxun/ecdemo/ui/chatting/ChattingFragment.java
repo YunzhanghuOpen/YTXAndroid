@@ -31,7 +31,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,7 +43,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.common.dialog.ECAlertDialog;
@@ -79,6 +77,7 @@ import com.yuntongxun.ecdemo.ui.chatting.base.OnListViewBottomListener;
 import com.yuntongxun.ecdemo.ui.chatting.base.OnListViewTopListener;
 import com.yuntongxun.ecdemo.ui.chatting.base.OnRefreshAdapterDataListener;
 import com.yuntongxun.ecdemo.ui.chatting.model.ImgInfo;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecdemo.ui.chatting.view.CCPChattingFooter2;
 import com.yuntongxun.ecdemo.ui.chatting.view.SmileyPanel;
 import com.yuntongxun.ecdemo.ui.contact.AtSomeoneUI;
@@ -91,7 +90,6 @@ import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECChatManager.OnChangeVoiceListener;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
-import com.yuntongxun.ecsdk.ECGroupManager;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.ECUserState;
 import com.yuntongxun.ecsdk.ECVoIPCallManager.CallType;
@@ -99,7 +97,6 @@ import com.yuntongxun.ecsdk.Parameters;
 import com.yuntongxun.ecsdk.SdkErrorCode;
 import com.yuntongxun.ecsdk.im.ECFileMessageBody;
 import com.yuntongxun.ecsdk.im.ECGroup;
-import com.yuntongxun.ecsdk.im.ECGroupMember;
 import com.yuntongxun.ecsdk.im.ECLocationMessageBody;
 import com.yuntongxun.ecsdk.im.ECPreviewMessageBody;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
@@ -107,22 +104,18 @@ import com.yuntongxun.ecsdk.im.ECUserStateMessageBody;
 import com.yuntongxun.ecsdk.im.ECVideoMessageBody;
 import com.yuntongxun.ecsdk.im.ECVoiceMessageBody;
 import com.yuntongxun.ecsdk.platformtools.ECHandlerHelper;
-import com.yunzhanghu.redpacketsdk.bean.RPUserBean;
 import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
 import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
-import com.yunzhanghu.redpacketui.callback.GroupMemberCallback;
-import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
 import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
-import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.List;
-
-import utils.RedPacketConstant;
-import utils.RedPacketUtil;
 
 /**
  * com.yuntongxun.ecdemo.ui.chatting in ECDemo_Android
@@ -748,56 +741,7 @@ public class ChattingFragment extends CCPFragment implements
                     getTopBarView().setTitle(charSequence);
                 }
             }
-            ECGroupManager groupManager = ECDevice.getECGroupManager();
-            // 调用获取群组成员接口，设置结果回调
-            groupManager.queryGroupMembers(ecGroup.getGroupId(),
-                    new ECGroupManager.OnQueryGroupMembersListener() {
-                        @Override
-                        public void onQueryGroupMembersComplete(ECError error
-                                , final List members) {
-                            if (error.errorCode == SdkErrorCode.REQUEST_SUCCESS
-                                    && members != null) {
-                                // 获取群组成员成功
-                                // 将群组成员信息更新到本地缓存中（sqlite） 通知UI更新
-
-                                RPGroupMemberUtil.getInstance().setGroupMemberListener(new NotifyGroupMemberCallback() {
-                                    @Override
-                                    public void getGroupMember(final String groupID, final GroupMemberCallback mCallBack) {
-
-                                        List<RPUserBean> userBeanList = new ArrayList<RPUserBean>();
-
-                                        for (int i = 0; i < members.size(); i++) {
-                                            RPUserBean userBean = new RPUserBean();
-                                            ECGroupMember member = (ECGroupMember) members.get(i);
-                                            userBean.userId = member.getVoipAccount();
-                                            if (userBean.userId.equals(CCPAppManager.getUserId())) {
-                                                continue;
-                                            }
-
-                                            if (member != null) {
-                                                userBean.userAvatar = "none";
-                                                userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() : member.getDisplayName();
-                                            } else {
-                                                userBean.userNickname = userBean.userId;
-                                                userBean.userAvatar = "none";
-                                            }
-                                            userBeanList.add(userBean);
-                                        }
-                                        mCallBack.setGroupMember(userBeanList);
-                                    }
-                                });
-
-
-                                return;
-                            }
-                            // 群组成员获取失败
-                            Log.e("ECSDK_Demo", "sync group detail fail " +
-                                    ", errorCode=" + error.errorCode);
-
-                        }
-
-                    }
-            );
+            RedPacketUtil.getInstance().setGroupMember(ecGroup.getGroupId());
         }
     }
 
@@ -949,7 +893,7 @@ public class ChattingFragment extends CCPFragment implements
 
         if (requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {
             if (data != null) {
-                handlesendRedPacketMessage(data);
+                handleSendRedPacketMessage(data);
             }
         }
 
@@ -960,32 +904,31 @@ public class ChattingFragment extends CCPFragment implements
     /**
      * 发送红包消息
      */
-    private void handlesendRedPacketMessage(Intent data) {
-        String greetings = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);
-        String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);
-        String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);
-        String redPacketType = data.getStringExtra(RedPacketConstant.EXTRA_RED_PACKET_TYPE);
-        String text = "[" + getResources().getString(R.string.ytx_luckymoney) + "]" + greetings;
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);//是否是红包消息
-        jsonObject.put(RPConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_RED_PACKET_TYPE, redPacketType);//红包类型，是否是专属红包
-        jsonObject.put(RedPacketConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);//指定接收者
-        // 组建一个待发送的ECMessage
-        ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-        // 设置消息接收者
-        msg.setTo(mRecipients);
-        msg.setUserData(jsonObject.toJSONString());
-        // 创建一个文本消息体，并添加到消息对象中
-        ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
-        msg.setBody(msgBody);
-        String[] at = mChattingFooter.getAtSomeBody();
-        msgBody.setAtMembers(at);
-        mChattingFooter.clearSomeBody();
+    private void handleSendRedPacketMessage(Intent data) {
         try {
+            String greetings = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);
+            String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);
+            String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);
+            String redPacketType = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_TYPE);
+            String text = "[" + getResources().getString(R.string.ytx_luckymoney) + "]" + greetings;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE, true);//是否是红包消息
+            jsonObject.put(RPConstant.EXTRA_SPONSOR_NAME, getResources().getString(R.string.ytx_luckymoney));//红包sponsor name
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_GREETING, greetings);//祝福语
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_ID, moneyID);//红包id
+            jsonObject.put(RPConstant.MESSAGE_ATTR_RED_PACKET_TYPE, redPacketType);//红包类型，是否是专属红包
+            jsonObject.put(RPConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID, specialReceiveId);//指定接收者
+            // 组建一个待发送的ECMessage
+            ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
+            // 设置消息接收者
+            msg.setTo(mRecipients);
+            msg.setUserData(jsonObject.toString());
+            // 创建一个文本消息体，并添加到消息对象中
+            ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+            msg.setBody(msgBody);
+            String[] at = mChattingFooter.getAtSomeBody();
+            msgBody.setAtMembers(at);
+            mChattingFooter.clearSomeBody();
             // 发送消息，该函数见上
             long rowId = -1;
             if (mCustomerService) {
@@ -996,9 +939,10 @@ public class ChattingFragment extends CCPFragment implements
             // 通知列表刷新
             msg.setId(rowId);
             notifyIMessageListView(msg);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     private void handleVideoRecordSend(Intent data) {
@@ -1799,6 +1743,7 @@ public class ChattingFragment extends CCPFragment implements
             Intent intent = new Intent(getActivity(), RPRedPacketActivity.class);
             intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
             TokenData tokenData = new TokenData();
+            tokenData.appUserId = clientUser.getUserId();
             intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
             startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_MONEY);
             hideBottomPanel();
@@ -2667,33 +2612,29 @@ public class ChattingFragment extends CCPFragment implements
 
     public void sendRedPacketAckMessage(String senderId, String senderNickName) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE, true);//是否是红包领取消息
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_ID, senderId);//发送者id
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME, clientUser.getUserName());//接收者昵称
-        jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID, clientUser.getUserId());//接收者id
-        String text = getResources().getString(R.string.ytx_luckymoney);
-        if (senderId.equals(clientUser.getUserId())) {
-
-            text = this.getResources().getString(R.string.money_msg_take_money);
-        } else {
-
-            text = String.format(getResources().getString(R.string.money_msg_take_someone_money), senderNickName);
-
-
-        }
-        // 组建一个待发送的ECMessage
-        ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
-        // 设置消息接收者
-        msg.setTo(mRecipients);
-        msg.setUserData(jsonObject.toJSONString());
-        // 创建一个文本消息体，并添加到消息对象中
-        ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
-        msg.setBody(msgBody);
-        String[] at = mChattingFooter.getAtSomeBody();
-        msgBody.setAtMembers(at);
-        mChattingFooter.clearSomeBody();
         try {
+            jsonObject.put(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE, true);//是否是红包领取消息
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_NAME, senderNickName);//发送者昵称
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_SENDER_ID, senderId);//发送者id
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME, clientUser.getUserName());//接收者昵称
+            jsonObject.put(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID, clientUser.getUserId());//接收者id
+            String text;
+            if (senderId.equals(clientUser.getUserId())) {
+                text = this.getResources().getString(R.string.money_msg_take_money);
+            } else {
+                text = String.format(getResources().getString(R.string.money_msg_take_someone_money), senderNickName);
+            }
+            // 组建一个待发送的ECMessage
+            ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
+            // 设置消息接收者
+            msg.setTo(mRecipients);
+            msg.setUserData(jsonObject.toString());
+            // 创建一个文本消息体，并添加到消息对象中
+            ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+            msg.setBody(msgBody);
+            String[] at = mChattingFooter.getAtSomeBody();
+            msgBody.setAtMembers(at);
+            mChattingFooter.clearSomeBody();
             // 发送消息，该函数见上
             long rowId = -1;
             if (mCustomerService) {
@@ -2704,11 +2645,9 @@ public class ChattingFragment extends CCPFragment implements
             // 通知列表刷新
             msg.setId(rowId);
             notifyIMessageListView(msg);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
 }

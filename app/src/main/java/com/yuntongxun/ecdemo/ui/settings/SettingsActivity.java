@@ -17,7 +17,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -39,12 +38,11 @@ import com.yuntongxun.ecdemo.ui.LauncherActivity;
 import com.yuntongxun.ecdemo.ui.SDKCoreHelper;
 import com.yuntongxun.ecdemo.ui.chatting.IMChattingHelper;
 import com.yuntongxun.ecdemo.ui.chatting.base.EmojiconTextView;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecdemo.ui.contact.ContactLogic;
 import com.yuntongxun.ecdemo.ui.contact.ECContacts;
 
 import java.io.InvalidClassException;
-
-import utils.RedPacketUtil;
 
 
 /**
@@ -240,11 +238,7 @@ public class SettingsActivity extends ECSuperActivity implements View.OnClickLis
         settings_money.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fromNickname = CCPAppManager.getClientUser().getUserName();
-                String fromAvatarUrl = "none";
-                fromAvatarUrl = TextUtils.isEmpty(fromAvatarUrl) ? "none" : fromAvatarUrl;
-                fromNickname = TextUtils.isEmpty(fromNickname) ? CCPAppManager.getClientUser().getUserId() : fromNickname;
-                RedPacketUtil.startChangeActivity(SettingsActivity.this, fromNickname, fromAvatarUrl, CCPAppManager.getClientUser().getUserId());
+                RedPacketUtil.getInstance().startChangeActivity(SettingsActivity.this, CCPAppManager.getClientUser());
             }
         });
     }

@@ -31,6 +31,7 @@ import com.yuntongxun.ecdemo.common.utils.ECPreferences;
 import com.yuntongxun.ecdemo.common.utils.FileAccessor;
 import com.yuntongxun.ecdemo.common.utils.LogUtil;
 import com.yuntongxun.ecdemo.core.ClientUser;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yunzhanghu.redpacketsdk.RPRefreshSignListener;
 import com.yunzhanghu.redpacketsdk.RPValueCallback;
 import com.yunzhanghu.redpacketsdk.RedPacket;
@@ -39,8 +40,6 @@ import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import java.io.File;
 import java.io.InvalidClassException;
-
-import utils.RedPacketUtil;
 
 /**
  * Created by Jorstin on 2015/3/17.

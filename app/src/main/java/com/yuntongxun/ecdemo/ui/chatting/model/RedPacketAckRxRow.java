@@ -5,15 +5,16 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yuntongxun.ecdemo.R;
 import com.yuntongxun.ecdemo.common.CCPAppManager;
 import com.yuntongxun.ecdemo.ui.chatting.holder.BaseHolder;
 import com.yuntongxun.ecdemo.ui.chatting.holder.RedPacketAckViewHolder;
-import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.CheckRedPacketMessageUtil;
+import com.yuntongxun.ecdemo.ui.chatting.redpacketutils.RedPacketUtil;
 import com.yuntongxun.ecdemo.ui.chatting.view.ChattingItemContainer;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+
+import org.json.JSONObject;
 
 /**
  * Created by ustc on 2016/6/24.
@@ -38,43 +39,39 @@ public class RedPacketAckRxRow extends BaseChattingRow {
     }
 
     @Override
-    public void buildChattingData(final Context context, BaseHolder baseHolder,
-                                  ECMessage detail, int position) {
+    public void buildChattingData(final Context context, BaseHolder baseHolder, ECMessage detail, int position) {
 
         RedPacketAckViewHolder holder = (RedPacketAckViewHolder) baseHolder;
         ECMessage message = detail;
-        if (message != null) {
+        try {
+            if (message != null && message.getType() == ECMessage.Type.TXT) {
 
-            if (message.getType() == ECMessage.Type.TXT) {
-                JSONObject jsonObject = CheckRedPacketMessageUtil.isRedPacketAckMessage(message);
+                JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketAckMessage(message);
                 if (jsonObject != null) {
                     holder.getChattingAvatar().setVisibility(View.GONE);
                     holder.getChattingUser().setVisibility(View.GONE);
                     String currentUserId = CCPAppManager.getClientUser().getUserId();   //当前登陆用户id
-                    String recieveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                    String recieveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                    String receiveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                    String receiveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
                     String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
                     String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                     String text = "";
                     //发送者和领取者都是自己-
-                    if (currentUserId.equals(recieveUserId) && currentUserId.equals(sendUserId)) {
-
+                    if (currentUserId.equals(receiveUserId) && currentUserId.equals(sendUserId)) {
                         text = context.getResources().getString(R.string.money_msg_take_money);
-
                     } else if (currentUserId.equals(sendUserId)) {
                         //我仅仅是发送者
-                        text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), recieveUserNick);
-
-                    } else if (currentUserId.equals(recieveUserId)) {
+                        text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), receiveUserNick);
+                    } else if (currentUserId.equals(receiveUserId)) {
                         //我仅仅是接收者
                         text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
-
                     }
                     holder.getRedPacketAckMsgTv().setText(text);
-
                 }
-
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -87,8 +84,7 @@ public class RedPacketAckRxRow extends BaseChattingRow {
     }
 
     @Override
-    public boolean onCreateRowContextMenu(ContextMenu contextMenu,
-                                          View targetView, ECMessage detail) {
+    public boolean onCreateRowContextMenu(ContextMenu contextMenu, View targetView, ECMessage detail) {
 
         return false;
     }
