@@ -82,9 +82,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                             RPGroupMemberUtil.getInstance().setGroupMemberListener(new NotifyGroupMemberCallback() {
                                 @Override
                                 public void getGroupMember(final String groupID, final GroupMemberCallback mCallBack) {
-
                                     List<RPUserBean> userBeanList = new ArrayList<RPUserBean>();
-
                                     for (int i = 0; i < members.size(); i++) {
                                         RPUserBean userBean = new RPUserBean();
                                         ECGroupMember member = (ECGroupMember) members.get(i);
@@ -92,20 +90,13 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                                         if (userBean.userId.equals(CCPAppManager.getUserId())) {
                                             continue;
                                         }
-
-                                        if (member != null) {
-                                            userBean.userAvatar = "none";
-                                            userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() : member.getDisplayName();
-                                        } else {
-                                            userBean.userNickname = userBean.userId;
-                                            userBean.userAvatar = "none";
-                                        }
+                                        userBean.userAvatar = "none";
+                                        userBean.userNickname = TextUtils.isEmpty(member.getDisplayName()) ? member.getVoipAccount() : member.getDisplayName();
                                         userBeanList.add(userBean);
                                     }
                                     mCallBack.setGroupMember(userBeanList);
                                 }
                             });
-
                             return;
                         }
                         // 群组成员获取失败
@@ -223,8 +214,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
             if (!TextUtils.isEmpty(extraData)) {
                 try {
                     JSONObject jsonObject = new JSONObject(extraData);
-                    if (jsonObject != null && jsonObject.has(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)
-                            && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)) {
+                    if (jsonObject.has(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE) && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_MESSAGE)) {
                         rpJSON = jsonObject;
                     }
                 } catch (JSONException e) {
