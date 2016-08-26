@@ -25,16 +25,11 @@ public class TransferTxRow extends BaseChattingRow {
         super(type);
     }
 
-    /* (non-Javadoc)
-     * @see com.hisun.cas.model.im.ChattingRow#buildChatView(android.view.LayoutInflater, android.view.View)
-     */
     @Override
     public View buildChatView(LayoutInflater inflater, View convertView) {
         //we have a don't have a converView so we'll have to create a new one
         if (convertView == null || ((BaseHolder) convertView.getTag()).getType() != mRowType) {
-
             convertView = new ChattingItemContainer(inflater, R.layout.chatting_item_transfer_to);
-
             //use the view holder pattern to save of already looked up subviews
             TransferViewHolder holder = new TransferViewHolder(mRowType);
             convertView.setTag(holder.initBaseHolder(convertView, false));
@@ -51,7 +46,7 @@ public class TransferTxRow extends BaseChattingRow {
                 if (jsonObject != null) {
                     //清除文本框，和加载progressdialog
                     String amount = jsonObject.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);
-                    holder.getAmountTv().setText(amount+"元");
+                    holder.getAmountTv().setText(amount + "元");
                     ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_TRANSFER, position);
                     View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
                     holder.getBubble().setTag(holderTag);
@@ -71,8 +66,7 @@ public class TransferTxRow extends BaseChattingRow {
     }
 
     @Override
-    public boolean onCreateRowContextMenu(ContextMenu contextMenu,
-                                          View targetView, ECMessage detail) {
+    public boolean onCreateRowContextMenu(ContextMenu contextMenu, View targetView, ECMessage detail) {
 
         return false;
     }

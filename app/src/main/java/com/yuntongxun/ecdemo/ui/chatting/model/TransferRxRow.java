@@ -21,7 +21,6 @@ import org.json.JSONObject;
  */
 public class TransferRxRow extends BaseChattingRow {
 
-
     public TransferRxRow(int type) {
         super(type);
     }
@@ -47,7 +46,7 @@ public class TransferRxRow extends BaseChattingRow {
                 if (jsonObject != null) {
                     //清除文本框，和加载progressdialog
                     String amount = jsonObject.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);
-                    holder.getAmountTv().setText(amount+"元");
+                    holder.getAmountTv().setText(amount + "元");
                     ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_TRANSFER, position);
                     View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
                     holder.getBubble().setTag(holderTag);
@@ -58,7 +57,6 @@ public class TransferRxRow extends BaseChattingRow {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

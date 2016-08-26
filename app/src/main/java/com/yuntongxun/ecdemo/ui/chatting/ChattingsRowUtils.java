@@ -31,11 +31,11 @@ public class ChattingsRowUtils {
     public static int getChattingMessageType(ECMessage ecMessage) {
         ECMessage.Type type = ecMessage.getType();
         if (type == ECMessage.Type.TXT) {
-            if (RedPacketUtil.getInstance().isRedPacketMessage(ecMessage) != null) {
+            if (RedPacketUtil.getInstance().isRedPacketMessage(ecMessage) != null) {//红包
                 return 7000;
-            } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(ecMessage) != null) {
+            } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(ecMessage) != null) {//回执消息
                 return 8000;
-            } else if (RedPacketUtil.getInstance().isTransferMsg(ecMessage) != null) {
+            } else if (RedPacketUtil.getInstance().isTransferMsg(ecMessage) != null) {//转账
                 return 9000;
             }
             return 2000;

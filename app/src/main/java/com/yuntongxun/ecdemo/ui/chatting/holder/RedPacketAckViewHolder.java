@@ -14,15 +14,12 @@ public class RedPacketAckViewHolder extends BaseHolder {
 
     public View chattingContent;
     public TextView tvMsg;
-    /**
-     * TextView that display IMessage description.
-     */
+
     /**
      * @param type
      */
     public RedPacketAckViewHolder(int type) {
         super(type);
-
     }
 
     public BaseHolder initBaseHolder(View baseView, boolean receive) {
@@ -41,9 +38,6 @@ public class RedPacketAckViewHolder extends BaseHolder {
         return this;
     }
 
-    /**
-     * @return
-     */
     public TextView getRedPacketAckMsgTv() {
         if (tvMsg == null) {
             tvMsg = (TextView) getBaseView().findViewById(R.id.tv_money_greeting);
@@ -51,9 +45,6 @@ public class RedPacketAckViewHolder extends BaseHolder {
         return tvMsg;
     }
 
-    /**
-     * @return
-     */
     public ProgressBar getUploadProgressBar() {
         if (progressBar == null) {
             progressBar = (ProgressBar) getBaseView().findViewById(R.id.uploading_pb);

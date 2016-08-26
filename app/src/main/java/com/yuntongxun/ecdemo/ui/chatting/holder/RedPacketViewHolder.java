@@ -14,15 +14,10 @@ import com.yuntongxun.ecdemo.R;
 public class RedPacketViewHolder extends BaseHolder {
 
     public View chattingContent;
-    public TextView tv_money_greeting;
-    public TextView tv_sponsor_name;
-    public TextView tv_packet_type;
+    public TextView tv_money_greeting;//祝福语
+    public TextView tv_sponsor_name;//XX红包
+    public TextView tv_packet_type;//是否是专属红包
     public RelativeLayout bubble;
-    /**
-     * TextView that display IMessage description.
-     */
-
-
     /**
      * @param type
      */

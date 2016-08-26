@@ -121,7 +121,7 @@ public class AppPanelControl {
                 capability = new Capability(getContext().getString(
                         R.string.attach_red_packet), R.drawable.ytx_chat_redpacket_selector);
                 break;
-            //红包按钮
+            //转账按钮
             case R.string.attach_transfer:
 
                 capability = new Capability(getContext().getString(

@@ -16,10 +16,6 @@ public class TransferViewHolder extends BaseHolder {
     public View chattingContent;
     public TextView tv_transfer_amount;
     public RelativeLayout bubble;
-    /**
-     * TextView that display IMessage description.
-     */
-
 
     /**
      * @param type
@@ -64,9 +60,6 @@ public class TransferViewHolder extends BaseHolder {
         return bubble;
     }
 
-    /**
-     * @return
-     */
     public ProgressBar getUploadProgressBar() {
         if (progressBar == null) {
             progressBar = (ProgressBar) getBaseView().findViewById(R.id.uploading_pb);
