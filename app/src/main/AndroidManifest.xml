@@ -512,6 +512,18 @@
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"
             />
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPRedTransferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPTransferDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
 
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"

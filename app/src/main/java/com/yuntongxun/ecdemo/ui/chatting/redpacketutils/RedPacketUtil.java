@@ -3,6 +3,7 @@ package com.yuntongxun.ecdemo.ui.chatting.redpacketutils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.callback.GroupMemberCallback;
 import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
 import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
+import com.yunzhanghu.redpacketui.ui.activity.RPTransferDetailActivity;
 import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
 import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
 
@@ -47,6 +49,9 @@ import java.util.List;
 public class RedPacketUtil implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     public static final int REQUEST_CODE_SEND_MONEY = 15;
+
+    public static final int REQUEST_CODE_SEND_TRANSFER = 16;
+
 
     private TokenData mTokenData;
 
@@ -108,6 +113,44 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         );
     }
 
+    /**
+     * 进入转账页面
+     *
+     * @param fragment
+     * @param toChatUsername
+     * @param requestCode
+     */
+    public static void startRedTransferActivityForResult(Fragment fragment, final String toChatUsername, int requestCode) {
+        //发送者头像url
+//        String fromAvatarUrl = "none";
+//        //发送者昵称 设置了昵称就传昵称 否则传id
+//        String fromNickname = EMChatManager.getInstance().getCurrentUser();
+//        EaseUser easeUser = EaseUserUtils.getUserInfo(fromNickname);
+//        if (easeUser != null) {
+//            fromAvatarUrl = TextUtils.isEmpty(easeUser.getAvatar()) ? "none" : easeUser.getAvatar();
+//            fromNickname = TextUtils.isEmpty(easeUser.getNick()) ? easeUser.getUsername() : easeUser.getNick();
+//        }
+//        String toAvatarUrl="none";
+//        String toUserName="";
+//        EaseUser easeToUser=EaseUserUtils.getUserInfo(toChatUsername);
+//        if (easeToUser!=null){
+//            toAvatarUrl = TextUtils.isEmpty(easeToUser.getAvatar()) ? "none" : easeToUser.getAvatar();
+//            toUserName = TextUtils.isEmpty(easeToUser.getNick()) ? easeToUser.getUsername() : easeToUser.getNick();
+//        }
+//        RedPacketInfo redPacketInfo = new RedPacketInfo();
+//        redPacketInfo.fromAvatarUrl = fromAvatarUrl;
+//        redPacketInfo.fromNickName = fromNickname;
+//        //接收者Id或者接收的群Id
+//        redPacketInfo.toUserId = toChatUsername;
+//        redPacketInfo.toNickName=toUserName;
+//        redPacketInfo.toAvatarUrl=toAvatarUrl;
+//
+//        Intent intent = new Intent(fragment.getContext(), RPRedTransferActivity.class);
+//        intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
+//        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, getTokenData());
+//        fragment.startActivityForResult(intent, requestCode);
+    }
+
 
     /**
      * 打开红包
@@ -149,7 +192,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 } else {
                     redPacketInfo.specialNickname = specialReceiveId;
                 }
-                redPacketInfo.specialAvatarUrl = "none";//需要用户头像
+                redPacketInfo.specialAvatarUrl = "none";////开发者换成自己app的图像
                 redPacketInfo.toUserId = CCPAppManager.getClientUser().getUserId();//接受者id
             }
             TokenData tokenData = new TokenData();
@@ -176,6 +219,45 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 }
             });
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 打开转账
+     *
+     * @param mContext
+     * @param ecMessage
+     * @param clientUser
+     */
+    public void openTransfer(final ChattingActivity mContext, ECMessage ecMessage, ClientUser clientUser) {
+        try {
+            JSONObject jsonTransfer = RedPacketUtil.getInstance().isTransferMsg(ecMessage);
+            String amount = jsonTransfer.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);//转账金额
+            String time = jsonTransfer.getString(RPConstant.EXTRA_TRANSFER_PACKET_TIME);//转账时间
+            String fromAvatarUrl = "none";//开发者换成自己app的图像
+            String fromNickName = clientUser.getUserName();
+            fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
+            String messageDirect;
+            if (ecMessage.getDirection() == ECMessage.Direction.RECEIVE) {//接受者
+                messageDirect = RPConstant.MESSAGE_DIRECT_SEND;
+            } else {//发送者
+                messageDirect = RPConstant.MESSAGE_DIRECT_RECEIVE;
+            }
+            RedPacketInfo redPacketInfo = new RedPacketInfo();
+            redPacketInfo.moneyMsgDirect = messageDirect;
+            redPacketInfo.redPacketAmount = amount;
+            redPacketInfo.fromNickName = fromNickName;
+            redPacketInfo.fromAvatarUrl = fromAvatarUrl;
+            redPacketInfo.transferTime = time;
+            TokenData tokenData = new TokenData();
+            tokenData.appUserId = clientUser.getUserId();
+            Intent intent = new Intent(mContext, RPTransferDetailActivity.class);
+            intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
+            intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
+            mContext.startActivity(intent);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -252,6 +334,32 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     }
 
     /**
+     * 是否转账消息
+     *
+     * @param message
+     * @return
+     */
+    public JSONObject isTransferMsg(ECMessage message) {
+        JSONObject jsonTransfer = null;
+        if (message.getType() == ECMessage.Type.TXT) {
+            // 设置内容
+            String extraData = message.getUserData();
+            if (!TextUtils.isEmpty(extraData)) {
+                try {
+                    JSONObject jsonObject = new JSONObject(extraData);
+                    if (jsonObject.has(RPConstant.MESSAGE_ATTR_IS_TRANSFER_PACKET_MESSAGE)
+                            && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_TRANSFER_PACKET_MESSAGE)) {
+                        jsonTransfer = jsonObject;
+                    }
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.toString());
+                }
+            }
+        }
+        return jsonTransfer;
+    }
+
+    /**
      * 是否是自己的回执消息消息
      *
      * @param message
@@ -285,7 +393,8 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
 
     public void requestSign(Context context, String userId, final RPValueCallback<TokenData> rpValueCallback) {
         mRPValueCallback = rpValueCallback;
-        String mockUrl = "http://rpv2.yunzhanghu.com/api/sign?duid=" + userId;
+        //String mockUrl = "http://rpv2.yunzhanghu.com/api/sign?duid=" + userId;
+        String mockUrl = "http://10.10.1.10:32802/api/sign?duid=" + userId;
         RequestQueue mRequestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.GET, mockUrl, this, this);
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));

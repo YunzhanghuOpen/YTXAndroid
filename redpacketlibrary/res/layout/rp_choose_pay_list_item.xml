@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/iv_pay_icon"
             style="@style/PayTypeIconStyle"
-            android:src="@drawable/rp_jd_icon"
+            android:src="@drawable/rp_hf_icon"
             />
 
         <LinearLayout

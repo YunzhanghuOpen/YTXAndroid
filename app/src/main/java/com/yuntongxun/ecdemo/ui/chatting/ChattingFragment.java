@@ -108,6 +108,7 @@ import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
 import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
+import com.yunzhanghu.redpacketui.ui.activity.RPRedTransferActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -891,9 +892,14 @@ public class ChattingFragment extends CCPFragment implements
             handleSendLocationMessage(locationInfo);
         }
 
-        if (requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {
+        if (requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {//红包
             if (data != null) {
                 handleSendRedPacketMessage(data);
+            }
+        }
+        if (requestCode == RedPacketUtil.REQUEST_CODE_SEND_TRANSFER) {//转账
+            if (data != null) {
+                handleSendTransferMessage(data);
             }
         }
 
@@ -931,6 +937,44 @@ public class ChattingFragment extends CCPFragment implements
             mChattingFooter.clearSomeBody();
             // 发送消息，该函数见上
             long rowId = -1;
+            if (mCustomerService) {
+                rowId = CustomerServiceHelper.sendMCMessage(msg);
+            } else {
+                rowId = IMChattingHelper.sendECMessage(msg);
+            }
+            // 通知列表刷新
+            msg.setId(rowId);
+            notifyIMessageListView(msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * 发送转账消息
+     */
+    private void handleSendTransferMessage(Intent data) {
+        try {
+            String money = data.getStringExtra(RPConstant.EXTRA_TRANSFER_AMOUNT);
+            String time = data.getStringExtra(RPConstant.EXTRA_TRANSFER_PACKET_TIME);
+            String text = "[" + getResources().getString(R.string.attach_transfer) + "]";
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(RPConstant.MESSAGE_ATTR_IS_TRANSFER_PACKET_MESSAGE, true);//是否是转账消息
+            jsonObject.put(RPConstant.EXTRA_TRANSFER_AMOUNT, money);//转账金额
+            jsonObject.put(RPConstant.EXTRA_TRANSFER_PACKET_TIME, time);//转账时间
+            // 组建一个待发送的ECMessage
+            ECMessage msg = ECMessage.createECMessage(ECMessage.Type.TXT);
+            // 设置消息接收者
+            msg.setTo(mRecipients);
+            msg.setUserData(jsonObject.toString());
+            // 创建一个文本消息体，并添加到消息对象中
+            ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+            msg.setBody(msgBody);
+            String[] at = mChattingFooter.getAtSomeBody();
+            msgBody.setAtMembers(at);
+            mChattingFooter.clearSomeBody();
+            // 发送消息，该函数见上
+            long rowId;
             if (mCustomerService) {
                 rowId = CustomerServiceHelper.sendMCMessage(msg);
             } else {
@@ -1724,7 +1768,7 @@ public class ChattingFragment extends CCPFragment implements
         public void OnSelectRedPacketRequest() {//红包
             RedPacketInfo redPacketInfo = new RedPacketInfo();
             //传递参数到红包sdk：发送者头像url，昵称（缺失则传id）
-            String fromAvatarUrl = "none";
+            String fromAvatarUrl = "none";//开发者换成自己app的图像
             String fromNickName = clientUser.getUserName();
             fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
             redPacketInfo.fromAvatarUrl = fromAvatarUrl;//发送者头像
@@ -1747,6 +1791,31 @@ public class ChattingFragment extends CCPFragment implements
             intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
             startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_MONEY);
             hideBottomPanel();
+        }
+
+        @Override
+        public void OnSelectTransferRequest() {//转账
+            RedPacketInfo redPacketInfo=new RedPacketInfo();
+            //传递参数到红包sdk：发送者头像url，昵称（缺失则传id）
+            String fromNickName = clientUser.getUserName();
+            fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
+            redPacketInfo.fromAvatarUrl = "none";//发送者头像//开发者换成自己app的图像
+            redPacketInfo.fromNickName = fromNickName;//发送者昵称
+            //接收者
+            redPacketInfo.toUserId = mRecipients;
+            ECContacts contact = ContactSqlManager.getContact(mRecipients);
+            if (contact!=null){
+                redPacketInfo.toNickName = contact.getNickname();
+            }else {
+                redPacketInfo.toNickName=mRecipients;
+            }
+            redPacketInfo.toAvatarUrl = "none";//开发者换成自己app的图像
+            TokenData tokenData = new TokenData();
+            tokenData.appUserId = clientUser.getUserId();
+            Intent intent = new Intent(getActivity(), RPRedTransferActivity.class);
+            intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
+            intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
+            startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_TRANSFER);
         }
 
     }

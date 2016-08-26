@@ -35,6 +35,8 @@ public class ChattingsRowUtils {
                 return 7000;
             } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(ecMessage) != null) {
                 return 8000;
+            } else if (RedPacketUtil.getInstance().isTransferMsg(ecMessage) != null) {
+                return 9000;
             }
             return 2000;
         } else if (type == ECMessage.Type.VOICE) {

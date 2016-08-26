@@ -172,6 +172,10 @@ public class ChattingListClickListener implements View.OnClickListener {
                 //打开红包
                 RedPacketUtil.getInstance().openRedPacket(mContext,iMessage,CCPAppManager.getClientUser());
                 break;
+            case ViewHolderTag.TagType.TAG_IM_TRANSFER:
+                //打开转账
+                RedPacketUtil.getInstance().openTransfer(mContext,iMessage,CCPAppManager.getClientUser());
+                break;
             default:
                 break;
         }
