@@ -3,7 +3,6 @@ package com.yuntongxun.ecdemo.ui.chatting.redpacketutils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -72,7 +71,6 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     }
 
     public void setGroupMember(String groupId) {
-
         ECGroupManager groupManager = ECDevice.getECGroupManager();
         // 调用获取群组成员接口，设置结果回调
         groupManager.queryGroupMembers(groupId,
@@ -114,45 +112,6 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     }
 
     /**
-     * 进入转账页面
-     *
-     * @param fragment
-     * @param toChatUsername
-     * @param requestCode
-     */
-    public static void startRedTransferActivityForResult(Fragment fragment, final String toChatUsername, int requestCode) {
-        //发送者头像url
-//        String fromAvatarUrl = "none";
-//        //发送者昵称 设置了昵称就传昵称 否则传id
-//        String fromNickname = EMChatManager.getInstance().getCurrentUser();
-//        EaseUser easeUser = EaseUserUtils.getUserInfo(fromNickname);
-//        if (easeUser != null) {
-//            fromAvatarUrl = TextUtils.isEmpty(easeUser.getAvatar()) ? "none" : easeUser.getAvatar();
-//            fromNickname = TextUtils.isEmpty(easeUser.getNick()) ? easeUser.getUsername() : easeUser.getNick();
-//        }
-//        String toAvatarUrl="none";
-//        String toUserName="";
-//        EaseUser easeToUser=EaseUserUtils.getUserInfo(toChatUsername);
-//        if (easeToUser!=null){
-//            toAvatarUrl = TextUtils.isEmpty(easeToUser.getAvatar()) ? "none" : easeToUser.getAvatar();
-//            toUserName = TextUtils.isEmpty(easeToUser.getNick()) ? easeToUser.getUsername() : easeToUser.getNick();
-//        }
-//        RedPacketInfo redPacketInfo = new RedPacketInfo();
-//        redPacketInfo.fromAvatarUrl = fromAvatarUrl;
-//        redPacketInfo.fromNickName = fromNickname;
-//        //接收者Id或者接收的群Id
-//        redPacketInfo.toUserId = toChatUsername;
-//        redPacketInfo.toNickName=toUserName;
-//        redPacketInfo.toAvatarUrl=toAvatarUrl;
-//
-//        Intent intent = new Intent(fragment.getContext(), RPRedTransferActivity.class);
-//        intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
-//        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, getTokenData());
-//        fragment.startActivityForResult(intent, requestCode);
-    }
-
-
-    /**
      * 打开红包
      *
      * @param mContext
@@ -160,67 +119,64 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
      * @param clientUser
      */
     public void openRedPacket(final ChattingActivity mContext, ECMessage ecMessage, ClientUser clientUser) {
-        try {
-            final ProgressDialog progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCanceledOnTouchOutside(false);
-            RedPacketInfo redPacketInfo = new RedPacketInfo();
-            JSONObject jsonRedPacket = RedPacketUtil.getInstance().isRedPacketMessage(ecMessage);
-            String moneyID = jsonRedPacket.getString(RPConstant.EXTRA_RED_PACKET_ID);//红包id
-            String packetType = jsonRedPacket.getString(RPConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
-            String specialReceiveId = jsonRedPacket.getString(RPConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID);
-            String toAvatarUrl = "none";//容联云没有网址图片
-            String toNickName = clientUser.getUserName();
-            toNickName = TextUtils.isEmpty(toNickName) ? clientUser.getUserId() : toNickName;
-            redPacketInfo.toAvatarUrl = toAvatarUrl;//红包接受者头像
-            redPacketInfo.toNickName = toNickName;//红包接受者昵称
-            if (ecMessage.getDirection() == ECMessage.Direction.RECEIVE) {//接受者
-                redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_RECEIVE;
-            } else {//发送者
-                redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_SEND;
-            }
-            if (mContext.mChattingFragment.isPeerChat()) {//群聊
-                redPacketInfo.chatType = RPConstant.CHATTYPE_GROUP;
-            } else {//单聊
-                redPacketInfo.chatType = RPConstant.CHATTYPE_SINGLE;
-            }
-            redPacketInfo.redPacketId = moneyID;
-            //定向红包
-            if (!TextUtils.isEmpty(packetType) && packetType.equals(RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
-                ECContacts contact = ContactSqlManager.getContact(specialReceiveId);
-                if (contact != null) {
-                    redPacketInfo.specialNickname = contact.getNickname();
-                } else {
-                    redPacketInfo.specialNickname = specialReceiveId;
-                }
-                redPacketInfo.specialAvatarUrl = "none";////开发者换成自己app的图像
-                redPacketInfo.toUserId = CCPAppManager.getClientUser().getUserId();//接受者id
-            }
-            TokenData tokenData = new TokenData();
-            tokenData.appUserId = clientUser.getUserId();
-            RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, tokenData, mContext, new RPOpenPacketUtil.RPOpenPacketCallBack() {
-                @Override
-                public void onSuccess(String senderId, String senderNickname) {
-                    mContext.mChattingFragment.sendRedPacketAckMessage(senderId, senderNickname);
-                }
-
-                @Override
-                public void showLoading() {
-                    progressDialog.show();
-                }
-
-                @Override
-                public void hideLoading() {
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                public void onError(String code, String message) {
-                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setCanceledOnTouchOutside(false);
+        RedPacketInfo redPacketInfo = new RedPacketInfo();
+        JSONObject jsonRedPacket = RedPacketUtil.getInstance().isRedPacketMessage(ecMessage);
+        String moneyID = jsonRedPacket.optString(RPConstant.EXTRA_RED_PACKET_ID);//红包id
+        String packetType = jsonRedPacket.optString(RPConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
+        String specialReceiveId = jsonRedPacket.optString(RPConstant.MESSAGE_ATTR_SPECIAL_RECEIVER_ID);
+        String toAvatarUrl = "none";//容联云没有网址图片
+        String toNickName = clientUser.getUserName();
+        toNickName = TextUtils.isEmpty(toNickName) ? clientUser.getUserId() : toNickName;
+        redPacketInfo.toAvatarUrl = toAvatarUrl;//红包接受者头像
+        redPacketInfo.toNickName = toNickName;//红包接受者昵称
+        if (ecMessage.getDirection() == ECMessage.Direction.RECEIVE) {//接受者
+            redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_RECEIVE;
+        } else {//发送者
+            redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_SEND;
         }
+        if (mContext.mChattingFragment.isPeerChat()) {//群聊
+            redPacketInfo.chatType = RPConstant.CHATTYPE_GROUP;
+        } else {//单聊
+            redPacketInfo.chatType = RPConstant.CHATTYPE_SINGLE;
+        }
+        redPacketInfo.redPacketId = moneyID;
+        //定向红包
+        if (!TextUtils.isEmpty(packetType) && packetType.equals(RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
+            ECContacts contact = ContactSqlManager.getContact(specialReceiveId);
+            if (contact != null) {
+                redPacketInfo.specialNickname = contact.getNickname();
+            } else {
+                redPacketInfo.specialNickname = specialReceiveId;
+            }
+
+            redPacketInfo.specialAvatarUrl = "none";////开发者换成自己app的头像
+            redPacketInfo.toUserId = CCPAppManager.getClientUser().getUserId();//接受者id
+        }
+        TokenData tokenData = new TokenData();
+        tokenData.appUserId = clientUser.getUserId();
+        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, tokenData, mContext, new RPOpenPacketUtil.RPOpenPacketCallBack() {
+            @Override
+            public void onSuccess(String senderId, String senderNickname) {
+                mContext.mChattingFragment.sendRedPacketAckMessage(senderId, senderNickname);
+            }
+
+            @Override
+            public void showLoading() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void hideLoading() {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(String code, String message) {
+                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -322,7 +278,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 try {
                     JSONObject jsonObject = new JSONObject(extraData);
                     if (jsonObject.has(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE)
-                            && jsonObject.getBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE)) {
+                            && jsonObject.optBoolean(RPConstant.MESSAGE_ATTR_IS_RED_PACKET_ACK_MESSAGE)) {
                         jsonRedPacketAck = jsonObject;
                     }
                 } catch (JSONException e) {
@@ -369,15 +325,11 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         boolean isMyselfAckMsg = true;
         JSONObject jsonObject = isRedPacketAckMessage(message);
         if (jsonObject != null) {
-            try {
-                String receiverId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                String senderId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                //发送者和领取者都不是自己
-                if (!currentUserId.equals(receiverId) && !currentUserId.equals(senderId)) {
-                    isMyselfAckMsg = false;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            String receiverId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+            String senderId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+            //发送者和领取者都不是自己
+            if (!currentUserId.equals(receiverId) && !currentUserId.equals(senderId)) {
+                isMyselfAckMsg = false;
             }
         }
         return isMyselfAckMsg;
@@ -409,24 +361,19 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     @Override
     public void onResponse(JSONObject jsonObject) {
         if (jsonObject != null && jsonObject.length() > 0) {
-            try {
-                String partner = jsonObject.getString("partner");
-                String userId = jsonObject.getString("user_id");
-                String timestamp = jsonObject.getString("timestamp");
-                String sign = jsonObject.getString("sign");
-                //保存红包Token
-                if (mTokenData == null) {
-                    mTokenData = new TokenData();
-                }
-                mTokenData.authPartner = partner;
-                mTokenData.appUserId = userId;
-                mTokenData.timestamp = timestamp;
-                mTokenData.authSign = sign;
-                mRPValueCallback.onSuccess(mTokenData);
-            } catch (org.json.JSONException e) {
-                e.printStackTrace();
-                mRPValueCallback.onError(e.getMessage(), e.getMessage());
+            String partner = jsonObject.optString("partner");
+            String userId = jsonObject.optString("user_id");
+            String timestamp = jsonObject.optString("timestamp");
+            String sign = jsonObject.optString("sign");
+            //保存红包Token
+            if (mTokenData == null) {
+                mTokenData = new TokenData();
             }
+            mTokenData.authPartner = partner;
+            mTokenData.appUserId = userId;
+            mTokenData.timestamp = timestamp;
+            mTokenData.authSign = sign;
+            mRPValueCallback.onSuccess(mTokenData);
 
         } else {
             mRPValueCallback.onError("", "sign data is  null");

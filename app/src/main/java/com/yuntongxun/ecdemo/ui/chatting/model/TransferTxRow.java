@@ -39,24 +39,20 @@ public class TransferTxRow extends BaseChattingRow {
 
     @Override
     public void buildChattingData(Context context, BaseHolder baseHolder, ECMessage message, int position) {
-        try {
-            if (message != null && message.getType() == ECMessage.Type.TXT) {
-                TransferViewHolder holder = (TransferViewHolder) baseHolder;
-                JSONObject jsonObject = RedPacketUtil.getInstance().isTransferMsg(message);
-                if (jsonObject != null) {
-                    //清除文本框，和加载progressdialog
-                    String amount = jsonObject.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);
-                    holder.getAmountTv().setText(amount + "元");
-                    ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_TRANSFER, position);
-                    View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
-                    holder.getBubble().setTag(holderTag);
-                    holder.getBubble().setOnClickListener(onClickListener);
-                }
+        if (message != null && message.getType() == ECMessage.Type.TXT) {
+            TransferViewHolder holder = (TransferViewHolder) baseHolder;
+            JSONObject jsonObject = RedPacketUtil.getInstance().isTransferMsg(message);
+            if (jsonObject != null) {
+                //清除文本框，和加载progressdialog
+                String amount = jsonObject.optString(RPConstant.EXTRA_TRANSFER_AMOUNT);
+                holder.getAmountTv().setText(amount + "元");
+                ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_TRANSFER, position);
+                View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
+                holder.getBubble().setTag(holderTag);
+                holder.getBubble().setOnClickListener(onClickListener);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
 
