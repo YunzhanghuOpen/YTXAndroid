@@ -45,33 +45,30 @@ public class RedPacketTxRow extends BaseChattingRow {
 
     @Override
     public void buildChattingData(Context context, BaseHolder baseHolder, ECMessage message, int position) {
-        try {
-            if (message != null && message.getType() == ECMessage.Type.TXT) {
-                RedPacketViewHolder holder = (RedPacketViewHolder) baseHolder;
-                JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketMessage(message);
-                if (jsonObject != null) {
-                    //清除文本框，和加载progressdialog
-                    String greeting = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_GREETING);
-                    String sponsorName = jsonObject.getString(RPConstant.EXTRA_SPONSOR_NAME);
-                    String packetType = jsonObject.getString(RPConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
-                    holder.getGreetingTv().setText(greeting);
-                    holder.getSponsorNameTv().setText(sponsorName);
-                    if (!TextUtils.isEmpty(packetType) && TextUtils.equals(packetType, RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
-                        holder.getPacketTypeTv().setVisibility(View.VISIBLE);
-                        holder.getPacketTypeTv().setText(context.getResources().getString(R.string.exclusive_red_packet));
-                    } else {
-                        holder.getPacketTypeTv().setVisibility(View.GONE);
-                    }
-                    ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_REDPACKET, position);
-                    View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
-                    holder.getBubble().setTag(holderTag);
-                    holder.getBubble().setOnClickListener(onClickListener);
+        if (message != null && message.getType() == ECMessage.Type.TXT) {
+            RedPacketViewHolder holder = (RedPacketViewHolder) baseHolder;
+            JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketMessage(message);
+            if (jsonObject != null) {
+                //清除文本框，和加载progressdialog
+                String greeting = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_GREETING);
+                String sponsorName = jsonObject.optString(RPConstant.EXTRA_SPONSOR_NAME);
+                String packetType = jsonObject.optString(RPConstant.MESSAGE_ATTR_RED_PACKET_TYPE);
+                holder.getGreetingTv().setText(greeting);
+                holder.getSponsorNameTv().setText(sponsorName);
+                if (!TextUtils.isEmpty(packetType) && TextUtils.equals(packetType, RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
+                    holder.getPacketTypeTv().setVisibility(View.VISIBLE);
+                    holder.getPacketTypeTv().setText(context.getResources().getString(R.string.exclusive_red_packet));
+                } else {
+                    holder.getPacketTypeTv().setVisibility(View.GONE);
                 }
+                ViewHolderTag holderTag = ViewHolderTag.createTag(message, ViewHolderTag.TagType.TAG_IM_REDPACKET, position);
+                View.OnClickListener onClickListener = ((ChattingActivity) context).mChattingFragment.getChattingAdapter().getOnClickListener();
+                holder.getBubble().setTag(holderTag);
+                holder.getBubble().setOnClickListener(onClickListener);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+
     }
 
 

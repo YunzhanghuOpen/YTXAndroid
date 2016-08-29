@@ -43,38 +43,30 @@ public class RedPacketAckRxRow extends BaseChattingRow {
 
         RedPacketAckViewHolder holder = (RedPacketAckViewHolder) baseHolder;
         ECMessage message = detail;
-        try {
-            if (message != null && message.getType() == ECMessage.Type.TXT) {
-
-                JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketAckMessage(message);
-                if (jsonObject != null) {
-                    holder.getChattingAvatar().setVisibility(View.GONE);
-                    holder.getChattingUser().setVisibility(View.GONE);
-                    String currentUserId = CCPAppManager.getClientUser().getUserId();   //当前登陆用户id
-                    String receiveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                    String receiveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
-                    String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                    String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
-                    String text = "";
-                    //发送者和领取者都是自己-
-                    if (currentUserId.equals(receiveUserId) && currentUserId.equals(sendUserId)) {
-                        text = context.getResources().getString(R.string.money_msg_take_money);
-                    } else if (currentUserId.equals(sendUserId)) {
-                        //我仅仅是发送者
-                        text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), receiveUserNick);
-                    } else if (currentUserId.equals(receiveUserId)) {
-                        //我仅仅是接收者
-                        text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
-                    }
-                    holder.getRedPacketAckMsgTv().setText(text);
+        if (message != null && message.getType() == ECMessage.Type.TXT) {
+            JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketAckMessage(message);
+            if (jsonObject != null) {
+                holder.getChattingAvatar().setVisibility(View.GONE);
+                holder.getChattingUser().setVisibility(View.GONE);
+                String currentUserId = CCPAppManager.getClientUser().getUserId();   //当前登陆用户id
+                String receiveUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                String receiveUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                String sendUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+                String sendUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
+                String text = "";
+                //发送者和领取者都是自己-
+                if (currentUserId.equals(receiveUserId) && currentUserId.equals(sendUserId)) {
+                    text = context.getResources().getString(R.string.money_msg_take_money);
+                } else if (currentUserId.equals(sendUserId)) {
+                    //我仅仅是发送者
+                    text = String.format(context.getResources().getString(R.string.money_msg_someone_take_money), receiveUserNick);
+                } else if (currentUserId.equals(receiveUserId)) {
+                    //我仅仅是接收者
+                    text = String.format(context.getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
                 }
+                holder.getRedPacketAckMsgTv().setText(text);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-
     }
 
     @Override
