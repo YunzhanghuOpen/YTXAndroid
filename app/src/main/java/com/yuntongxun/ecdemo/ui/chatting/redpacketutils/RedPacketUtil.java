@@ -197,9 +197,9 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
             fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
             String messageDirect;
             if (ecMessage.getDirection() == ECMessage.Direction.RECEIVE) {//接受者
-                messageDirect = RPConstant.MESSAGE_DIRECT_SEND;
-            } else {//发送者
                 messageDirect = RPConstant.MESSAGE_DIRECT_RECEIVE;
+            } else {//发送者
+                messageDirect = RPConstant.MESSAGE_DIRECT_SEND;
             }
             RedPacketInfo redPacketInfo = new RedPacketInfo();
             redPacketInfo.moneyMsgDirect = messageDirect;
