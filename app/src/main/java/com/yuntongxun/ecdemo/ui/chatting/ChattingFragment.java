@@ -108,7 +108,7 @@ import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
 import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
-import com.yunzhanghu.redpacketui.ui.activity.RPRedTransferActivity;
+import com.yunzhanghu.redpacketui.ui.activity.RPTransferActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1812,7 +1812,7 @@ public class ChattingFragment extends CCPFragment implements
             redPacketInfo.toAvatarUrl = "none";//开发者换成自己app的图像
             TokenData tokenData = new TokenData();
             tokenData.appUserId = clientUser.getUserId();
-            Intent intent = new Intent(getActivity(), RPRedTransferActivity.class);
+            Intent intent = new Intent(getActivity(), RPTransferActivity.class);
             intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
             intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
             startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_TRANSFER);

@@ -79,9 +79,10 @@ public class ECApplication extends Application {
             @Override
             public void onRefreshSign(RPValueCallback<TokenData> rpValueCallback) {
                 ClientUser clientUser = CCPAppManager.getClientUser();
-                RedPacketUtil.getInstance().requestSign(ECApplication.this,clientUser.getUserId(),rpValueCallback);
+                RedPacketUtil.getInstance().requestSign(ECApplication.this, clientUser.getUserId(), rpValueCallback);
             }
         });
+        RedPacket.getInstance().initBaseUrl("http://10.10.1.10:32802");
     }
 
     /**
