@@ -426,7 +426,7 @@ public class IMChattingHelper implements OnChatReceiveListener,
                     String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
                     String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                     ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
-                    String text="";
+                    String text = "";
                     //发送者和领取者都是自己-
                     if (currentUserId.equals(receiveUserId) && currentUserId.equals(sendUserId)) {
                         text = CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_money);
@@ -441,6 +441,16 @@ public class IMChattingHelper implements OnChatReceiveListener,
                     msg.setBody(msgBody);
                     //设置为不提醒
                     showNotice = false;
+                }
+                JSONObject transferObject = RedPacketUtil.getInstance().isTransferMsg(msg);
+                if (transferObject != null) {
+                    //改写转账消息的内容
+                    String money = transferObject.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);//转账金额
+                    String text = "[转账]向你转账" + money + "元";
+                    ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+                    msg.setBody(msgBody);
+                    //设置为不提醒
+                    showNotice = true;
                 }
 
             } catch (Exception e) {

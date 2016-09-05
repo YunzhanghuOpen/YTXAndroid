@@ -950,6 +950,7 @@ public class ChattingFragment extends CCPFragment implements
         }
 
     }
+
     /**
      * 发送转账消息
      */
@@ -957,7 +958,8 @@ public class ChattingFragment extends CCPFragment implements
         try {
             String money = data.getStringExtra(RPConstant.EXTRA_TRANSFER_AMOUNT);
             String time = data.getStringExtra(RPConstant.EXTRA_TRANSFER_PACKET_TIME);
-            String text = "[" + getResources().getString(R.string.attach_transfer) + "]";
+            String transfer = getResources().getString(R.string.attach_transfer);
+            String text = "[" + transfer + "]" + transfer + money + "元";
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(RPConstant.MESSAGE_ATTR_IS_TRANSFER_PACKET_MESSAGE, true);//是否是转账消息
             jsonObject.put(RPConstant.EXTRA_TRANSFER_AMOUNT, money);//转账金额
@@ -1795,7 +1797,7 @@ public class ChattingFragment extends CCPFragment implements
 
         @Override
         public void OnSelectTransferRequest() {//转账
-            RedPacketInfo redPacketInfo=new RedPacketInfo();
+            RedPacketInfo redPacketInfo = new RedPacketInfo();
             //传递参数到红包sdk：发送者头像url，昵称（缺失则传id）
             String fromNickName = clientUser.getUserName();
             fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
@@ -1804,10 +1806,10 @@ public class ChattingFragment extends CCPFragment implements
             //接收者
             redPacketInfo.toUserId = mRecipients;
             ECContacts contact = ContactSqlManager.getContact(mRecipients);
-            if (contact!=null){
+            if (contact != null) {
                 redPacketInfo.toNickName = contact.getNickname();
-            }else {
-                redPacketInfo.toNickName=mRecipients;
+            } else {
+                redPacketInfo.toNickName = mRecipients;
             }
             redPacketInfo.toAvatarUrl = "none";//开发者换成自己app的图像
             TokenData tokenData = new TokenData();
@@ -1825,7 +1827,6 @@ public class ChattingFragment extends CCPFragment implements
 
     public void showTakeFireStyle(final Context ctx) {//阅后即焚
         ECListDialog dialog = new ECListDialog(ctx, R.array.take_chat_fire_msg);
-        ;
         dialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
             @Override
             public void onDialogItemClick(Dialog d, int position) {
