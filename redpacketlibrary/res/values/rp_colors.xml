@@ -19,6 +19,7 @@
     <color name="best_luck_yellow">#fabf40</color>
     <color name="check_blue">#167ffc</color>
     <color name="button_blue">#35B7F3</color>
+    <color name="light_blue">#2FA3D9</color>
     <color name="text_unselected">@color/divider_color</color>
     <color name="half_transparent">#e0000000</color>
     <color name="title_color">#D3D97A</color>

@@ -420,11 +420,10 @@ public class IMChattingHelper implements OnChatReceiveListener,
             if (jsonObject != null) {
                 //改写回执红包消息的内容
                 String currentUserId = CCPAppManager.getClientUser().getUserId();//当前登陆用户id
-                String receiveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                String receiveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
-                String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
-                ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
+                String receiveUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                String receiveUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                String sendUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+                String sendUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
                 String text = "";
                 //发送者和领取者都是自己-
                 if (currentUserId.equals(receiveUserId) && currentUserId.equals(sendUserId)) {
@@ -444,7 +443,7 @@ public class IMChattingHelper implements OnChatReceiveListener,
             JSONObject transferObject = RedPacketUtil.getInstance().isTransferMsg(msg);
             if (transferObject != null) {
                 //改写转账消息的内容
-                String money = transferObject.getString(RPConstant.EXTRA_TRANSFER_AMOUNT);//转账金额
+                String money = transferObject.optString(RPConstant.EXTRA_TRANSFER_AMOUNT);//转账金额
                 String text = "[转账]向你转账" + money + "元";
                 ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
                 msg.setBody(msgBody);

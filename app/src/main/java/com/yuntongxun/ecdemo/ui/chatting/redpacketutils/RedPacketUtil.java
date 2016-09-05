@@ -158,7 +158,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         tokenData.appUserId = clientUser.getUserId();
         RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo, tokenData, mContext, new RPOpenPacketUtil.RPOpenPacketCallBack() {
             @Override
-            public void onSuccess(String senderId, String senderNickname) {
+            public void onSuccess(String senderId, String senderNickname,String myAmount) {
                 mContext.mChattingFragment.sendRedPacketAckMessage(senderId, senderNickname);
             }
 
