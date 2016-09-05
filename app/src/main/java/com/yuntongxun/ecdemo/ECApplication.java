@@ -82,6 +82,7 @@ public class ECApplication extends Application {
                 RedPacketUtil.getInstance().requestSign(ECApplication.this, clientUser.getUserId(), rpValueCallback);
             }
         });
+        //设置baseUrl
         RedPacket.getInstance().initBaseUrl("http://10.10.1.10:32802");
     }
 

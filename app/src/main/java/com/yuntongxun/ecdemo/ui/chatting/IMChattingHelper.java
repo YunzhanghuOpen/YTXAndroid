@@ -440,6 +440,7 @@ public class IMChattingHelper implements OnChatReceiveListener,
                 //设置为不提醒
                 showNotice = false;
             }
+            //转账
             JSONObject transferObject = RedPacketUtil.getInstance().isTransferMsg(msg);
             if (transferObject != null) {
                 //改写转账消息的内容

@@ -516,7 +516,7 @@
             android:name="com.yunzhanghu.redpacketui.ui.activity.RPTransferActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
-            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:windowSoftInputMode="adjustPan|stateVisible"
             />
         <activity
             android:name="com.yunzhanghu.redpacketui.ui.activity.RPTransferDetailActivity"

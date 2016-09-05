@@ -162,7 +162,7 @@ sup {
 
 <p><strong>redpacketlibrary</strong>，在容联云<strong>Yuntx_FullLib_v5.2.1r.jar</strong>的基础上提供了收发红包和零钱页的功能。</p>
 
-<h2>2. 集成步骤</h2>
+<h2>2. 集成步骤（红包领取消息不计数，请你处理）</h2>
 
 <h3>2.1 添加对红包工程的依赖</h3>
 
@@ -268,13 +268,11 @@ sup {
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"
             /&gt;
-
         &lt;activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPTransferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateVisible"
             /&gt;
         &lt;activity
             android:name="com.yunzhanghu.redpacketui.ui.activity.RPTransferDetailActivity"
@@ -282,6 +280,7 @@ sup {
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"
             /&gt;
+
         &lt;activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -292,7 +291,7 @@ sup {
     &lt;!--红包相关界面 end--&gt;
 </code></pre>
 
-<h3>2.4 在聊天页扩展消息类型中增加“红包”的发送入口</h3>
+<h3>2.4 在聊天页拓展消息类型中增加“红包”的发送入口</h3>
 
 <ul>
 <li>在AppPanelControl.java中增加消息扩展栏红包的按钮</li>
@@ -398,16 +397,15 @@ sup {
      */
     private class OnOnChattingPanelImpl implements CCPChattingFooter2.OnChattingPanelClickListener {
 
-    ....
+    .....
 
         @Override
         public void OnSelectRedPacketRequest() {//红包
             RedPacketInfo redPacketInfo = new RedPacketInfo();
             //传递参数到红包sdk：发送者头像url，昵称（缺失则传id）
-            String fromAvatarUrl = "none";
+            String fromAvatarUrl = "none";//开发者换成自己app的图像 
             String fromNickName = clientUser.getUserName();
-            fromNickName = TextUtils.isEmpty(fromNickName) ? 
-            clientUser.getUserId() : fromNickName;
+            fromNickName = TextUtils.isEmpty(fromNickName) ? clientUser.getUserId() : fromNickName;
             redPacketInfo.fromAvatarUrl = fromAvatarUrl;//发送者头像
             redPacketInfo.fromNickName = fromNickName;//发送者昵称
             if (!isPeerChat()) {
@@ -517,6 +515,7 @@ sup {
                     getTopBarView().setTitle(charSequence);
                 }
             }
+            //专属红包
             RedPacketUtil.getInstance().setGroupMember(ecGroup.getGroupId());
         }
     }
@@ -525,7 +524,7 @@ sup {
 <h3>2.7 增加四种消息item类型：收/发红包消息,收/发红包领取回执消息</h3>
 
 <ul>
-<li>在ChattingListAdapter.java</li>
+<li>在ChattingListAdapter2.java</li>
 </ul>
 
 
@@ -576,15 +575,14 @@ sup {
 
     public static int getChattingMessageType(ECMessage ecMessage) {
         ECMessage.Type type = ecMessage.getType();
-        if (RedPacketUtil.getInstance().isRedPacketMessage(ecMessage) != null) {//红包
+        if (type == ECMessage.Type.TXT) {
+            if (RedPacketUtil.getInstance().isRedPacketMessage(ecMessage) != null) {
                 return 7000;
-            } else if (RedPacketUtil.getInstance().
-            isRedPacketAckMessage(ecMessage) != null) {//回执消息
+            } else if (RedPacketUtil.getInstance().isRedPacketAckMessage(ecMessage) != null) {
                 return 8000;
-            } else if (RedPacketUtil.getInstance().isTransferMsg(ecMessage) != null) {//转账
-                return 9000;
             }
             return 2000;
+        } 
 
         ...
 
@@ -659,6 +657,7 @@ sup {
             case ViewHolderTag.TagType.TAG_IM_REDPACKET:
                 //打开红包
                 RedPacketUtil.getInstance().openRedPacket
+                (mContext,iMessage,CCPAppManager.getClientUser());
                 break;
             default:
                 break;
@@ -732,42 +731,46 @@ sup {
     private synchronized void postReceiveMessage(ECMessage msg,boolean showNotice) {
         // 接收到的IM消息，根据IM消息类型做不同的处理
         // IM消息类型：ECMessage.Type
-        if (msg.getType() == Type.TXT) {
-            try {
-                if (!RedPacketUtil.getInstance().isMyAckMessage(msg, CCPAppManager.getClientUser().getUserId())) {
-                    IMessageSqlManager.delSingleMsg(msg.getMsgId());
-                    return;
+      if (msg.getType() == Type.TXT) {
+            if (!RedPacketUtil.getInstance().isMyAckMessage(msg, CCPAppManager.getClientUser().getUserId())) {
+                IMessageSqlManager.delSingleMsg(msg.getMsgId());
+                return;
+            }
+            JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketAckMessage(msg);
+            if (jsonObject != null) {
+                //改写回执红包消息的内容
+                String currentUserId = CCPAppManager.getClientUser().getUserId();//当前登陆用户id
+                String receiveUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
+                String receiveUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
+                String sendUserId = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
+                String sendUserNick = jsonObject.optString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
+                String text = "";
+                //发送者和领取者都是自己-
+                if (currentUserId.equals(receiveUserId) &amp;&amp; currentUserId.equals(sendUserId)) {
+                    text = CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_money);
+                } else if (currentUserId.equals(sendUserId)) {
+                    //我仅仅是发送者
+                    text = String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_someone_take_money), receiveUserNick);
+                } else if (currentUserId.equals(receiveUserId)) {
+                    //我仅仅是接收者
+                    text = String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
                 }
-                JSONObject jsonObject = RedPacketUtil.getInstance().isRedPacketAckMessage(msg);
-                if (jsonObject != null) {
-                    //改写回执红包消息的内容
-                    String currentUserId = CCPAppManager.getClientUser().getUserId();//当前登陆用户id
-                    String receiveUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//红包接收者id
-                    String receiveUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_RECEIVER_NAME);//红包接收者昵称
-                    String sendUserId = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_ID);//红包发送者id
-                    String sendUserNick = jsonObject.getString(RPConstant.EXTRA_RED_PACKET_SENDER_NAME);//红包发送者昵称
-                    ECTextMessageBody textBody = (ECTextMessageBody) msg.getBody();
-                    String text;
-                    //发送者和领取者都是自己-
-                    if (currentUserId.equals(receiveUserId) &amp;&amp; currentUserId.equals(sendUserId)) {
-                        text = CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_money);
-                    } else if (currentUserId.equals(sendUserId)) {
-                        //我仅仅是发送者
-                        text = String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_someone_take_money), receiveUserNick);
-                    } else if (currentUserId.equals(receiveUserId)) {
-                        //我仅仅是接收者
-                        text = String.format(CCPAppManager.getContext().getResources().getString(R.string.money_msg_take_someone_money), sendUserNick);
                 ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
                 msg.setBody(msgBody);
                 //设置为不提醒
                 showNotice = false;
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
+            //转账
+            JSONObject transferObject = RedPacketUtil.getInstance().isTransferMsg(msg);
+            if (transferObject != null) {
+                //改写转账消息的内容
+                String money = transferObject.optString(RPConstant.EXTRA_TRANSFER_AMOUNT);//转账金额
+                String text = "[转账]向你转账" + money + "元";
+                ECTextMessageBody msgBody = new ECTextMessageBody(text.toString());
+                msg.setBody(msgBody);
+                //设置为不提醒
+                showNotice = true;
+            }
 
         }
 
@@ -1134,6 +1137,12 @@ sup {
         break;
         }
     }
+</code></pre>
+
+<h1>4设置SDK BaseUrl</h1>
+
+<pre><code> //设置baseUrl
+ RedPacket.getInstance().initBaseUrl("http://10.10.1.10:32802");
 </code></pre>
 </body>
 </html>
