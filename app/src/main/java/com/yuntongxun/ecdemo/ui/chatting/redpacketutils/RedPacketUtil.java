@@ -210,7 +210,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
             TokenData tokenData = new TokenData();
             tokenData.appUserId = clientUser.getUserId();
             Intent intent = new Intent(mContext, RPTransferDetailActivity.class);
-            intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
+            intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
             intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
             mContext.startActivity(intent);
         } catch (Exception e) {
@@ -346,7 +346,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     public void requestSign(Context context, String userId, final RPValueCallback<TokenData> rpValueCallback) {
         mRPValueCallback = rpValueCallback;
         //String mockUrl = "http://rpv2.yunzhanghu.com/api/sign?duid=" + userId;
-        String mockUrl = "http://10.10.1.10:32802/api/sign?duid=" + userId;
+        String mockUrl = "http://10.10.1.10:32773/api/sign?duid=" + userId;
         RequestQueue mRequestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.GET, mockUrl, this, this);
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));

@@ -22,7 +22,7 @@
     <string name="wx_pay">微信支付</string>
     <string name="input_pay_pwd">请输入支付密码</string>
     <string name="btn_ok">确定</string>
-    <string name="btn_know">知道了</string>
+    <string name="btn_know">我知道了</string>
     <string name="check_money">查看红包</string>
     <!--绑定银行卡-->
     <string name="pay_bank_card">支付银行卡</string>

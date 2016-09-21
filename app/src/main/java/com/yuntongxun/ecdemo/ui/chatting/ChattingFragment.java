@@ -1815,7 +1815,7 @@ public class ChattingFragment extends CCPFragment implements
             TokenData tokenData = new TokenData();
             tokenData.appUserId = clientUser.getUserId();
             Intent intent = new Intent(getActivity(), RPTransferActivity.class);
-            intent.putExtra(RPConstant.EXTRA_TRANSFER_PACKET_INFO, redPacketInfo);
+            intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
             intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, tokenData);
             startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_TRANSFER);
         }

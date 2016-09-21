@@ -2,15 +2,8 @@
 <resources>
 
     <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
-        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
 
-    <style name="AnimFade2" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ytx_slide_in_from_right</item>
-        <item name="android:activityOpenExitAnimation">@anim/ytx_slide_out_to_left</item>
-        <item name="android:activityCloseExitAnimation">@anim/ytx_slide_out_to_right</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ytx_slide_in_from_left</item>
-    </style>
 
     <style name="RedPacketIconStyle">
         <item name="android:layout_width">25dp</item>
