@@ -145,12 +145,6 @@
         android:layout_marginBottom="@dimen/size81px"
         android:text="@string/jd_pay_agreement_hint" />
 
-    <TextView
-        android:id="@+id/tv_insurance_agreement"
-        style="@style/BindBankCardBottomStyle"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/size30px" />
-
     <LinearLayout
         android:id="@+id/target_layout"
         android:layout_width="@dimen/size180px"

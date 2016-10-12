@@ -83,7 +83,7 @@ public class ECApplication extends Application {
             }
         });
         //设置baseUrl
-        RedPacket.getInstance().initBaseUrl("http://10.10.1.10:32773");
+        RedPacket.getInstance().initBaseUrl("https://10.10.1.38");
     }
 
     /**

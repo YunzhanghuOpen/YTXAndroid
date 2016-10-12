@@ -37,12 +37,18 @@ import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
 import com.yunzhanghu.redpacketui.ui.activity.RPTransferDetailActivity;
 import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
 import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
+import com.yunzhanghu.redpacketsdk.utils.HTTPSManager;
+import com.yunzhanghu.redpacketsdk.utils.HttpsStack;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLSocketFactory;
 
 
 public class RedPacketUtil implements Response.Listener<JSONObject>, Response.ErrorListener {
@@ -345,12 +351,28 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
 
     public void requestSign(Context context, String userId, final RPValueCallback<TokenData> rpValueCallback) {
         mRPValueCallback = rpValueCallback;
-        //String mockUrl = "http://rpv2.yunzhanghu.com/api/sign?duid=" + userId;
-        String mockUrl = "http://10.10.1.10:32773/api/sign?duid=" + userId;
-        RequestQueue mRequestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.GET, mockUrl, this, this);
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));
-        mRequestQueue.add(jsonObjectRequest);
+        String mockUrl = "https://10.10.1.38/api/sign?duid=" + userId;
+        InputStream inputStream=null;
+        try {
+            //支持自签名
+            inputStream = context.getAssets().open("rpserver.cer");
+            SSLSocketFactory sslSocketFactory =  HTTPSManager.buildSSLSocketFactory(context, inputStream);
+            HttpsStack httpsStack = new HttpsStack(null,sslSocketFactory);
+            RequestQueue mRequestQueue = Volley.newRequestQueue(context, httpsStack);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.GET, mockUrl, this, this);
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));
+            mRequestQueue.add(jsonObjectRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (inputStream!=null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
